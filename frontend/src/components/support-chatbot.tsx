@@ -94,8 +94,15 @@ const chatResponses: Record<string, Message> = {
   main_menu: initialBotMessage
 }
 
-export function SupportChatbot() {
+export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
+
+  // Handle external trigger to open chat
+  useEffect(() => {
+    if (triggerOpen) {
+      setIsOpen(true)
+    }
+  }, [triggerOpen])
   const [messages, setMessages] = useState<Message[]>([initialBotMessage])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -238,11 +245,12 @@ export function SupportChatbot() {
   return (
     <>
       {/* Chat Toggle Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-[9999]">
         <Button
           onClick={() => setIsOpen(!isOpen)}
           className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
           size="lg"
+          data-chat-trigger
         >
           {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
         </Button>
@@ -250,7 +258,7 @@ export function SupportChatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-2rem)]">
+        <div className="fixed bottom-24 right-6 z-[9999] w-96 max-w-[calc(100vw-2rem)]">
           <Card className="h-[500px] flex flex-col shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b bg-blue-600 text-white rounded-t-lg">

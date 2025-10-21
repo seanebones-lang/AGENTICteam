@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/Button'
-import { SupportChatbot } from '@/components/support-chatbot'
 import { 
   HelpCircle, 
   BookOpen, 
@@ -393,7 +392,14 @@ export default function SupportPage() {
                 <Clock className="w-4 h-4 inline mr-1" />
                 Available 24/7 • Avg response: 2 min
               </div>
-              <Button className="w-full">
+              <Button 
+                className="w-full"
+                onClick={() => {
+                  // Trigger the global chatbot
+                  const chatButton = document.querySelector('[data-chat-trigger]') as HTMLButtonElement
+                  if (chatButton) chatButton.click()
+                }}
+              >
                 Start Chat
               </Button>
             </Card>
@@ -468,8 +474,6 @@ export default function SupportPage() {
         </div>
       </section>
 
-      {/* Support Chatbot */}
-      <SupportChatbot />
     </div>
   )
 }
