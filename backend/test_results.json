@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-10-21T09:21:43.134652",
+  "test_suites": {
+    "Api Tests": {
+      "status": "failed",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.02525496482849121,
+      "output": "",
+      "errors": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3: No module named pytest\n"
+    }
+  },
+  "overall_status": "failed",
+  "total_tests": 0,
+  "passed_tests": 0,
+  "failed_tests": 0,
+  "skipped_tests": 0,
+  "coverage_percent": 0.0,
+  "duration_seconds": 0.0
+}

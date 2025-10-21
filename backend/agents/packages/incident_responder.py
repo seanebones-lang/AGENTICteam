@@ -71,10 +71,11 @@ class IncidentResponderAgent:
     """
     
     def __init__(self, api_key: Optional[str] = None):
-        self.llm = ChatOpenAI(
-            model="gpt-4o",
+        from langchain_anthropic import ChatAnthropic
+        self.llm = ChatAnthropic(
+            model="claude-3-5-sonnet-20241022",
             temperature=0.1,  # Low temperature for consistent analysis
-            api_key=api_key
+            api_key=api_key or os.getenv("ANTHROPIC_API_KEY")
         )
         
         # Common incident patterns and their root causes

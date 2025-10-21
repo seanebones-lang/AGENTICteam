@@ -6,7 +6,7 @@ import asyncio
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
 from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI
+# Removed OpenAI import - using Claude Anthropic instead
 from langchain_core.prompts import ChatPromptTemplate
 from enum import Enum
 import re
@@ -80,10 +80,12 @@ class TicketResolverAgent:
     """
     
     def __init__(self, api_key: Optional[str] = None):
-        self.llm = ChatOpenAI(
-            model="gpt-4o",
+        from langchain_anthropic import ChatAnthropic
+        import os
+        self.llm = ChatAnthropic(
+            model="claude-3-5-sonnet-20241022",
             temperature=0.3,
-            api_key=api_key
+            api_key=api_key or os.getenv("ANTHROPIC_API_KEY")
         )
         
         # Category keywords for classification

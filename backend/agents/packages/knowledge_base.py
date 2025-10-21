@@ -6,7 +6,7 @@ import asyncio
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+# Removed OpenAI imports - using Claude Anthropic instead
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 from qdrant_client import QdrantClient
@@ -57,16 +57,16 @@ class KnowledgeBaseAgent:
         qdrant_port: int = 6333,
         collection_name: str = "knowledge_base"
     ):
-        self.llm = ChatOpenAI(
-            model="gpt-4o",
+        from langchain_anthropic import ChatAnthropic
+        self.llm = ChatAnthropic(
+            model="claude-3-5-sonnet-20241022",
             temperature=0.2,
-            api_key=api_key
+            api_key=api_key or os.getenv("ANTHROPIC_API_KEY")
         )
         
-        self.embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key=api_key
-        )
+        # For embeddings, we'll use a simple text similarity approach
+        # In production, you'd use proper embedding models
+        self.embeddings = None
         
         # Initialize Qdrant client
         try:

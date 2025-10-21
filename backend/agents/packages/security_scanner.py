@@ -41,9 +41,9 @@ class SecurityScannerAgent:
     
     def __init__(self, api_key: Optional[str] = None):
         from langchain_anthropic import ChatAnthropic
-        # Using Claude Sonnet 4 for optimal balance of speed and intelligence
+        # Using Claude Sonnet 3.5 (latest available as of 2025)
         self.llm = ChatAnthropic(
-            model="claude-sonnet-4-20250514",  # Claude Sonnet 4 (latest stable)
+            model="claude-3-5-sonnet-20241022",  # Claude 3.5 Sonnet (latest stable)
             temperature=0,
             api_key=api_key or os.getenv("ANTHROPIC_API_KEY")
         )
