@@ -10,6 +10,7 @@ const navigation = {
   ],
   company: [
     { name: 'About', href: '/about' },
+    { name: 'Support', href: '/support' },
     { name: 'Contact', href: 'https://bizbot.store' },
     { name: 'Status', href: '/status' },
   ],
