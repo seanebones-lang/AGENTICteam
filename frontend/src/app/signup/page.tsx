@@ -38,19 +38,34 @@ export default function SignupPage() {
     setIsLoading(true)
 
     try {
-      // Mock registration - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Import apiService dynamically to avoid SSR issues
+      const { apiService } = await import('@/lib/api')
+      
+      // Real registration API call
+      const response = await apiService.register(formData.orgName, formData.email, formData.password)
+      
+      // Store auth token
+      localStorage.setItem('auth_token', response.access_token)
+      localStorage.setItem('user_data', JSON.stringify(response.user))
       
       toast({
         title: "Account Created!",
-        description: "Your 14-day free trial has started",
+        description: "Welcome to BizBot.store! Please add $8 minimum to start using agents.",
       })
       
-      router.push('/dashboard')
+      // Check if payment is required
+      if (response.requires_payment) {
+        // Redirect to payment page with minimum $8 requirement
+        router.push('/pricing?required=8&reason=signup')
+      } else {
+        // User already has sufficient credits
+        router.push('/dashboard')
+      }
     } catch (error) {
+      console.error('Registration error:', error)
       toast({
         title: "Registration Failed",
-        description: "Please try again",
+        description: error instanceof Error ? error.message : "Please try again",
         variant: "destructive",
       })
     } finally {

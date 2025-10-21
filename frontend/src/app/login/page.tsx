@@ -24,20 +24,32 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // Mock authentication - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Import apiService dynamically to avoid SSR issues
+      const { apiService } = await import('@/lib/api')
       
-      // Simulate successful login
+      // Real authentication API call
+      const response = await apiService.login(formData.email, formData.password)
+      
+      // Store auth token
+      localStorage.setItem('auth_token', response.access_token)
+      localStorage.setItem('user_data', JSON.stringify(response.user))
+      
       toast({
         title: "Login Successful",
-        description: "Welcome back!",
+        description: `Welcome back, ${response.user.name || response.user.email}!`,
       })
       
-      router.push('/dashboard')
+      // Check if user needs to add credits
+      if (response.requires_payment) {
+        router.push('/pricing?required=8&reason=insufficient_credits')
+      } else {
+        router.push('/dashboard')
+      }
     } catch (error) {
+      console.error('Login error:', error)
       toast({
         title: "Login Failed",
-        description: "Invalid email or password",
+        description: error instanceof Error ? error.message : "Invalid email or password",
         variant: "destructive",
       })
     } finally {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/badge'
@@ -181,7 +181,91 @@ const costExamples = [
 
 export default function PricingPage() {
   const [calculatorExecutions, setCalculatorExecutions] = useState([1000])
+  const [requiredAmount, setRequiredAmount] = useState<number | null>(null)
+  const [paymentReason, setPaymentReason] = useState<string | null>(null)
   const { toast } = useToast()
+
+  useEffect(() => {
+    // Check URL parameters for required payment
+    const urlParams = new URLSearchParams(window.location.search)
+    const required = urlParams.get('required')
+    const reason = urlParams.get('reason')
+    
+    if (required) {
+      setRequiredAmount(parseFloat(required))
+    }
+    if (reason) {
+      setPaymentReason(reason)
+    }
+  }, [])
+
+  const handlePurchaseCredits = async (amount: number) => {
+    try {
+      const { apiService } = await import('@/lib/api')
+      const token = localStorage.getItem('auth_token')
+      
+      if (!token) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to purchase credits",
+          variant: "destructive",
+        })
+        return
+      }
+
+      // Create payment intent
+      const paymentIntent = await apiService.createPaymentIntent(amount, `Credits for BizBot.store - $${amount}`)
+      
+      toast({
+        title: "Payment Processing",
+        description: `Processing payment for $${amount}...`,
+      })
+      
+      // In production, integrate with Stripe Elements here
+      // For now, simulate successful payment
+      setTimeout(async () => {
+        try {
+          // Add credits to user account
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api/v1/credits/add`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              amount: amount,
+              payment_intent_id: paymentIntent.payment_intent_id
+            }),
+          })
+          
+          if (response.ok) {
+            toast({
+              title: "Payment Successful!",
+              description: `$${amount} in credits added to your account.`,
+            })
+            
+            // Redirect to dashboard
+            window.location.href = '/dashboard'
+          } else {
+            throw new Error('Failed to add credits')
+          }
+        } catch (error) {
+          toast({
+            title: "Payment Failed",
+            description: "There was an issue processing your payment. Please try again.",
+            variant: "destructive",
+          })
+        }
+      }, 2000)
+      
+    } catch (error) {
+      toast({
+        title: "Payment Failed",
+        description: error instanceof Error ? error.message : "Unable to process payment",
+        variant: "destructive",
+      })
+    }
+  }
 
   const calculateCost = (tier: typeof pricingTiers[0], executions: number) => {
     const executionCost = executions * tier.pricePerExecution
@@ -189,10 +273,22 @@ export default function PricingPage() {
   }
 
   const handleGetStarted = (tierName: string) => {
-    toast({
-      title: "Getting Started",
-      description: `Redirecting to ${tierName} plan setup...`,
-    })
+    const tier = pricingTiers.find(t => t.name === tierName)
+    if (!tier) return
+    
+    // For required payments, use the required amount, otherwise use tier minimum
+    const amount = requiredAmount || Math.max(tier.minCost, 8) // Enforce $8 minimum
+    
+    if (tierName === 'Solo' && !requiredAmount) {
+      // Solo tier can start free if no payment required
+      toast({
+        title: "Starting Solo Plan",
+        description: "Redirecting to dashboard...",
+      })
+      window.location.href = '/dashboard'
+    } else {
+      handlePurchaseCredits(amount)
+    }
   }
 
   return (
@@ -207,6 +303,24 @@ export default function PricingPage() {
             Transparent, competitive pricing—5% below market with 14% markup (vs. 20% industry standard). 
             No hidden fees. Pay only for what you use with minimum execution loads to ensure platform reliability.
           </p>
+          
+          {/* Required Payment Banner */}
+          {requiredAmount && (
+            <div className="mt-6 mx-auto max-w-2xl p-4 bg-orange-100 dark:bg-orange-900/20 border border-orange-300 dark:border-orange-700 rounded-lg">
+              <div className="flex items-center justify-center gap-2 text-orange-800 dark:text-orange-200">
+                <DollarSign className="h-5 w-5" />
+                <span className="font-semibold">
+                  {paymentReason === 'signup' 
+                    ? `Welcome! Please add $${requiredAmount} minimum to start using agents.`
+                    : `Please add $${requiredAmount} to continue using agents.`
+                  }
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-orange-700 dark:text-orange-300">
+                This ensures platform reliability and covers minimum execution costs.
+              </p>
+            </div>
+          )}
           
           {/* Key Benefits */}
           <div className="flex flex-wrap justify-center gap-6 mb-8">

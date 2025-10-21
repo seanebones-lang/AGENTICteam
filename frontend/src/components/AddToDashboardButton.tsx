@@ -9,14 +9,14 @@ interface AddToDashboardButtonProps {
   agentId: string
   agentName: string
   variant?: 'default' | 'outline'
-  size?: 'default' | 'sm' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'icon'
 }
 
 export function AddToDashboardButton({ 
   agentId, 
   agentName, 
   variant = 'outline', 
-  size = 'lg' 
+  size = 'md' 
 }: AddToDashboardButtonProps) {
   const [isAdded, setIsAdded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
