@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/Button'
+import { SupportChatbot } from '@/components/support-chatbot'
 import { 
   HelpCircle, 
   BookOpen, 
@@ -466,6 +467,9 @@ export default function SupportPage() {
           </div>
         </div>
       </section>
+
+      {/* Support Chatbot */}
+      <SupportChatbot />
     </div>
   )
 }
