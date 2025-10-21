@@ -19,8 +19,8 @@ export function useAgents(category?: string) {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.packages.list({ category });
-      setPackages(response.data);
+      const response = await api.getAgents(category);
+      setPackages(response.packages);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch packages');
     } finally {
@@ -51,8 +51,8 @@ export function useAgent(packageId: string) {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.packages.get(packageId);
-      setAgent(response.data);
+      const response = await api.getAgent(packageId);
+      setAgent(response);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch package');
     } finally {
@@ -119,9 +119,9 @@ export function useExecuteAgent() {
       setError(null);
       setResult(null);
       
-      const response = await api.agents.execute(packageId, { task, engine_type: engineType });
-      setResult(response.data);
-      return response.data;
+      const response = await api.executeAgent(packageId, task, engineType);
+      setResult(response);
+      return response;
     } catch (err: any) {
       const message = err.response?.data?.detail || 'Execution failed';
       setError(message);
