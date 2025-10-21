@@ -61,7 +61,7 @@ export default function SupportPage() {
             {/* Support Status */}
             <div className="flex items-center justify-center gap-x-6 text-sm">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
                 <span className="text-gray-600 dark:text-gray-400">Support team online</span>
               </div>
               <span className="text-gray-300 dark:text-gray-600">|</span>
@@ -95,15 +95,15 @@ export default function SupportPage() {
               </p>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Click "Sign Up" in the top navigation
                 </li>
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Enter your email and create a password
                 </li>
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Check your email for verification link
                 </li>
               </ul>
@@ -115,9 +115,9 @@ export default function SupportPage() {
             </Card>
 
             {/* Step 2 */}
-            <Card className="p-6 border-l-4 border-l-green-500">
+            <Card className="p-6 border-l-4 border-l-blue-500">
               <div className="flex items-center mb-4">
-                <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
                   2
                 </div>
                 <h3 className="text-xl font-semibold">Choose Your Plan</h3>
@@ -127,15 +127,15 @@ export default function SupportPage() {
               </p>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Free: 10 agent executions/month
                 </li>
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Pro: Unlimited executions + priority
                 </li>
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Enterprise: Custom solutions
                 </li>
               </ul>
@@ -159,15 +159,15 @@ export default function SupportPage() {
               </p>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Browse the agent marketplace
                 </li>
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Click "Activate" on any agent
                 </li>
                 <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle className="w-4 h-4 text-blue-500 mr-2" />
                   Test in the playground first
                 </li>
               </ul>
@@ -195,13 +195,13 @@ export default function SupportPage() {
             {/* Authentication Issues */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Shield className="w-6 h-6 text-red-500 mr-3" />
+                <Shield className="w-6 h-6 text-purple-500 mr-3" />
                 <h3 className="text-xl font-semibold">Authentication Issues</h3>
               </div>
               
               <div className="space-y-4">
-                <div className="border-l-4 border-l-red-200 pl-4">
-                  <h4 className="font-semibold text-red-700 dark:text-red-400">Can't log in / "Invalid credentials"</h4>
+                <div className="border-l-4 border-l-purple-200 pl-4">
+                  <h4 className="font-semibold text-purple-700 dark:text-purple-400">Can't log in / "Invalid credentials"</h4>
                   <ul className="text-sm text-gray-600 dark:text-gray-300 mt-2 space-y-1">
                     <li>• Check your email and password are correct</li>
                     <li>• Try resetting your password</li>
@@ -210,8 +210,8 @@ export default function SupportPage() {
                   </ul>
                 </div>
                 
-                <div className="border-l-4 border-l-red-200 pl-4">
-                  <h4 className="font-semibold text-red-700 dark:text-red-400">Email verification not received</h4>
+                <div className="border-l-4 border-l-purple-200 pl-4">
+                  <h4 className="font-semibold text-purple-700 dark:text-purple-400">Email verification not received</h4>
                   <ul className="text-sm text-gray-600 dark:text-gray-300 mt-2 space-y-1">
                     <li>• Check your spam/junk folder</li>
                     <li>• Add support@bizbot.store to your contacts</li>
@@ -225,13 +225,13 @@ export default function SupportPage() {
             {/* Agent Execution Issues */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Zap className="w-6 h-6 text-orange-500 mr-3" />
+                <Zap className="w-6 h-6 text-blue-500 mr-3" />
                 <h3 className="text-xl font-semibold">Agent Execution Issues</h3>
               </div>
               
               <div className="space-y-4">
-                <div className="border-l-4 border-l-orange-200 pl-4">
-                  <h4 className="font-semibold text-orange-700 dark:text-orange-400">Agent not responding / Timeout</h4>
+                <div className="border-l-4 border-l-blue-200 pl-4">
+                  <h4 className="font-semibold text-blue-700 dark:text-blue-400">Agent not responding / Timeout</h4>
                   <ul className="text-sm text-gray-600 dark:text-gray-300 mt-2 space-y-1">
                     <li>• Check your internet connection</li>
                     <li>• Try a simpler task first</li>
@@ -240,8 +240,8 @@ export default function SupportPage() {
                   </ul>
                 </div>
                 
-                <div className="border-l-4 border-l-orange-200 pl-4">
-                  <h4 className="font-semibold text-orange-700 dark:text-orange-400">Poor agent responses</h4>
+                <div className="border-l-4 border-l-blue-200 pl-4">
+                  <h4 className="font-semibold text-blue-700 dark:text-blue-400">Poor agent responses</h4>
                   <ul className="text-sm text-gray-600 dark:text-gray-300 mt-2 space-y-1">
                     <li>• Be more specific in your instructions</li>
                     <li>• Provide more context and examples</li>
@@ -406,8 +406,8 @@ export default function SupportPage() {
 
             {/* Email Support */}
             <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-6 h-6 text-green-600 dark:text-green-400" />
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Email Support</h3>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
