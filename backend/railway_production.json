@@ -1,0 +1,59 @@
+# Enterprise API Deployment Configuration
+# Production-ready for Railway deployment
+
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "pip install -r requirements_production.txt"
+  },
+  "deploy": {
+    "startCommand": "python main_enterprise.py",
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10,
+    "workers": 4
+  },
+  "environments": {
+    "production": {
+      "variables": {
+        "PYTHON_VERSION": "3.9",
+        "ENVIRONMENT": "production",
+        "LOG_LEVEL": "INFO",
+        "DEBUG": "false",
+        "WORKERS": "4",
+        "HOST": "0.0.0.0",
+        "PORT": "$PORT"
+      }
+    }
+  },
+  "services": {
+    "postgresql": {
+      "type": "postgresql",
+      "version": "15"
+    },
+    "redis": {
+      "type": "redis",
+      "version": "7.0"
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics": true,
+    "logs": true,
+    "tracing": true
+  },
+  "security": {
+    "https": true,
+    "cors": true,
+    "rate_limiting": true,
+    "authentication": true
+  },
+  "scaling": {
+    "auto_scaling": true,
+    "min_instances": 1,
+    "max_instances": 10,
+    "cpu_threshold": 70,
+    "memory_threshold": 80
+  }
+}

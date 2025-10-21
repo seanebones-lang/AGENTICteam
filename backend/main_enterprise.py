@@ -18,7 +18,7 @@ from fastapi.openapi.utils import get_openapi
 
 import uvicorn
 from pydantic import BaseModel, Field, validator
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings
 import redis
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, Float, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -144,7 +144,7 @@ class ExecutionHistory(Base):
 # Pydantic Models
 class UserCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
-    email: str = Field(..., regex=r'^[\w\.-]+@[\w\.-]+\.\w+$')
+    email: str = Field(..., pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$')
     password: str = Field(..., min_length=8)
     
     @validator('password')
@@ -171,7 +171,7 @@ class Token(BaseModel):
 class AgentExecution(BaseModel):
     package_id: str = Field(..., min_length=1)
     task: str = Field(..., min_length=1, max_length=10000)
-    engine_type: str = Field(default="crewai", regex=r'^(crewai|langgraph|langchain)$')
+    engine_type: str = Field(default="crewai", pattern=r'^(crewai|langgraph|langchain)$')
 
 class ExecutionResult(BaseModel):
     success: bool
