@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/badge'
@@ -19,6 +19,8 @@ import {
   CheckCircle
 } from 'lucide-react'
 import Link from 'next/link'
+import { apiService, Agent } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 
 const agents = [
   {
@@ -143,11 +145,37 @@ const agents = [
   },
 ]
 
-const categories = ['All', 'Security', 'Operations', 'Support', 'Data', 'DevOps', 'Analytics', 'Compliance', 'AI', 'Automation']
+// Mock agents as fallback
+const mockAgents = agents
 
 export default function AgentsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [agents, setAgents] = useState<Agent[]>([])
+  const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const loadAgents = async () => {
+      try {
+        const response = await apiService.getAgents()
+        setAgents(response.packages)
+      } catch (error) {
+        console.error('Failed to load agents:', error)
+        toast({
+          title: "Failed to load agents",
+          description: "Using mock data instead",
+          variant: "destructive",
+        })
+        // Fallback to mock data
+        setAgents(mockAgents)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadAgents()
+  }, [toast])
 
   const filteredAgents = agents.filter(agent => {
     const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -155,6 +183,8 @@ export default function AgentsPage() {
     const matchesCategory = selectedCategory === 'All' || agent.category === selectedCategory
     return matchesSearch && matchesCategory
   })
+
+  const categories = ['All', ...Array.from(new Set(agents.map(agent => agent.category)))]
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -194,9 +224,18 @@ export default function AgentsPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading agents...</p>
+          </div>
+        )}
+
         {/* Agent Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredAgents.map((agent) => {
+        {!loading && (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredAgents.map((agent) => {
             const Icon = agent.icon
             return (
               <Card key={agent.id} className="p-6 hover:shadow-lg transition-shadow">
@@ -266,9 +305,10 @@ export default function AgentsPage() {
               </Card>
             )
           })}
-        </div>
+          </div>
+        )}
 
-        {filteredAgents.length === 0 && (
+        {!loading && filteredAgents.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-600 dark:text-gray-400">
               No agents found matching your criteria.

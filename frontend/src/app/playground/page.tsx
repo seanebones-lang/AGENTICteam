@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Play, Loader2, CheckCircle, XCircle, Clock, Zap } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { apiService } from '@/lib/api'
 
 const mockAgents = [
   { id: 'security-scanner', name: 'Security Scanner' },
@@ -121,23 +122,13 @@ function PlaygroundContent() {
         }
       } else {
         // Live mode - call actual API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/agents/${selectedAgent}/execute`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            package_id: selectedAgent,
-            task: JSON.parse(input).task || 'Execute agent task',
-            engine_type: JSON.parse(input).engine_type || 'crewai',
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const data = await response.json()
+        const inputData = JSON.parse(input)
+        const data = await apiService.executeAgent(
+          selectedAgent,
+          inputData.task || 'Execute agent task',
+          inputData.engine_type || 'crewai'
+        )
+        
         setOutput(JSON.stringify(data, null, 2))
         setExecutionStatus('success')
         setExecutionTime(Date.now() - startTime)

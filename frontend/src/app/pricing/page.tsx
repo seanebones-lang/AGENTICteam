@@ -1,42 +1,57 @@
-import Link from 'next/link'
+'use client'
+
+import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/badge'
-import { Check, Zap, Star, Crown, Sparkles, Gem, Key } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Slider } from '@/components/ui/slider'
+import { 
+  Check, 
+  DollarSign, 
+  Shield, 
+  Zap, 
+  Clock, 
+  Users, 
+  Phone,
+  Mail,
+  ExternalLink,
+  Calculator,
+  TrendingUp,
+  Award
+} from 'lucide-react'
+import Link from 'next/link'
+import { useToast } from '@/hooks/use-toast'
 
-const tiers = [
+const pricingTiers = [
   {
     name: 'Solo',
-    icon: Zap,
-    price: 0.005,
-    priceDisplay: '$0.005',
-    unit: 'per execution',
+    pricePerExecution: 0.005,
+    minExecutions: 5,
+    minCost: 0.025,
     description: 'Perfect for individual developers and testing',
     features: [
-      '5,000 included tokens',
+      '5,000 included tokens (free tier)',
       'Claude Haiku 3.5',
       '100K context window',
       '2K max output tokens',
       'Email support',
       'Basic analytics',
       'API access',
-      'Community access',
+      'Community access'
     ],
-    limits: {
-      rateLimit: '10 requests/min',
-      teamSize: '1 user',
-      sla: 'None',
-    },
-    cta: 'Start Free',
     popular: false,
-    savings: '5% below market',
+    sla: 'None',
+    rateLimit: '10 requests/min',
+    teamSize: '1 user',
+    cta: 'Start Free',
+    color: 'gray'
   },
   {
     name: 'Basic',
-    icon: Zap,
-    price: 0.0095,
-    priceDisplay: '$0.0095',
-    unit: 'per execution',
+    pricePerExecution: 0.0095,
+    minExecutions: 8,
+    minCost: 0.076,
     description: 'Fast and economical for simple tasks',
     features: [
       '10,000 included tokens',
@@ -46,23 +61,20 @@ const tiers = [
       'Email support',
       'Webhook integrations',
       'Advanced analytics',
-      'API access',
+      'API access'
     ],
-    limits: {
-      rateLimit: '60 requests/min',
-      teamSize: '3 users',
-      sla: '99% uptime',
-    },
-    cta: 'Get Started',
     popular: false,
-    savings: '5% below market',
+    sla: '99% uptime',
+    rateLimit: '60 requests/min',
+    teamSize: '3 users',
+    cta: 'Get Started',
+    color: 'blue'
   },
   {
     name: 'Silver',
-    icon: Star,
-    price: 0.038,
-    priceDisplay: '$0.038',
-    unit: 'per execution',
+    pricePerExecution: 0.038,
+    minExecutions: 12,
+    minCost: 0.456,
     description: 'Enhanced features for growing teams',
     features: [
       '15,000 included tokens',
@@ -73,23 +85,20 @@ const tiers = [
       'Advanced analytics',
       'Webhook integrations',
       'Team collaboration',
-      'Custom workflows',
+      'Custom workflows'
     ],
-    limits: {
-      rateLimit: '120 requests/min',
-      teamSize: '5 users',
-      sla: '99.5% uptime',
-    },
-    cta: 'Get Started',
     popular: false,
-    savings: '5% below market',
+    sla: '99.5% uptime',
+    rateLimit: '120 requests/min',
+    teamSize: '5 users',
+    cta: 'Get Started',
+    color: 'silver'
   },
   {
     name: 'Standard',
-    icon: Sparkles,
-    price: 0.0475,
-    priceDisplay: '$0.0475',
-    unit: 'per execution',
+    pricePerExecution: 0.0475,
+    minExecutions: 15,
+    minCost: 0.7125,
     description: 'Balanced performance for most workloads',
     features: [
       '20,000 included tokens',
@@ -101,23 +110,20 @@ const tiers = [
       'Webhook integrations',
       'Usage analytics',
       'Team collaboration',
-      'Multi-region deployment',
+      'Multi-region deployment'
     ],
-    limits: {
-      rateLimit: '300 requests/min',
-      teamSize: '10 users',
-      sla: '99.9% uptime',
-    },
-    cta: 'Get Started',
     popular: true,
-    savings: 'Recommended',
+    sla: '99.9% uptime',
+    rateLimit: '300 requests/min',
+    teamSize: '10 users',
+    cta: 'Get Started',
+    color: 'blue'
   },
   {
     name: 'Premium',
-    icon: Crown,
-    price: 0.076,
-    priceDisplay: '$0.076',
-    unit: 'per execution',
+    pricePerExecution: 0.076,
+    minExecutions: 20,
+    minCost: 1.52,
     description: 'Advanced agents and complex orchestration',
     features: [
       '25,000 included tokens',
@@ -129,23 +135,20 @@ const tiers = [
       'Multi-agent workflows',
       'Custom integrations',
       'Dedicated account manager',
-      'Priority processing',
+      'Priority processing'
     ],
-    limits: {
-      rateLimit: '600 requests/min',
-      teamSize: '25 users',
-      sla: '99.95% uptime',
-    },
-    cta: 'Get Started',
     popular: false,
-    savings: '5% below market',
+    sla: '99.95% uptime',
+    rateLimit: '600 requests/min',
+    teamSize: '25 users',
+    cta: 'Get Started',
+    color: 'purple'
   },
   {
     name: 'Elite',
-    icon: Gem,
-    price: 0.2375,
-    priceDisplay: '$0.2375',
-    unit: 'per execution',
+    pricePerExecution: 0.19,
+    minExecutions: 25,
+    minCost: 4.75,
     description: 'Maximum intelligence for mission-critical tasks',
     features: [
       '30,000 included tokens',
@@ -158,315 +161,399 @@ const tiers = [
       'Security audits',
       'Custom SLAs',
       'Dedicated infrastructure',
-      'Advanced security',
+      'Advanced security'
     ],
-    limits: {
-      rateLimit: '1200 requests/min',
-      teamSize: 'Unlimited',
-      sla: '99.99% uptime',
-    },
+    popular: false,
+    sla: '99.99% uptime',
+    rateLimit: '1200 requests/min',
+    teamSize: 'Unlimited',
     cta: 'Contact Sales',
-    popular: false,
-    savings: '5% below market',
-  },
-  {
-    name: 'BYOK',
-    icon: Key,
-    price: 0.002,
-    priceDisplay: '$0.002',
-    unit: 'platform fee',
-    description: 'Bring Your Own Anthropic API Key',
-    features: [
-      'Unlimited tokens (your Anthropic plan)',
-      'All Claude models',
-      '200K context window',
-      '8K max output tokens',
-      'Zero markup on tokens',
-      'Direct Anthropic billing',
-      'Full platform access',
-      'Enterprise support',
-      'Custom integrations',
-      'Priority processing',
-    ],
-    limits: {
-      rateLimit: 'Custom',
-      teamSize: 'Unlimited',
-      sla: 'Custom',
-    },
-    cta: 'Learn More',
-    popular: false,
-    savings: 'Lowest fees in industry',
-    highlight: true,
-  },
+    color: 'gold'
+  }
 ]
 
-const volumeDiscounts = [
-  {
-    volume: '10,000+ executions/month',
-    discount: '10-11% off',
-    description: 'Automatic volume discounts applied',
-  },
-  {
-    volume: '100,000+ executions/month',
-    discount: 'Custom pricing',
-    description: 'Contact sales for enterprise rates',
-  },
-  {
-    volume: 'Annual billing',
-    discount: '20% off',
-    description: 'Save 20% when you pay annually',
-  },
-]
-
-const costComparison = [
-  { executions: '1,000', solo: '$8', basic: '$12', silver: '$45', standard: '$56', premium: '$84', elite: '$280', byok: '$12.50*' },
-  { executions: '10,000', solo: '$80', basic: '$120', silver: '$450', standard: '$560', premium: '$840', elite: '$2,800', byok: '$125*' },
-  { executions: '100,000', solo: '$800', basic: '$1,200', silver: '$4,500', standard: '$5,600', premium: '$8,400', elite: '$28,000', byok: '$1,250*' },
+const costExamples = [
+  { executions: 5, label: 'Minimum Load' },
+  { executions: 1000, label: '1,000' },
+  { executions: 10000, label: '10,000' },
+  { executions: 100000, label: '100,000' }
 ]
 
 export default function PricingPage() {
+  const [calculatorExecutions, setCalculatorExecutions] = useState([1000])
+  const { toast } = useToast()
+
+  const calculateCost = (tier: typeof pricingTiers[0], executions: number) => {
+    const executionCost = executions * tier.pricePerExecution
+    return Math.max(executionCost, tier.minCost)
+  }
+
+  const handleGetStarted = (tierName: string) => {
+    toast({
+      title: "Getting Started",
+      description: `Redirecting to ${tierName} plan setup...`,
+    })
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+      <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
         {/* Header */}
-        <div className="mx-auto max-w-4xl text-center mb-16">
-          <Badge className="mb-4 bg-green-600 hover:bg-green-700">5% Below Market Rates</Badge>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
-            Transparent, Competitive Pricing
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            BizBot.store Pricing
           </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
-            7 tiers to fit every need. All pricing 5% below market with 14% markup (vs 20% industry standard).
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-6 max-w-3xl mx-auto">
+            Transparent, competitive pricing—5% below market with 14% markup (vs. 20% industry standard). 
+            No hidden fees. Pay only for what you use with minimum execution loads to ensure platform reliability.
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            No hidden fees. No monthly minimums. Pay only for what you use.
-          </p>
-        </div>
-
-        {/* Pricing Tiers - Horizontal Scroll on Mobile */}
-        <div className="mb-16">
-          <div className="overflow-x-auto pb-4">
-            <div className="inline-flex gap-6 lg:grid lg:grid-cols-4 min-w-max lg:min-w-0">
-              {tiers.map((tier) => {
-                const Icon = tier.icon
-                return (
-                  <Card
-                    key={tier.name}
-                    className={`relative p-6 w-72 lg:w-auto ${
-                      tier.popular
-                        ? 'ring-2 ring-blue-600 shadow-xl scale-105'
-                        : tier.highlight
-                        ? 'ring-2 ring-yellow-500 shadow-xl'
-                        : ''
-                    }`}
-                  >
-                    {tier.popular && (
-                      <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600">
-                        Recommended
-                      </Badge>
-                    )}
-                    {tier.highlight && (
-                      <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-600">
-                        Enterprise
-                      </Badge>
-                    )}
-                    
-                    <div className="mb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Icon className="h-5 w-5 text-blue-600" />
-                        <h3 className="text-xl font-bold">{tier.name}</h3>
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {tier.description}
-                      </p>
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-bold">{tier.priceDisplay}</span>
-                      </div>
-                      <span className="text-xs text-gray-600 dark:text-gray-400">{tier.unit}</span>
-                      <div className="mt-1">
-                        <Badge variant="secondary" className="text-xs">
-                          {tier.savings}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <Button
-                      className="w-full mb-4 text-sm"
-                      variant={tier.popular ? 'default' : 'outline'}
-                    >
-                      <Link href={tier.name === 'BYOK' ? '/docs/api/auth' : tier.name === 'Elite' ? 'https://bizbot.store' : '/signup'}>
-                        {tier.cta}
-                      </Link>
-                    </Button>
-
-                    <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                      <div className="text-xs space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">Rate Limit:</span>
-                          <span className="font-semibold">{tier.limits.rateLimit}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">Team Size:</span>
-                          <span className="font-semibold">{tier.limits.teamSize}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">SLA:</span>
-                          <span className="font-semibold">{tier.limits.sla}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <ul className="space-y-2">
-                      {tier.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2">
-                          <Check className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-xs text-gray-700 dark:text-gray-300">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Card>
-                )
-              })}
+          
+          {/* Key Benefits */}
+          <div className="flex flex-wrap justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-sm">
+              <Shield className="h-5 w-5 text-green-600" />
+              <span>99.999% uptime</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Zap className="h-5 w-5 text-blue-600" />
+              <span>45ms latency</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Award className="h-5 w-5 text-purple-600" />
+              <span>500k+ daily tasks</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <TrendingUp className="h-5 w-5 text-orange-600" />
+              <span>5% below market</span>
             </div>
           </div>
         </div>
 
-        {/* Cost Comparison Table */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Monthly Cost Examples</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Based on average 1,000 input + 500 output tokens per execution
+        {/* ROI Calculator */}
+        <div className="mb-12 bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
+              <Calculator className="h-6 w-6" />
+              ROI Calculator
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              See how much you can save vs. hiring a $120k/year engineer
             </p>
           </div>
+          
+          <div className="max-w-md mx-auto">
+            <label className="block text-sm font-medium mb-2">
+              Monthly Executions: {calculatorExecutions[0].toLocaleString()}
+            </label>
+            <Slider
+              value={calculatorExecutions}
+              onValueChange={setCalculatorExecutions}
+              max={100000}
+              min={5}
+              step={100}
+              className="mb-6"
+            />
+            
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Traditional Hiring</p>
+                <p className="text-2xl font-bold text-red-600">$10,000/mo</p>
+                <p className="text-xs text-gray-500">$120k salary + benefits</p>
+              </div>
+              <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">BizBot.store (Standard)</p>
+                <p className="text-2xl font-bold text-green-600">
+                  ${calculateCost(pricingTiers[3], calculatorExecutions[0]).toFixed(0)}/mo
+                </p>
+                <p className="text-xs text-gray-500">
+                  Save ${(10000 - calculateCost(pricingTiers[3], calculatorExecutions[0])).toFixed(0)}/month
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <Card className="p-6 overflow-x-auto">
+        {/* Pricing Tiers */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {pricingTiers.map((tier) => (
+            <Card 
+              key={tier.name} 
+              className={`p-8 relative ${
+                tier.popular 
+                  ? 'border-2 border-blue-500 shadow-xl scale-105 bg-gradient-to-b from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800' 
+                  : 'border border-gray-200 hover:shadow-lg transition-shadow'
+              }`}
+            >
+              {tier.popular && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-blue-500 text-white px-4 py-1 text-sm font-medium">
+                    Recommended
+                  </Badge>
+                </div>
+              )}
+              
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+                <div className="mb-3">
+                  <p className="text-3xl font-bold text-blue-600">
+                    ${tier.pricePerExecution.toFixed(4)}
+                    <span className="text-sm text-gray-500 font-normal"> per execution</span>
+                  </p>
+                  {tier.name !== 'Solo' && (
+                    <p className="text-sm text-green-600 font-medium">
+                      5% below market
+                    </p>
+                  )}
+                </div>
+                <p className="text-sm font-medium text-orange-600 mb-3">
+                  Minimum: {tier.minExecutions} executions/month
+                </p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {tier.description}
+                </p>
+              </div>
+
+              {/* Tier Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                <div>
+                  <p className="text-gray-500">Rate Limit</p>
+                  <p className="font-medium">{tier.rateLimit}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Team Size</p>
+                  <p className="font-medium">{tier.teamSize}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500">SLA</p>
+                  <p className="font-medium">{tier.sla}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Min Cost</p>
+                  <p className="font-medium">${tier.minCost.toFixed(2)}/mo</p>
+                </div>
+              </div>
+
+              {/* Features */}
+              <ul className="space-y-3 mb-8">
+                {tier.features.map((feature, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA Button */}
+              <Button 
+                className="w-full py-3 text-lg font-medium" 
+                variant={tier.popular ? 'default' : 'outline'}
+                onClick={() => handleGetStarted(tier.name)}
+              >
+                {tier.cta}
+              </Button>
+            </Card>
+          ))}
+        </div>
+
+        {/* BYOK Enterprise Tier */}
+        <div className="mb-12">
+          <Card className="p-8 border-2 border-dashed border-purple-300 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-3 text-purple-700">Enterprise BYOK</h3>
+              <p className="text-xl font-bold text-purple-600 mb-2">
+                $0.002 platform fee per execution
+              </p>
+              <p className="text-sm text-gray-500 mb-3">Lowest fees in industry</p>
+              <p className="text-lg font-medium text-green-600 mb-4">
+                No minimum executions
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                  <p className="text-gray-500 text-sm">Rate Limit</p>
+                  <p className="font-bold">Custom</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Team Size</p>
+                  <p className="font-bold">Unlimited</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">SLA</p>
+                  <p className="font-bold">Custom</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Tokens</p>
+                  <p className="font-bold">Unlimited</p>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3">Bring Your Own Anthropic API Key</h4>
+                <ul className="text-sm space-y-2 max-w-md mx-auto">
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    Zero markup on tokens
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    Direct Anthropic billing
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    Full platform access
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    Save 15-25% vs. Standard tier
+                  </li>
+                </ul>
+              </div>
+
+              <Button size="lg" variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50">
+                Learn More About BYOK
+              </Button>
+            </div>
+          </Card>
+        </div>
+
+        {/* Cost Comparison Table */}
+        <div className="mb-12 bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+          <h2 className="text-2xl font-bold text-center mb-6">Monthly Cost Examples</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
+            Based on average 1,000 input + 500 output tokens per execution, including minimum loads
+          </p>
+          
+          <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 font-semibold">Executions/Month</th>
-                  <th className="text-right py-3 px-4 font-semibold">Solo</th>
-                  <th className="text-right py-3 px-4 font-semibold">Basic</th>
-                  <th className="text-right py-3 px-4 font-semibold">Silver</th>
-                  <th className="text-right py-3 px-4 font-semibold bg-blue-50 dark:bg-blue-900/20">Standard</th>
-                  <th className="text-right py-3 px-4 font-semibold">Premium</th>
-                  <th className="text-right py-3 px-4 font-semibold">Elite</th>
-                  <th className="text-right py-3 px-4 font-semibold bg-yellow-50 dark:bg-yellow-900/20">BYOK</th>
+                <tr className="border-b">
+                  <th className="text-left py-3 px-4">Executions/Month</th>
+                  {pricingTiers.map((tier) => (
+                    <th key={tier.name} className="text-center py-3 px-4">{tier.name}</th>
+                  ))}
+                  <th className="text-center py-3 px-4">BYOK</th>
                 </tr>
               </thead>
               <tbody>
-                {costComparison.map((row, idx) => (
-                  <tr key={idx} className="border-b border-gray-100 dark:border-gray-800">
-                    <td className="py-3 px-4 font-semibold">{row.executions}</td>
-                    <td className="text-right py-3 px-4">{row.solo}</td>
-                    <td className="text-right py-3 px-4">{row.basic}</td>
-                    <td className="text-right py-3 px-4">{row.silver}</td>
-                    <td className="text-right py-3 px-4 bg-blue-50 dark:bg-blue-900/20 font-semibold">{row.standard}</td>
-                    <td className="text-right py-3 px-4">{row.premium}</td>
-                    <td className="text-right py-3 px-4">{row.elite}</td>
-                    <td className="text-right py-3 px-4 bg-yellow-50 dark:bg-yellow-900/20 font-semibold">{row.byok}</td>
+                {costExamples.map((example) => (
+                  <tr key={example.executions} className="border-b hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="py-3 px-4 font-medium">{example.label}</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.name} className="text-center py-3 px-4">
+                        <span className="font-bold">
+                          ${calculateCost(tier, example.executions === 5 ? tier.minExecutions : example.executions).toFixed(2)}
+                        </span>
+                        {example.executions === 5 && (
+                          <span className="block text-xs text-gray-500">
+                            ({tier.minExecutions} execs)
+                          </span>
+                        )}
+                      </td>
+                    ))}
+                    <td className="text-center py-3 px-4">
+                      <span className="font-bold">
+                        ${(example.executions * 0.002 + (example.executions * 0.0125)).toFixed(2)}*
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-4">
-              * BYOK pricing includes $0.002 platform fee + Anthropic token costs (paid directly to Anthropic)
-            </p>
-          </Card>
+          </div>
+          
+          <p className="text-xs text-gray-500 mt-4">
+            *BYOK pricing: $0.002 platform fee + Anthropic token costs (paid directly to Anthropic, ~$0.003–$0.015/token).
+          </p>
         </div>
 
         {/* Volume Discounts */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Volume Discounts</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Save more as you scale
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {volumeDiscounts.map((discount) => (
-              <Card key={discount.volume} className="p-6 text-center">
-                <h3 className="text-xl font-semibold mb-2">{discount.volume}</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-2">{discount.discount}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{discount.description}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* FAQ */}
-        <div className="mx-auto max-w-3xl mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
-          <div className="space-y-6">
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Why are your prices 5% below market?</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                We believe in transparent, competitive pricing. By operating efficiently with a 14% markup (vs 20% industry standard), we pass the savings directly to you while maintaining premium service quality.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">What is BYOK (Bring Your Own Key)?</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                BYOK allows you to use your own Anthropic API key. You pay us only $0.002 per execution for platform access, and pay Anthropic directly for token usage at their standard rates. Perfect for enterprise customers with existing Anthropic contracts.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Can I switch tiers anytime?</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                Yes! You can change tiers at any time. Since pricing is per-execution, you'll automatically use the new tier's rates for subsequent requests. No contracts, no lock-in.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">What payment methods do you accept?</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                We accept all major credit cards (Visa, Mastercard, Amex), ACH transfers, wire transfers, and purchase orders for enterprise accounts. All payments are processed securely through Stripe.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Do you offer annual discounts?</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                Yes! Save 20% when you commit to annual billing. Volume discounts (10-11% off) automatically apply at 10K+ executions/month. Contact sales for custom enterprise pricing at 100K+ executions.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Which tier should I choose?</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong>Solo:</strong> Testing and prototyping | <strong>Basic:</strong> Simple, high-volume tasks | <strong>Silver:</strong> Growing teams | <strong>Standard:</strong> Most users (recommended) | <strong>Premium:</strong> Complex agents | <strong>Elite:</strong> Mission-critical | <strong>BYOK:</strong> Enterprise with existing Anthropic contracts
-              </p>
-            </Card>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center">
-          <Card className="p-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
-            <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-              Start with our Solo tier for free, or choose the plan that fits your needs.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg">
-                <Link href="/signup">Get Started Free</Link>
-              </Button>
-              <Button size="lg" variant="outline">
-                <Link href="https://bizbot.store" target="_blank">Contact Sales</Link>
-              </Button>
-              <Button size="lg" variant="outline">
-                <Link href="/docs/api/auth">View API Docs</Link>
-              </Button>
+        <div className="mb-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white">
+          <h2 className="text-2xl font-bold text-center mb-8">Volume Discounts</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">10-11%</div>
+              <div className="text-lg font-semibold mb-2">Volume Discount</div>
+              <div className="text-sm opacity-90">10,000+ executions/month</div>
+              <div className="text-xs opacity-75">Auto-applied</div>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-6">
-              Questions? Call us at <a href="tel:+18176759898" className="font-semibold text-blue-600 hover:underline">(817) 675-9898</a> or visit <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-600 hover:underline">bizbot.store</a>
-            </p>
-          </Card>
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">Custom</div>
+              <div className="text-lg font-semibold mb-2">Enterprise Pricing</div>
+              <div className="text-sm opacity-90">100,000+ executions/month</div>
+              <div className="text-xs opacity-75">Contact sales</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">20%</div>
+              <div className="text-lg font-semibold mb-2">Annual Discount</div>
+              <div className="text-sm opacity-90">All tiers</div>
+              <div className="text-xs opacity-75">Billed annually</div>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="mb-12 bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+          <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="font-semibold mb-3">Why minimum execution loads?</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                Minimums ensure platform reliability while keeping costs low. Solo's free tier transitions to 5 executions/month post-trial; other tiers start at 8–25 executions to cover compute and support.
+              </p>
+              
+              <h3 className="font-semibold mb-3">Why are your prices 5% below market?</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                Our 14% markup (vs. 20% industry standard) and efficient operations let us pass savings to you while delivering premium performance (99.999% uptime, 45ms latency).
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-3">Can I switch tiers anytime?</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                Yes! Change tiers anytime; new rates apply instantly. Minimum loads adjust with tier changes. No contracts, no lock-in.
+              </p>
+              
+              <h3 className="font-semibold mb-3">What payment methods do you accept?</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                Credit cards (Visa, Mastercard, Amex), ACH, wire transfers, and purchase orders for enterprise accounts, processed securely via Stripe.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-12">
+          <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            Start free with Solo or choose your tier.
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <Button size="lg" asChild>
+              <Link href="/agents">Get Started Free</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/contact">Contact Sales</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/docs">View API Docs</Link>
+            </Button>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              <span>(817) 675-9898</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              <span>support@bizbot.store</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ExternalLink className="h-4 w-4" />
+              <span>bizbot.store</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -24,6 +24,8 @@ import {
   Star
 } from 'lucide-react'
 import Link from 'next/link'
+import { AddToDashboardButton } from '@/components/AddToDashboardButton'
+import { ViewPricingButton } from '@/components/ViewPricingButton'
 
 const agentDetails = {
   'security-scanner': {
@@ -303,12 +305,18 @@ export default function AgentDetailPage() {
               Test Agent
             </Button>
           </Link>
-          <Button variant="outline" size="lg">
-            Add to Dashboard
-          </Button>
-          <Button variant="outline" size="lg">
-            View Pricing
-          </Button>
+          <AddToDashboardButton 
+            agentId={agent.id} 
+            agentName={agent.name}
+            variant="outline"
+            size="lg"
+          />
+          <ViewPricingButton 
+            agentId={agent.id} 
+            agentName={agent.name}
+            variant="outline"
+            size="lg"
+          />
         </div>
 
         {/* Tabs */}
