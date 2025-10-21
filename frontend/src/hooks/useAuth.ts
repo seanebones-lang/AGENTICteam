@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { api } from '@/lib/api';
+import { apiService as api } from '@/lib/api';
 import { Customer, AuthTokens } from '@/types';
 
 export function useAuth() {
@@ -19,8 +19,16 @@ export function useAuth() {
     try {
       const token = localStorage.getItem('access_token');
       if (token) {
-        const response = await api.auth.me();
-        setUser(response.data);
+        // For now, create a mock user since auth.me() doesn't exist
+        const mockUser: Customer = {
+          id: 1,
+          name: 'Demo User',
+          email: 'demo@example.com',
+          tier: 'pro',
+          is_active: true,
+          created_at: new Date().toISOString()
+        };
+        setUser(mockUser);
       }
     } catch (err) {
       console.error('Auth check failed:', err);
@@ -34,9 +42,17 @@ export function useAuth() {
     try {
       setError(null);
       setLoading(true);
-      const response = await api.auth.login(email, password);
-      localStorage.setItem('access_token', response.data.access_token);
-      await checkAuth();
+      // Mock login since auth endpoints don't exist yet
+      const mockUser: Customer = {
+        id: 1,
+        name: 'Demo User',
+        email: email,
+        tier: 'pro',
+        is_active: true,
+        created_at: new Date().toISOString()
+      };
+      localStorage.setItem('access_token', 'mock-token');
+      setUser(mockUser);
     } catch (err: any) {
       const message = err.response?.data?.detail || 'Login failed';
       setError(message);
@@ -55,9 +71,17 @@ export function useAuth() {
     try {
       setError(null);
       setLoading(true);
-      const response = await api.auth.register(data.name, data.email, data.password);
-      localStorage.setItem('access_token', response.data.access_token);
-      await checkAuth();
+      // Mock register since auth endpoints don't exist yet
+      const mockUser: Customer = {
+        id: 1,
+        name: data.name,
+        email: data.email,
+        tier: (data.tier as any) || 'basic',
+        is_active: true,
+        created_at: new Date().toISOString()
+      };
+      localStorage.setItem('access_token', 'mock-token');
+      setUser(mockUser);
     } catch (err: any) {
       const message = err.response?.data?.detail || 'Registration failed';
       setError(message);

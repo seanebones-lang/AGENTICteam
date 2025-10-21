@@ -3,11 +3,11 @@
  */
 
 import { useState, useEffect } from 'react';
-import { apiService as api } from '@/lib/api';
-import { AgentPackage, Category } from '@/types';
+import { apiService as api, Agent } from '@/lib/api';
+import { Category } from '@/types';
 
 export function useAgents(category?: string) {
-  const [packages, setPackages] = useState<AgentPackage[]>([]);
+  const [packages, setPackages] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,7 +39,7 @@ export function useAgents(category?: string) {
 }
 
 export function useAgent(packageId: string) {
-  const [agent, setAgent] = useState<AgentPackage | null>(null);
+  const [agent, setAgent] = useState<Agent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
