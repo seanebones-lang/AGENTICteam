@@ -302,7 +302,7 @@ export default function AgentDetailPage() {
           <Link href={`/playground?agent=${agent.id}`}>
             <Button size="lg" className="flex items-center gap-2">
               <Play className="h-5 w-5" />
-              Test Agent
+              Activate Agent
             </Button>
           </Link>
           <AddToDashboardButton 

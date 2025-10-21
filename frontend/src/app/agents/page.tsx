@@ -289,7 +289,7 @@ export default function AgentsPage() {
                 <div className="flex gap-2">
                   <Button asChild className="flex-1">
                     <Link href={`/playground?agent=${agent.id}`}>
-                      Try Now
+                      Activate Now
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
