@@ -30,56 +30,46 @@ const mockScenarios = {
   'security-scanner': {
     title: 'Scan Web Application',
     input: JSON.stringify({
-      target_url: 'https://example.com',
-      scan_type: 'full',
-      include_owasp_top_10: true
+      package_id: 'security-scanner',
+      task: 'Scan https://example.com for vulnerabilities',
+      engine_type: 'crewai'
     }, null, 2),
     expectedOutput: {
-      vulnerabilities_found: 3,
-      critical: 0,
-      high: 1,
-      medium: 2,
-      low: 0,
-      scan_duration: '2.3s',
-      compliance_score: 98.5
+      success: true,
+      result: "Agent 'Security Scanner Agent' executed successfully!\n\nTask: Scan https://example.com for vulnerabilities\nEngine: crewai\nExecution ID: mock-execution-id\n\nResult: Task completed with 100% success rate. All objectives achieved.",
+      execution_id: 'mock-execution-id',
+      execution_time: 2.3,
+      tokens_used: 45
     }
   },
   'ticket-resolver': {
     title: 'Classify Support Ticket',
     input: JSON.stringify({
-      ticket_id: 'TKT-12345',
-      subject: 'Unable to login to dashboard',
-      description: 'User reports getting 500 error when trying to access the admin dashboard',
-      customer_tier: 'gold'
+      package_id: 'ticket-resolver',
+      task: 'Classify support ticket: Unable to login to dashboard',
+      engine_type: 'crewai'
     }, null, 2),
     expectedOutput: {
-      category: 'Technical Issue',
-      priority: 'High',
-      assigned_team: 'Backend Engineering',
-      estimated_resolution: '2 hours',
-      suggested_actions: [
-        'Check server logs for 500 errors',
-        'Verify database connectivity',
-        'Review recent deployments'
-      ]
+      success: true,
+      result: "Agent 'Ticket Resolution Agent' executed successfully!\n\nTask: Classify support ticket: Unable to login to dashboard\nEngine: crewai\nExecution ID: mock-execution-id\n\nResult: Task completed with 100% success rate. All objectives achieved.",
+      execution_id: 'mock-execution-id',
+      execution_time: 1.2,
+      tokens_used: 38
     }
   },
   'knowledge-base': {
     title: 'Query Knowledge Base',
     input: JSON.stringify({
-      query: 'How do I configure multi-factor authentication?',
-      context: 'enterprise_security',
-      max_results: 3
+      package_id: 'knowledge-base',
+      task: 'Answer: How do I configure multi-factor authentication?',
+      engine_type: 'crewai'
     }, null, 2),
     expectedOutput: {
-      answer: 'To configure MFA, navigate to Settings > Security > Multi-Factor Authentication...',
-      confidence: 0.95,
-      sources: [
-        'Security Documentation - MFA Setup',
-        'Admin Guide - Authentication',
-        'Best Practices - Security'
-      ],
-      related_topics: ['SSO', 'Password Policies', 'Session Management']
+      success: true,
+      result: "Agent 'Knowledge Base Agent' executed successfully!\n\nTask: Answer: How do I configure multi-factor authentication?\nEngine: crewai\nExecution ID: mock-execution-id\n\nResult: Task completed with 100% success rate. All objectives achieved.",
+      execution_id: 'mock-execution-id',
+      execution_time: 0.9,
+      tokens_used: 52
     }
   }
 }
@@ -131,14 +121,15 @@ function PlaygroundContent() {
         }
       } else {
         // Live mode - call actual API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/marketplace/agents/execute`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/agents/${selectedAgent}/execute`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            agent_id: selectedAgent,
-            input: JSON.parse(input),
+            package_id: selectedAgent,
+            task: JSON.parse(input).task || 'Execute agent task',
+            engine_type: JSON.parse(input).engine_type || 'crewai',
           }),
         })
 
