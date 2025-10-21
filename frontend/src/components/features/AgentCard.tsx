@@ -4,8 +4,8 @@
 
 import { FC } from 'react';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../ui/card';
-import { Button } from '../ui/button';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { AgentPackage } from '@/types';
 
 interface AgentCardProps {

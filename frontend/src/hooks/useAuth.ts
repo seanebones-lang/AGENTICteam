@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { apiClient } from '@/lib/api';
+import { api } from '@/lib/api';
 import { Customer, AuthTokens } from '@/types';
 
 export function useAuth() {
@@ -19,13 +19,12 @@ export function useAuth() {
     try {
       const token = localStorage.getItem('access_token');
       if (token) {
-        apiClient.setToken(token);
-        const userData = await apiClient.getCurrentUser();
-        setUser(userData);
+        const response = await api.auth.me();
+        setUser(response.data);
       }
     } catch (err) {
       console.error('Auth check failed:', err);
-      apiClient.clearAuth();
+      localStorage.removeItem('access_token');
     } finally {
       setLoading(false);
     }
@@ -35,7 +34,8 @@ export function useAuth() {
     try {
       setError(null);
       setLoading(true);
-      await apiClient.login(email, password);
+      const response = await api.auth.login(email, password);
+      localStorage.setItem('access_token', response.data.access_token);
       await checkAuth();
     } catch (err: any) {
       const message = err.response?.data?.detail || 'Login failed';
@@ -55,14 +55,9 @@ export function useAuth() {
     try {
       setError(null);
       setLoading(true);
-      const response = await apiClient.register(data);
-      
-      // Auto-login after registration
-      if (response.api_key) {
-        apiClient.setApiKey(response.api_key);
-      }
-      
-      await login(data.email, data.password);
+      const response = await api.auth.register(data.name, data.email, data.password);
+      localStorage.setItem('access_token', response.data.access_token);
+      await checkAuth();
     } catch (err: any) {
       const message = err.response?.data?.detail || 'Registration failed';
       setError(message);
@@ -73,7 +68,7 @@ export function useAuth() {
   };
 
   const logout = () => {
-    apiClient.clearAuth();
+    localStorage.removeItem('access_token');
     setUser(null);
   };
 

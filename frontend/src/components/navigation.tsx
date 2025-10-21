@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Menu, X, Zap } from 'lucide-react'
 import { useState } from 'react'

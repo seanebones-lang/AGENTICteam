@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card'
+import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { Shield, Lock, Eye, Database, UserCheck, Globe } from 'lucide-react'

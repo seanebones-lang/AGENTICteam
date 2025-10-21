@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { apiClient } from '@/lib/api';
+import { api } from '@/lib/api';
 import { AgentPackage, Category } from '@/types';
 
 export function useAgents(category?: string) {
@@ -19,8 +19,8 @@ export function useAgents(category?: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiClient.getPackages(category);
-      setPackages(data);
+      const response = await api.packages.list({ category });
+      setPackages(response.data);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch packages');
     } finally {
@@ -51,8 +51,8 @@ export function useAgent(packageId: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiClient.getPackage(packageId);
-      setAgent(data);
+      const response = await api.packages.get(packageId);
+      setAgent(response.data);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch package');
     } finally {
@@ -81,8 +81,14 @@ export function useCategories() {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiClient.getCategories();
-      setCategories(data);
+      // For now, return mock categories since we don't have a categories endpoint
+      const mockCategories: Category[] = [
+        { id: 'security', name: 'Security', description: 'Security and compliance agents', icon: 'shield' },
+        { id: 'automation', name: 'Automation', description: 'Process automation agents', icon: 'zap' },
+        { id: 'analytics', name: 'Analytics', description: 'Data analysis agents', icon: 'bar-chart' },
+        { id: 'communication', name: 'Communication', description: 'Communication agents', icon: 'message-circle' },
+      ];
+      setCategories(mockCategories);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch categories');
     } finally {
@@ -113,9 +119,9 @@ export function useExecuteAgent() {
       setError(null);
       setResult(null);
       
-      const data = await apiClient.executePackage(packageId, task, engineType);
-      setResult(data);
-      return data;
+      const response = await api.agents.execute(packageId, { task, engine_type: engineType });
+      setResult(response.data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.detail || 'Execution failed';
       setError(message);

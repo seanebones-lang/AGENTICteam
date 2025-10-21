@@ -45,3 +45,4 @@ htmlcov/
 # Alembic
 alembic/versions/*.pyc
 
+.vercel

@@ -1,6 +1,6 @@
-import { Card } from '@/components/ui/card'
+import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
 import { Shield, CheckCircle, AlertTriangle } from 'lucide-react'
 
