@@ -118,51 +118,82 @@ export function SupportChatbot() {
     setMessages(prev => [...prev, newMessage])
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return
 
+    const userMessage = inputValue
+    
     // Add user message
     addMessage({
       type: 'user',
-      content: inputValue
+      content: userMessage
     })
 
-    // Simulate bot typing
+    // Show bot typing
     setIsTyping(true)
     setInputValue('')
 
-    // Simple keyword matching for responses
-    setTimeout(() => {
+    try {
+      // Call Claude API for intelligent response
+      const response = await fetch('/api/support-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          conversation_history: messages.slice(-5) // Send last 5 messages for context
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get response')
+      }
+
+      const data = await response.json()
+      
       setIsTyping(false)
       
-      const input = inputValue.toLowerCase()
-      let response: Message
+      // Add Claude's response
+      addMessage({
+        type: 'bot',
+        content: data.response,
+        options: data.suggested_actions || []
+      })
+
+    } catch (error) {
+      setIsTyping(false)
+      console.error('Chat error:', error)
+      
+      // Fallback to keyword matching if API fails
+      const input = userMessage.toLowerCase()
+      let fallbackResponse: Message
 
       if (input.includes('start') || input.includes('begin') || input.includes('new')) {
-        response = chatResponses.getting_started
+        fallbackResponse = chatResponses.getting_started
       } else if (input.includes('login') || input.includes('account') || input.includes('password')) {
-        response = chatResponses.account_issues
+        fallbackResponse = chatResponses.account_issues
       } else if (input.includes('agent') || input.includes('execute') || input.includes('run')) {
-        response = chatResponses.agent_problems
+        fallbackResponse = chatResponses.agent_problems
       } else if (input.includes('pay') || input.includes('bill') || input.includes('credit') || input.includes('price')) {
-        response = chatResponses.billing
+        fallbackResponse = chatResponses.billing
       } else {
-        // Default response
-        response = {
-          id: 'default',
+        fallbackResponse = {
+          id: 'fallback',
           type: 'bot',
-          content: "I understand you need help with that. Let me connect you with the right resources:",
+          content: "I'm having trouble connecting to my smart response system right now. Let me help you with these options:",
           timestamp: new Date(),
           options: [
-            { label: "Browse Help Topics", action: "message", value: "main_menu" },
-            { label: "Contact Support", action: "contact", value: "human" },
-            { label: "View Documentation", action: "link", value: "/docs" }
+            { label: "Getting Started", action: "message", value: "getting_started" },
+            { label: "Account Issues", action: "message", value: "account_issues" },
+            { label: "Agent Problems", action: "message", value: "agent_problems" },
+            { label: "Talk to Human", action: "contact", value: "human" }
           ]
         }
       }
 
-      addMessage(response)
-    }, 1000)
+      addMessage(fallbackResponse)
+    }
   }
 
   const handleOptionClick = (option: ChatOption) => {
@@ -226,8 +257,8 @@ export function SupportChatbot() {
               <div className="flex items-center gap-2">
                 <Bot className="h-5 w-5" />
                 <div>
-                  <h3 className="font-semibold">Support Assistant</h3>
-                  <p className="text-xs text-blue-100">Online • Responds instantly</p>
+                  <h3 className="font-semibold">AI Support Assistant</h3>
+                  <p className="text-xs text-blue-100">Powered by Claude • Expert knowledge</p>
                 </div>
               </div>
               <Button
@@ -337,7 +368,7 @@ export function SupportChatbot() {
                 </Button>
               </div>
               <p className="text-xs text-gray-500 mt-2 text-center">
-                For complex issues, our human support team is available 24/7
+                Powered by Claude AI • Can help with any platform question
               </p>
             </div>
           </Card>
