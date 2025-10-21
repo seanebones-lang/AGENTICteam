@@ -184,6 +184,356 @@ const agentDetails = {
         }
       }
     }
+  },
+  'data-processor': {
+    id: 'data-processor',
+    name: 'Data Processor',
+    description: 'Advanced data extraction, transformation, and loading (ETL) with AI-driven insights.',
+    icon: Database,
+    category: 'Data',
+    executions: 21300,
+    avgTime: '3.1s',
+    successRate: 99.1,
+    tier: 'Silver+',
+    features: ['Data Extraction', 'Data Transformation', 'Data Loading', 'AI Insights'],
+    pricing: {
+      perTask: 0.60,
+      monthly: 149.99
+    },
+    documentation: {
+      overview: 'The Data Processor Agent handles complex ETL operations with AI-powered data insights and automated pipeline management.',
+      capabilities: [
+        'Multi-source data extraction and ingestion',
+        'Intelligent data transformation and cleansing',
+        'Automated data quality validation',
+        'Real-time and batch processing modes',
+        'AI-driven data insights and anomaly detection',
+        'Schema evolution and data lineage tracking'
+      ],
+      useCases: [
+        'Data warehouse automation',
+        'Real-time analytics pipelines',
+        'Data migration and integration',
+        'Business intelligence workflows',
+        'Data quality management'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/data-processor/execute',
+        method: 'POST',
+        input: {
+          source_config: 'object',
+          transformation_rules: 'array',
+          destination_config: 'object',
+          processing_mode: 'string'
+        },
+        output: {
+          processed_records: 'number',
+          data_quality_score: 'number',
+          insights: 'array',
+          pipeline_status: 'string'
+        }
+      }
+    }
+  },
+  'deployment-agent': {
+    id: 'deployment-agent',
+    name: 'Deployment Agent',
+    description: 'Automated, secure, and compliant application deployment across cloud environments.',
+    icon: GitBranch,
+    category: 'DevOps',
+    executions: 15600,
+    avgTime: '4.5s',
+    successRate: 99.7,
+    tier: 'Gold+',
+    features: ['CI/CD Integration', 'Multi-cloud Deployment', 'Rollback', 'Compliance Checks'],
+    pricing: {
+      perTask: 1.20,
+      monthly: 299.99
+    },
+    documentation: {
+      overview: 'The Deployment Agent automates secure application deployments across multiple cloud environments with built-in compliance and rollback capabilities.',
+      capabilities: [
+        'Multi-cloud deployment orchestration',
+        'Automated security and compliance scanning',
+        'Blue-green and canary deployment strategies',
+        'Intelligent rollback and recovery',
+        'Infrastructure as Code (IaC) integration',
+        'Real-time deployment monitoring and alerts'
+      ],
+      useCases: [
+        'Continuous deployment automation',
+        'Multi-environment releases',
+        'Compliance-driven deployments',
+        'Disaster recovery automation',
+        'Infrastructure provisioning'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/deployment-agent/execute',
+        method: 'POST',
+        input: {
+          application_config: 'object',
+          target_environments: 'array',
+          deployment_strategy: 'string',
+          compliance_requirements: 'array'
+        },
+        output: {
+          deployment_id: 'string',
+          status: 'string',
+          deployed_environments: 'array',
+          compliance_status: 'string'
+        }
+      }
+    }
+  },
+  'report-generator': {
+    id: 'report-generator',
+    name: 'Report Generator',
+    description: 'Automated generation of business intelligence reports and dashboards from various data sources.',
+    icon: BarChart,
+    category: 'Analytics',
+    executions: 31200,
+    avgTime: '2.0s',
+    successRate: 99.3,
+    tier: 'All Tiers',
+    features: ['Custom Reports', 'Scheduled Reports', 'Data Visualization', 'PDF Export'],
+    pricing: {
+      perTask: 0.45,
+      monthly: 129.99
+    },
+    documentation: {
+      overview: 'The Report Generator Agent creates comprehensive business intelligence reports with automated data visualization and scheduling capabilities.',
+      capabilities: [
+        'Multi-source data aggregation and analysis',
+        'Dynamic report generation with custom templates',
+        'Interactive dashboards and visualizations',
+        'Automated report scheduling and distribution',
+        'Export to multiple formats (PDF, Excel, CSV)',
+        'Real-time data refresh and alerts'
+      ],
+      useCases: [
+        'Executive dashboard automation',
+        'Financial reporting and analysis',
+        'Performance monitoring reports',
+        'Compliance and audit reporting',
+        'Customer analytics and insights'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/report-generator/execute',
+        method: 'POST',
+        input: {
+          data_sources: 'array',
+          report_template: 'string',
+          parameters: 'object',
+          output_format: 'string'
+        },
+        output: {
+          report_id: 'string',
+          report_url: 'string',
+          generated_at: 'string',
+          data_points: 'number'
+        }
+      }
+    }
+  },
+  'audit-agent': {
+    id: 'audit-agent',
+    name: 'Audit Agent',
+    description: 'Continuous auditing and monitoring for regulatory compliance and internal policy adherence.',
+    icon: CheckCircle,
+    category: 'Compliance',
+    executions: 18700,
+    avgTime: '2.8s',
+    successRate: 99.6,
+    tier: 'Enterprise',
+    features: ['Regulatory Compliance', 'Policy Enforcement', 'Audit Trails', 'Alerting'],
+    pricing: {
+      perTask: 0.85,
+      monthly: 179.99
+    },
+    documentation: {
+      overview: 'The Audit Agent provides continuous compliance monitoring and automated audit trail generation for regulatory and internal policy adherence.',
+      capabilities: [
+        'Continuous compliance monitoring and assessment',
+        'Automated audit trail generation and management',
+        'Policy violation detection and alerting',
+        'Regulatory framework mapping and reporting',
+        'Risk assessment and mitigation recommendations',
+        'Evidence collection and documentation'
+      ],
+      useCases: [
+        'SOX compliance automation',
+        'GDPR privacy compliance',
+        'Financial audit preparation',
+        'Security policy enforcement',
+        'Risk management workflows'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/audit-agent/execute',
+        method: 'POST',
+        input: {
+          audit_scope: 'string',
+          compliance_framework: 'string',
+          time_period: 'object',
+          audit_criteria: 'array'
+        },
+        output: {
+          audit_id: 'string',
+          compliance_score: 'number',
+          violations: 'array',
+          recommendations: 'array'
+        }
+      }
+    }
+  },
+  'knowledge-base': {
+    id: 'knowledge-base',
+    name: 'Knowledge Base',
+    description: 'AI-powered knowledge retrieval and content generation for customer support and internal teams.',
+    icon: Bot,
+    category: 'AI',
+    executions: 50100,
+    avgTime: '1.5s',
+    successRate: 98.7,
+    tier: 'All Tiers',
+    features: ['Smart Search', 'Content Generation', 'FAQ Automation', 'Multi-language Support'],
+    pricing: {
+      perTask: 0.35,
+      monthly: 159.99
+    },
+    documentation: {
+      overview: 'The Knowledge Base Agent provides intelligent knowledge retrieval and automated content generation with advanced search and multi-language capabilities.',
+      capabilities: [
+        'Semantic search across knowledge repositories',
+        'Automated content generation and updates',
+        'FAQ automation and chatbot integration',
+        'Multi-language content translation',
+        'Knowledge graph construction and maintenance',
+        'Content relevance scoring and optimization'
+      ],
+      useCases: [
+        'Customer support automation',
+        'Internal knowledge management',
+        'Documentation generation',
+        'Chatbot and virtual assistant integration',
+        'Content localization and translation'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/knowledge-base/execute',
+        method: 'POST',
+        input: {
+          query: 'string',
+          context: 'string',
+          language: 'string',
+          content_type: 'string'
+        },
+        output: {
+          results: 'array',
+          confidence_score: 'number',
+          generated_content: 'string',
+          related_topics: 'array'
+        }
+      }
+    }
+  },
+  'workflow-orchestrator': {
+    id: 'workflow-orchestrator',
+    name: 'Workflow Orchestrator',
+    description: 'Design, automate, and manage complex business workflows with drag-and-drop simplicity.',
+    icon: GitBranch,
+    category: 'Automation',
+    executions: 25400,
+    avgTime: '3.5s',
+    successRate: 99.2,
+    tier: 'Silver+',
+    features: ['Visual Workflow Builder', 'Task Automation', 'Integration Hub', 'Monitoring'],
+    pricing: {
+      perTask: 0.95,
+      monthly: 249.99
+    },
+    documentation: {
+      overview: 'The Workflow Orchestrator Agent enables visual workflow design and automation with comprehensive integration capabilities and real-time monitoring.',
+      capabilities: [
+        'Visual drag-and-drop workflow designer',
+        'Multi-system integration and orchestration',
+        'Conditional logic and decision trees',
+        'Real-time workflow monitoring and analytics',
+        'Error handling and retry mechanisms',
+        'Workflow versioning and rollback'
+      ],
+      useCases: [
+        'Business process automation',
+        'System integration workflows',
+        'Approval and routing processes',
+        'Data pipeline orchestration',
+        'Multi-step task automation'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/workflow-orchestrator/execute',
+        method: 'POST',
+        input: {
+          workflow_definition: 'object',
+          input_data: 'object',
+          execution_context: 'object',
+          callback_url: 'string'
+        },
+        output: {
+          execution_id: 'string',
+          status: 'string',
+          completed_steps: 'array',
+          output_data: 'object'
+        }
+      }
+    }
+  },
+  'analytics-engine': {
+    id: 'analytics-engine',
+    name: 'Analytics Engine',
+    description: 'Real-time data analytics and predictive modeling for business insights.',
+    icon: BarChart,
+    category: 'Analytics',
+    executions: 12300,
+    avgTime: '4.0s',
+    successRate: 99.0,
+    tier: 'Gold+',
+    features: ['Predictive Analytics', 'Anomaly Detection', 'Trend Analysis', 'Custom Dashboards'],
+    pricing: {
+      perTask: 1.05,
+      monthly: 219.99
+    },
+    documentation: {
+      overview: 'The Analytics Engine Agent provides advanced data analytics with predictive modeling, anomaly detection, and real-time business insights.',
+      capabilities: [
+        'Real-time data processing and analysis',
+        'Machine learning model deployment and inference',
+        'Anomaly detection and alerting',
+        'Predictive analytics and forecasting',
+        'Custom dashboard creation and management',
+        'Statistical analysis and reporting'
+      ],
+      useCases: [
+        'Business intelligence and reporting',
+        'Predictive maintenance and forecasting',
+        'Fraud detection and prevention',
+        'Customer behavior analysis',
+        'Performance optimization and monitoring'
+      ],
+      api: {
+        endpoint: '/api/v1/agents/analytics-engine/execute',
+        method: 'POST',
+        input: {
+          dataset: 'object',
+          analysis_type: 'string',
+          model_config: 'object',
+          output_format: 'string'
+        },
+        output: {
+          analysis_id: 'string',
+          results: 'object',
+          insights: 'array',
+          confidence_score: 'number'
+        }
+      }
+    }
   }
 }
 
