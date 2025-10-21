@@ -8,12 +8,12 @@ import { Footer } from '@/components/footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Agent Marketplace - Enterprise AI Agent Platform',
+  title: 'Agent Marketplace - Agentic AI Solutions',
   description: 'Deploy, manage, and scale AI agents with military-grade security. 99.999% uptime, 45ms global latency.',
   keywords: 'AI agents, enterprise AI, agent marketplace, autonomous agents, AI automation',
   authors: [{ name: 'Sean McDonnell', url: 'https://bizbot.store' }],
   openGraph: {
-    title: 'Agent Marketplace - Enterprise AI Agent Platform',
+    title: 'Agent Marketplace - Agentic AI Solutions',
     description: 'Deploy, manage, and scale AI agents with military-grade security',
     type: 'website',
   },

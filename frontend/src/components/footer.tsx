@@ -31,7 +31,7 @@ export function Footer() {
               <span className="text-xl font-bold">Agent Marketplace</span>
             </Link>
             <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mb-4">
-              Enterprise AI Agent Platform with military-grade security. Deploy, manage, and scale autonomous agents.
+              Agentic AI Solutions with military-grade security. Deploy, manage, and scale autonomous agents.
             </p>
             
             {/* Legal Notice */}

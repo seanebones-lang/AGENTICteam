@@ -21,7 +21,7 @@ export default function HomePage() {
             </Badge>
             
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl gradient-text mb-6">
-              Enterprise AI Agent Platform
+              Agentic AI Solutions
             </h1>
             
             <p className="text-lg leading-8 text-gray-600 dark:text-gray-300 mb-8">
