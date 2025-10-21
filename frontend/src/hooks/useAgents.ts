@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { api } from '@/lib/api';
+import { apiService as api } from '@/lib/api';
 import { AgentPackage, Category } from '@/types';
 
 export function useAgents(category?: string) {
