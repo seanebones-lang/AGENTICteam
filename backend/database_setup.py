@@ -26,6 +26,13 @@ def init_database():
             tier TEXT DEFAULT 'basic',
             credits REAL DEFAULT 10.0,
             api_key TEXT UNIQUE,
+            email_verified BOOLEAN DEFAULT FALSE,
+            verification_token TEXT,
+            verification_token_expires TIMESTAMP,
+            password_reset_token TEXT,
+            password_reset_expires TIMESTAMP,
+            failed_login_attempts INTEGER DEFAULT 0,
+            account_locked_until TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -124,6 +131,22 @@ def init_database():
             is_blocked BOOLEAN DEFAULT FALSE,
             block_expires_at TIMESTAMP,
             UNIQUE(ip_address, endpoint, window_start)
+        )
+    ''')
+    
+    # User sessions table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            session_hash TEXT UNIQUE NOT NULL,
+            ip_address TEXT,
+            user_agent TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMP NOT NULL,
+            is_active BOOLEAN DEFAULT TRUE,
+            FOREIGN KEY (user_id) REFERENCES users (id)
         )
     ''')
     
