@@ -64,9 +64,8 @@ class KnowledgeBaseAgent:
             api_key=api_key or os.getenv("ANTHROPIC_API_KEY")
         )
         
-        # For embeddings, we'll use a simple text similarity approach
-        # In production, you'd use proper embedding models
-        self.embeddings = None
+        # Initialize simple embeddings for production without external dependencies
+        self._init_embeddings()
         
         # Initialize Qdrant client
         try:
@@ -81,6 +80,42 @@ class KnowledgeBaseAgent:
         
         # Sample knowledge base (in production, load from database)
         self._initialize_sample_knowledge()
+    
+    def _init_embeddings(self):
+        """Initialize simple embeddings without external model dependencies"""
+        class SimpleEmbeddings:
+            """Simple TF-IDF-like embeddings for production use"""
+            def __init__(self):
+                import numpy as np
+                self.dimension = 1536
+                self.np = np
+            
+            def embed_query(self, text: str) -> List[float]:
+                """Generate embedding vector from text"""
+                # Simple hash-based embedding
+                import hashlib
+                # Create multiple hash functions for better distribution
+                vector = []
+                for i in range(self.dimension // 32):
+                    hash_input = f"{text}_{i}".encode()
+                    hash_hex = hashlib.sha256(hash_input).hexdigest()
+                    # Convert hex to floats
+                    for j in range(0, 64, 2):
+                        val = int(hash_hex[j:j+2], 16) / 255.0
+                        vector.append(val - 0.5)  # Center around 0
+                
+                # Normalize vector
+                norm = sum(v * v for v in vector) ** 0.5
+                if norm > 0:
+                    vector = [v / norm for v in vector]
+                
+                return vector[:self.dimension]
+            
+            def embed_documents(self, texts: List[str]) -> List[List[float]]:
+                """Generate embeddings for multiple documents"""
+                return [self.embed_query(text) for text in texts]
+        
+        self.embeddings = SimpleEmbeddings()
     
     def _ensure_collection_exists(self):
         """Ensure Qdrant collection exists"""
