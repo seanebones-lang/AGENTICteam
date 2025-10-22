@@ -134,14 +134,57 @@ export default function PricingPage() {
   }
 
   const handleSubscribe = async (tierName: string, amount: number) => {
-    toast({
-      title: "Redirecting to Checkout",
-      description: `Setting up ${tierName} subscription...`,
-    })
-    
-    // TODO: Integrate with Stripe subscription
-    // For now, redirect to signup
-    window.location.href = '/signup'
+    try {
+      // Get user email from localStorage or prompt
+      const userData = localStorage.getItem('user_data')
+      let email = ''
+      
+      if (userData) {
+        const user = JSON.parse(userData)
+        email = user.email
+      } else {
+        // Redirect to signup if not logged in
+        window.location.href = '/signup'
+        return
+      }
+      
+      toast({
+        title: "Creating Subscription",
+        description: `Setting up ${tierName} subscription for $${amount}/month...`,
+      })
+      
+      // Create Stripe Subscription Checkout Session
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
+      const response = await fetch(`${API_BASE_URL}/api/v1/stripe/create-subscription-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_email: email,
+          tier: tierName.toLowerCase(),
+          success_url: `${window.location.origin}/dashboard?subscription=success&tier=${tierName}`,
+          cancel_url: `${window.location.origin}/pricing?subscription=cancelled`
+        })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to create subscription checkout')
+      }
+      
+      const data = await response.json()
+      
+      // Redirect to Stripe Checkout
+      window.location.href = data.checkout_url
+      
+    } catch (error) {
+      console.error('Subscription checkout error:', error)
+      toast({
+        title: "Subscription Failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      })
+    }
   }
 
   if (loading) {

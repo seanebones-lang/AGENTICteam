@@ -1063,6 +1063,75 @@ async def create_checkout_session(checkout_data: dict):
         logger.error(f"Checkout session creation failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.post("/api/v1/stripe/create-subscription-checkout")
+async def create_subscription_checkout(checkout_data: dict):
+    """Create a Stripe Checkout Session for subscription"""
+    try:
+        import stripe
+        
+        customer_email = checkout_data.get("customer_email")
+        tier = checkout_data.get("tier", "basic")
+        success_url = checkout_data.get("success_url", "https://bizbot.store/dashboard?subscription=success")
+        cancel_url = checkout_data.get("cancel_url", "https://bizbot.store/pricing?subscription=cancelled")
+        
+        if not customer_email:
+            raise HTTPException(status_code=400, detail="Customer email required")
+        
+        # Subscription tier pricing (matching SUBSCRIPTION_TIERS in main.py)
+        tiers = {
+            "basic": {"price": 49.00, "credits": 1000, "name": "Basic Plan", "features": "1,000 credits/month + 1 free re-run daily"},
+            "pro": {"price": 99.00, "credits": 3000, "name": "Pro Plan", "features": "3,000 credits/month + unlimited re-runs + priority"},
+            "enterprise": {"price": 299.00, "credits": 15000, "name": "Enterprise Plan", "features": "15,000 credits/month + dedicated Slack support"}
+        }
+        
+        if tier not in tiers:
+            raise HTTPException(status_code=400, detail=f"Invalid tier: {tier}")
+        
+        tier_info = tiers[tier]
+        
+        # Create Stripe Checkout Session for subscription
+        session = stripe.checkout.Session.create(
+            customer_email=customer_email,
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'unit_amount': int(tier_info['price'] * 100),  # Convert to cents
+                    'recurring': {
+                        'interval': 'month',
+                    },
+                    'product_data': {
+                        'name': tier_info['name'],
+                        'description': tier_info['features'],
+                    },
+                },
+                'quantity': 1,
+            }],
+            mode='subscription',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                'customer_email': customer_email,
+                'tier': tier,
+                'credits_per_month': tier_info['credits']
+            }
+        )
+        
+        return {
+            "checkout_url": session.url,
+            "session_id": session.id,
+            "tier": tier,
+            "credits_per_month": tier_info['credits'],
+            "monthly_price": tier_info['price']
+        }
+        
+    except stripe.error.StripeError as e:
+        logger.error(f"Stripe error: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Stripe error: {str(e)}")
+    except Exception as e:
+        logger.error(f"Subscription checkout creation failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.post("/api/v1/subscriptions/create")
 async def create_subscription(subscription_data: dict):
     """Create a subscription"""
