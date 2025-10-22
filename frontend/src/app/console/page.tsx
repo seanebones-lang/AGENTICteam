@@ -358,15 +358,77 @@ export default function ConsolePage() {
                           <span className="font-semibold text-green-600 dark:text-green-400">Success</span>
                         </div>
                         <div className="prose dark:prose-invert max-w-none">
-                          {typeof activeTab.result.result === 'string' ? (
-                            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                              {activeTab.result.result}
-                            </p>
-                          ) : (
-                            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm">
-                              {JSON.stringify(activeTab.result.result, null, 2)}
-                            </pre>
-                          )}
+                          {(() => {
+                            const result = activeTab.result.result
+                            
+                            // If it's a string, display it directly
+                            if (typeof result === 'string') {
+                              return (
+                                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                  {result}
+                                </p>
+                              )
+                            }
+                            
+                            // If it's an object, format it nicely
+                            if (typeof result === 'object' && result !== null) {
+                              // Check for common text fields first
+                              const textContent = result.output || result.response || result.text || result.message || result.content
+                              
+                              if (textContent && typeof textContent === 'string') {
+                                return (
+                                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                    {textContent}
+                                  </p>
+                                )
+                              }
+                              
+                              // Format structured data nicely
+                              return (
+                                <div className="space-y-4">
+                                  {Object.entries(result).map(([key, value]) => {
+                                    // Skip internal fields
+                                    if (key === 'billing_info' || key === 'generation_time_ms') return null
+                                    
+                                    return (
+                                      <div key={key} className="border-l-4 border-blue-500 pl-4">
+                                        <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase mb-2">
+                                          {key.replace(/_/g, ' ')}
+                                        </h4>
+                                        {Array.isArray(value) ? (
+                                          <ul className="list-disc list-inside space-y-1">
+                                            {value.map((item, idx) => (
+                                              <li key={idx} className="text-gray-700 dark:text-gray-300">
+                                                {typeof item === 'object' ? JSON.stringify(item) : String(item)}
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        ) : typeof value === 'object' && value !== null ? (
+                                          <div className="space-y-1">
+                                            {Object.entries(value).map(([k, v]) => (
+                                              <div key={k} className="flex justify-between">
+                                                <span className="text-gray-600 dark:text-gray-400">{k.replace(/_/g, ' ')}:</span>
+                                                <span className="font-medium text-gray-800 dark:text-gray-200">{String(v)}</span>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        ) : (
+                                          <p className="text-gray-700 dark:text-gray-300">{String(value)}</p>
+                                        )}
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              )
+                            }
+                            
+                            // Fallback for other types
+                            return (
+                              <p className="text-gray-700 dark:text-gray-300">
+                                {String(result)}
+                              </p>
+                            )
+                          })()}
                         </div>
                       </div>
                       

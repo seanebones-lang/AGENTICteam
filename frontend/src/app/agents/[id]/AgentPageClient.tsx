@@ -702,33 +702,84 @@ export default function AgentPageClient() {
                     
                     {executionResult.result && (
                       <div className="space-y-3">
-                        {/* If result is a string, show it nicely formatted */}
-                        {typeof executionResult.result === 'string' ? (
-                          <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                            <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
-                              {executionResult.result}
-                            </p>
-                          </div>
-                        ) : (
-                          /* If result is an object, show structured data */
-                          <div className="space-y-2">
-                            {Object.entries(executionResult.result).map(([key, value]) => (
-                              <div key={key} className="p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-                                <div className="flex items-start gap-2">
-                                  <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" />
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                                      {key.replace(/_/g, ' ')}
-                                    </p>
-                                    <p className="text-sm text-gray-800 dark:text-gray-200 break-words">
-                                      {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
-                                    </p>
-                                  </div>
-                                </div>
+                        {/* Smart result display - extracts text from common fields */}
+                        {(() => {
+                          const result = executionResult.result
+                          
+                          // If it's a string, display it directly
+                          if (typeof result === 'string') {
+                            return (
+                              <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
+                                  {result}
+                                </p>
                               </div>
-                            ))}
-                          </div>
-                        )}
+                            )
+                          }
+                          
+                          // If it's an object, format it nicely
+                          if (typeof result === 'object' && result !== null) {
+                            // Check for common text fields first
+                            const textContent = result.output || result.response || result.text || result.message || result.content
+                            
+                            if (textContent && typeof textContent === 'string') {
+                              return (
+                                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                                  <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
+                                    {textContent}
+                                  </p>
+                                </div>
+                              )
+                            }
+                            
+                            // Format structured data nicely
+                            return (
+                              <div className="space-y-3">
+                                {Object.entries(result).map(([key, value]) => {
+                                  // Skip internal fields
+                                  if (key === 'billing_info' || key === 'generation_time_ms') return null
+                                  
+                                  return (
+                                    <div key={key} className="p-3 bg-gray-50 dark:bg-gray-900 rounded border-l-4 border-blue-500 dark:border-blue-600">
+                                      <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">
+                                        {key.replace(/_/g, ' ')}
+                                      </h4>
+                                      {Array.isArray(value) ? (
+                                        <ul className="list-disc list-inside space-y-1">
+                                          {value.map((item, idx) => (
+                                            <li key={idx} className="text-sm text-gray-800 dark:text-gray-200">
+                                              {typeof item === 'object' ? JSON.stringify(item) : String(item)}
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      ) : typeof value === 'object' && value !== null ? (
+                                        <div className="space-y-1">
+                                          {Object.entries(value).map(([k, v]) => (
+                                            <div key={k} className="flex justify-between text-sm">
+                                              <span className="text-gray-600 dark:text-gray-400">{k.replace(/_/g, ' ')}:</span>
+                                              <span className="font-medium text-gray-800 dark:text-gray-200">{String(v)}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <p className="text-sm text-gray-800 dark:text-gray-200">{String(value)}</p>
+                                      )}
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            )
+                          }
+                          
+                          // Fallback
+                          return (
+                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                              <p className="text-gray-800 dark:text-gray-200">
+                                {String(result)}
+                              </p>
+                            </div>
+                          )
+                        })()}
                         
                         {/* Raw JSON Toggle */}
                         <details className="mt-3">
