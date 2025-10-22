@@ -1001,6 +1001,10 @@ async def create_checkout_session(checkout_data: dict):
     """Create a Stripe Checkout Session for credit purchase"""
     try:
         import stripe
+        stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+        
+        if not stripe.api_key:
+            raise HTTPException(status_code=500, detail="Stripe not configured")
         
         customer_email = checkout_data.get("customer_email")
         package = checkout_data.get("package", "starter")
@@ -1068,6 +1072,10 @@ async def create_subscription_checkout(checkout_data: dict):
     """Create a Stripe Checkout Session for subscription"""
     try:
         import stripe
+        stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+        
+        if not stripe.api_key:
+            raise HTTPException(status_code=500, detail="Stripe not configured")
         
         customer_email = checkout_data.get("customer_email")
         tier = checkout_data.get("tier", "basic")
