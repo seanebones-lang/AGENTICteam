@@ -58,7 +58,7 @@ class TicketAnalysis(BaseModel):
     suggested_assignee: Optional[str] = None
     resolution_suggestions: List[ResolutionSuggestion] = Field(default_factory=list)
     similar_tickets: List[str] = Field(default_factory=list)
-    estimated_resolution_time: str
+    estimated_resolution_time: str = "15-30 minutes"  # Default estimate
     auto_response: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
     analysis_duration_ms: int = 0
