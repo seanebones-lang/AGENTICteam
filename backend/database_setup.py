@@ -275,7 +275,7 @@ class DatabaseManager:
         conn = self.get_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT id, email, name, tier, credits, api_key, created_at
+            SELECT id, email, name, tier, credits, api_key, created_at, password_hash
             FROM users WHERE email = ?
         ''', (email,))
         result = cursor.fetchone()
@@ -289,7 +289,8 @@ class DatabaseManager:
                 "tier": result[3],
                 "credits": result[4],
                 "api_key": result[5],
-                "created_at": result[6]
+                "created_at": result[6],
+                "password_hash": result[7]
             }
         return None
     

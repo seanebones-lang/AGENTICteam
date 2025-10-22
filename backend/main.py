@@ -8,6 +8,7 @@ import os
 import asyncio
 import logging
 import time
+import hashlib
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 
@@ -71,6 +72,15 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Password hashing functions
+def hash_password(password: str) -> str:
+    """Hash a password using SHA-256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password: str, password_hash: str) -> bool:
+    """Verify a password against its hash"""
+    return hash_password(password) == password_hash
 
 # Initialize Real AI Agents
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -1520,8 +1530,9 @@ async def login(credentials: dict):
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    # In production, verify password hash
-    # For demo, accept any password
+    # Verify password
+    if not verify_password(password, user.get("password_hash", "")):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
     
     return {
         "access_token": f"token_{user['id']}_{int(datetime.now().timestamp())}",
@@ -1545,8 +1556,11 @@ async def register(user_data: dict):
     if not email or not name or not password:
         raise HTTPException(status_code=400, detail="Email, name, and password required")
     
+    # Hash the password before storing
+    password_hash = hash_password(password)
+    
     # Create user in database
-    user = db.create_user(email, name, "password_hash", "basic")
+    user = db.create_user(email, name, password_hash, "basic")
     if not user:
         raise HTTPException(status_code=409, detail="User already exists")
     
