@@ -43,8 +43,9 @@ export default function SignupPage() {
       // Real registration API call
       const response = await apiService.register(formData.orgName, formData.email, formData.password)
       
-      // Store auth token
+      // Store auth token and user email
       localStorage.setItem('auth_token', response.access_token)
+      localStorage.setItem('user_email', formData.email)
       localStorage.setItem('user_data', JSON.stringify(response.user))
       
       toast({

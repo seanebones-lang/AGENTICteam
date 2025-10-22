@@ -26,9 +26,25 @@ export function Navigation() {
   
   useEffect(() => {
     // Check if user is logged in
-    const authToken = localStorage.getItem('auth_token')
-    const userEmail = localStorage.getItem('user_email')
-    setIsLoggedIn(!!(authToken || userEmail))
+    const checkAuth = () => {
+      const authToken = localStorage.getItem('auth_token')
+      const userEmail = localStorage.getItem('user_email')
+      setIsLoggedIn(!!(authToken || userEmail))
+    }
+    
+    // Check on mount
+    checkAuth()
+    
+    // Listen for storage changes (when user logs in/out in another tab or via code)
+    window.addEventListener('storage', checkAuth)
+    
+    // Also check periodically to catch same-tab changes
+    const interval = setInterval(checkAuth, 500)
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth)
+      clearInterval(interval)
+    }
   }, [])
   
   const handleLogout = () => {

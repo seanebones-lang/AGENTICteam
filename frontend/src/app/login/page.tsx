@@ -52,6 +52,7 @@ export default function LoginPage() {
         const response = await apiService.login(formData.email, formData.password)
         
         localStorage.setItem('auth_token', response.access_token)
+        localStorage.setItem('user_email', formData.email)
         localStorage.setItem('user_data', JSON.stringify(response.user))
         
         toast({
