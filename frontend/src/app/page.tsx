@@ -267,7 +267,7 @@ export default function HomePage() {
           <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-4">
             Ready to Transform Your Support?
           </h2>
-          <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 dark:text-white/95 mb-8 max-w-2xl mx-auto">
             Join 10,000+ teams using AI to solve tickets faster. Start with 3 free queries.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -293,7 +293,7 @@ export default function HomePage() {
               </Link>
             </Button>
           </div>
-          <p className="mt-6 text-sm text-purple-100">
+          <p className="mt-6 text-sm text-white/90 dark:text-white/95">
             ✓ No credit card required  ✓ 3 free queries  ✓ Instant setup
           </p>
         </div>

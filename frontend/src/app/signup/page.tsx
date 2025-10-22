@@ -137,7 +137,7 @@ export default function SignupPage() {
                 <SelectItem value="enterprise">Enterprise - $250 (10,000 credits)</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Credits never expire • Light agents: 1 credit • Medium: 3 credits • Heavy: 8 credits
             </p>
           </div>
