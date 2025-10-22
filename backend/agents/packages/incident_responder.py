@@ -51,7 +51,7 @@ class IncidentAnalysis(BaseModel):
     impact_assessment: Dict[str, Any] = Field(default_factory=dict)
     remediation_actions: List[RemediationAction] = Field(default_factory=list)
     preventive_measures: List[str] = Field(default_factory=list)
-    estimated_resolution_time: str
+    estimated_resolution_time: str = "30-60 minutes"  # Default estimate
     confidence_score: float = 0.0
     analysis_duration_ms: int = 0
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
