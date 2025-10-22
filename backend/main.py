@@ -1101,8 +1101,27 @@ async def stripe_webhook(request: Request):
             
             logger.info(f"Payment completed: {customer_email} paid ${amount_total}")
             
-            # TODO: Credit user account with credits based on package purchased
-            # For now, just log the successful payment
+            # Add credits to user account
+            if customer_email and amount_total > 0:
+                user = db.get_user_by_email(customer_email)
+                if user:
+                    # Add credits (1:1 ratio - $20 = $20 credits)
+                    from credit_system import TransactionType
+                    credit_system.add_credits(
+                        user_id=user["id"],
+                        amount=amount_total,
+                        transaction_type=TransactionType.PURCHASE,
+                        description=f"Credit purchase via Stripe - ${amount_total}",
+                        metadata={
+                            "stripe_session_id": session.get("id"),
+                            "payment_intent": session.get("payment_intent")
+                        }
+                    )
+                    logger.info(f"✅ Added ${amount_total} credits to {customer_email}")
+                else:
+                    logger.error(f"❌ User not found for email: {customer_email}")
+            else:
+                logger.error(f"❌ Missing email or invalid amount: {customer_email}, ${amount_total}")
             
         elif event_type == 'payment_intent.succeeded':
             payment_intent = event['data']['object']
@@ -1128,6 +1147,37 @@ async def get_credit_packages():
     return {
         "packages": packages,
         "total": len(packages)
+    }
+
+@app.post("/api/v1/admin/add-credits")
+async def admin_add_credits(
+    email: str,
+    amount: float,
+    admin_key: str = Header(None)
+):
+    """Admin endpoint to manually add credits (for payment issues)"""
+    # Simple admin key check
+    if admin_key != os.getenv("ADMIN_API_KEY", "admin-secret-key-change-me"):
+        raise HTTPException(status_code=403, detail="Unauthorized")
+    
+    user = db.get_user_by_email(email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    from credit_system import TransactionType
+    credit_system.add_credits(
+        user_id=user["id"],
+        amount=amount,
+        transaction_type=TransactionType.PURCHASE,
+        description=f"Manual credit addition by admin - ${amount}",
+        metadata={"source": "admin_manual", "reason": "payment_fulfillment"}
+    )
+    
+    return {
+        "success": True,
+        "user_email": email,
+        "credits_added": amount,
+        "new_balance": credit_system.get_user_balance(user["id"])
     }
 
 @app.post("/api/v1/credits/purchase")
