@@ -1,9 +1,10 @@
 {
-  "buildCommand": "cd frontend && rm -rf .next node_modules/.cache && npm run build",
-  "devCommand": "cd frontend && npm run dev",
-  "installCommand": "cd frontend && rm -rf node_modules && npm install",
-  "outputDirectory": "frontend/.next",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
   "framework": "nextjs",
+  "rootDirectory": "frontend",
   "headers": [
     {
       "source": "/(.*)",
