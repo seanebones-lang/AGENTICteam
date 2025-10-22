@@ -996,6 +996,73 @@ async def purchase_credits(purchase_data: dict):
         logger.error(f"Credit purchase failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.post("/api/v1/stripe/create-checkout-session")
+async def create_checkout_session(checkout_data: dict):
+    """Create a Stripe Checkout Session for credit purchase"""
+    try:
+        import stripe
+        
+        customer_email = checkout_data.get("customer_email")
+        package = checkout_data.get("package", "starter")
+        success_url = checkout_data.get("success_url", "https://bizbot.store/dashboard?payment=success")
+        cancel_url = checkout_data.get("cancel_url", "https://bizbot.store/pricing?payment=cancelled")
+        
+        if not customer_email:
+            raise HTTPException(status_code=400, detail="Customer email required")
+        
+        # Credit package pricing (matching CREDIT_PACKAGES in main.py)
+        packages = {
+            "starter": {"price": 20.00, "credits": 500, "name": "Starter Package"},
+            "growth": {"price": 50.00, "credits": 1500, "name": "Growth Package"},
+            "business": {"price": 100.00, "credits": 3500, "name": "Business Package"},
+            "enterprise": {"price": 250.00, "credits": 10000, "name": "Enterprise Package"}
+        }
+        
+        if package not in packages:
+            raise HTTPException(status_code=400, detail=f"Invalid package: {package}")
+        
+        pkg = packages[package]
+        
+        # Create Stripe Checkout Session
+        session = stripe.checkout.Session.create(
+            customer_email=customer_email,
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'unit_amount': int(pkg['price'] * 100),  # Convert to cents
+                    'product_data': {
+                        'name': pkg['name'],
+                        'description': f"{pkg['credits']} credits for BizBot AI Agents",
+                    },
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                'customer_email': customer_email,
+                'package': package,
+                'credits': pkg['credits']
+            }
+        )
+        
+        return {
+            "checkout_url": session.url,
+            "session_id": session.id,
+            "package": package,
+            "credits": pkg['credits'],
+            "amount": pkg['price']
+        }
+        
+    except stripe.error.StripeError as e:
+        logger.error(f"Stripe error: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Stripe error: {str(e)}")
+    except Exception as e:
+        logger.error(f"Checkout session creation failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.post("/api/v1/subscriptions/create")
 async def create_subscription(subscription_data: dict):
     """Create a subscription"""

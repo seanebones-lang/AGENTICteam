@@ -80,14 +80,57 @@ export default function PricingPage() {
   }, [toast])
 
   const handlePurchaseCredits = async (packageName: string, amount: number) => {
-    toast({
-      title: "Redirecting to Checkout",
-      description: `Processing payment for $${amount}...`,
-    })
-    
-    // TODO: Integrate with Stripe checkout
-    // For now, redirect to signup
-    window.location.href = '/signup'
+    try {
+      // Get user email from localStorage or prompt
+      const userData = localStorage.getItem('user_data')
+      let email = ''
+      
+      if (userData) {
+        const user = JSON.parse(userData)
+        email = user.email
+      } else {
+        // Redirect to signup if not logged in
+        window.location.href = '/signup'
+        return
+      }
+      
+      toast({
+        title: "Creating Checkout Session",
+        description: `Redirecting to Stripe for $${amount} payment...`,
+      })
+      
+      // Create Stripe Checkout Session
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
+      const response = await fetch(`${API_BASE_URL}/api/v1/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_email: email,
+          package: packageName,
+          success_url: `${window.location.origin}/dashboard?payment=success&package=${packageName}`,
+          cancel_url: `${window.location.origin}/pricing?payment=cancelled`
+        })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+      
+      const data = await response.json()
+      
+      // Redirect to Stripe Checkout
+      window.location.href = data.checkout_url
+      
+    } catch (error) {
+      console.error('Checkout error:', error)
+      toast({
+        title: "Checkout Failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      })
+    }
   }
 
   const handleSubscribe = async (tierName: string, amount: number) => {
