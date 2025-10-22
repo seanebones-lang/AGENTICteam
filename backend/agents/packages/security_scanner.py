@@ -66,6 +66,7 @@ class SecurityScannerAgent:
         Args:
             input_data: {
                 "target": "https://example.com",
+                "task": "Scan https://example.com for vulnerabilities",
                 "scan_type": "quick|standard|full",
                 "compliance_checks": ["OWASP", "PCI-DSS", "GDPR"],
                 "max_depth": 3,
@@ -75,8 +76,21 @@ class SecurityScannerAgent:
         start_time = datetime.now()
         
         target = input_data.get("target")
+        task = input_data.get("task", "")
         scan_type = input_data.get("scan_type", "standard")
         compliance_checks = input_data.get("compliance_checks", ["OWASP"])
+        
+        # Extract URL from task if target not provided
+        if not target and task:
+            import re
+            url_pattern = r'https?://[^\s<>"{}|\\^`\[\]]+'
+            urls = re.findall(url_pattern, task)
+            if urls:
+                target = urls[0]
+        
+        # Default target if none found
+        if not target:
+            target = "https://example.com"
         
         # Validate target
         if not validators.url(target):
