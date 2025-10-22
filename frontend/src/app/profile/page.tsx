@@ -72,10 +72,7 @@ export default function ProfilePage() {
 
   // Saved prompts (localStorage for now)
   const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([])
-  const [favoriteAgents, setFavoriteAgents] = useState<FavoriteAgent[]>([
-    { id: 'ticket-resolver', name: 'Ticket Resolver', category: 'Support', times_used: 12 },
-    { id: 'security-scanner', name: 'Security Scanner', category: 'Security', times_used: 8 },
-  ])
+  const [favoriteAgents, setFavoriteAgents] = useState<FavoriteAgent[]>([])
 
   // Load saved data from localStorage
   useEffect(() => {
@@ -91,6 +88,12 @@ export default function ProfilePage() {
       const profile = JSON.parse(savedProfile)
       setUserData(profile)
       setEditForm({ name: profile.name, email: profile.email })
+    }
+    
+    // Load favorite agents
+    const savedFavorites = localStorage.getItem('favorite_agents')
+    if (savedFavorites) {
+      setFavoriteAgents(JSON.parse(savedFavorites))
     }
   }, [])
   

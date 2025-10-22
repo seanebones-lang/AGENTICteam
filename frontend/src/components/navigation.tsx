@@ -65,7 +65,6 @@ export function Navigation() {
         </div>
         
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center">
-          <ThemeToggle />
           <Button variant="ghost" asChild>
             <Link href="/dashboard">Dashboard</Link>
           </Button>
@@ -101,9 +100,6 @@ export function Navigation() {
               </Link>
             ))}
             <div className="flex flex-col gap-2 pt-4 border-t">
-              <div className="flex items-center gap-4 mb-2">
-                <ThemeToggle />
-              </div>
               <Button variant="ghost" className="w-full" asChild>
                 <Link href="/dashboard">Dashboard</Link>
               </Button>

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Zap, Mail } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 const navigation = {
   product: [
@@ -106,7 +107,8 @@ export function Footer() {
           <p className="text-xs text-gray-600 dark:text-gray-400">
             © 2025 Sean McDonnell. All rights reserved. Proprietary Software.
           </p>
-          <div className="flex gap-6">
+          <div className="flex items-center gap-6">
+            <ThemeToggle />
             {navigation.legal.map((item) => (
               <Link
                 key={item.name}
