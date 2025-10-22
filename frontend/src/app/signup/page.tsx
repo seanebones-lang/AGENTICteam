@@ -53,10 +53,10 @@ export default function SignupPage() {
         description: "You've received 10 free credits to get started. Purchase more credits to continue using agents.",
       })
       
-      // Always redirect to dashboard after signup
-      // User can purchase credits from there
+      // Always redirect to console after signup
+      // User can start using agents immediately
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push('/console')
       }, 1500)
     } catch (error) {
       console.error('Registration error:', error)
