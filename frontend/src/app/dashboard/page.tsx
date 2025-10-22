@@ -21,6 +21,7 @@ import {
   Bot,
   Star
 } from 'lucide-react'
+import { getCredits } from '@/lib/credits'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
 
