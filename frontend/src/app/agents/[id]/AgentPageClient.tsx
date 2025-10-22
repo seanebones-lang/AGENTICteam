@@ -491,14 +491,24 @@ export default function AgentPageClient() {
               <TabsContent value="capabilities" className="mt-6">
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4 dark:text-white">Capabilities</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {agent.features?.map((capability: string, index: number) => (
-                      <div key={index} className="flex items-start p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <Zap className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 dark:text-gray-300">{capability}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {agent.features && agent.features.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {agent.features.map((capability: string, index: number) => (
+                        <div key={index} className="flex items-start p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <Zap className="h-5 w-5 text-blue-500 dark:text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700 dark:text-gray-300">{capability}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-600 dark:text-gray-400">No capabilities data available</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                        Debug: agent.features = {JSON.stringify(agent.features)}
+                      </p>
+                    </div>
+                  )}
                 </Card>
               </TabsContent>
               
