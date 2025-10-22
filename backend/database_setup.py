@@ -293,6 +293,29 @@ class DatabaseManager:
             }
         return None
     
+    def get_user_by_id(self, user_id):
+        """Get user by ID"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT id, email, name, tier, credits, api_key, created_at
+            FROM users WHERE id = ?
+        ''', (user_id,))
+        result = cursor.fetchone()
+        conn.close()
+        
+        if result:
+            return {
+                "id": result[0],
+                "email": result[1],
+                "name": result[2],
+                "tier": result[3],
+                "credits": result[4],
+                "api_key": result[5],
+                "created_at": result[6]
+            }
+        return None
+    
     def create_user(self, email, name, password_hash, tier="basic"):
         """Create a new user"""
         import secrets
