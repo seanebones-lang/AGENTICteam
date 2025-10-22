@@ -36,12 +36,18 @@ export default function LoginPage() {
           localStorage.setItem('auth_token', 'demo-token-' + Date.now())
           localStorage.setItem('user_email', formData.email)
           
+          // Trigger storage event for navigation update
+          window.dispatchEvent(new Event('storage'))
+          
           toast({
             title: "Login Successful",
             description: `Welcome back, ${profile.name || formData.email}!`,
           })
           
-          router.push('/console')
+          // Use setTimeout to ensure storage event is processed
+          setTimeout(() => {
+            router.push('/console')
+          }, 100)
           return
         }
       }
@@ -55,12 +61,18 @@ export default function LoginPage() {
         localStorage.setItem('user_email', formData.email)
         localStorage.setItem('user_data', JSON.stringify(response.user))
         
+        // Trigger storage event for navigation update
+        window.dispatchEvent(new Event('storage'))
+        
         toast({
           title: "Login Successful",
           description: `Welcome back!`,
         })
         
-        router.push('/console')
+        // Use setTimeout to ensure storage event is processed
+        setTimeout(() => {
+          router.push('/console')
+        }, 100)
       } catch (apiError) {
         // Backend not available or user not found
         throw new Error("No account found with this email. Please sign up first.")

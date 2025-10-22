@@ -48,6 +48,9 @@ export default function SignupPage() {
       localStorage.setItem('user_email', formData.email)
       localStorage.setItem('user_data', JSON.stringify(response.user))
       
+      // Trigger storage event for navigation update
+      window.dispatchEvent(new Event('storage'))
+      
       toast({
         title: "Account Created Successfully!",
         description: "You've received 10 free credits to get started. Purchase more credits to continue using agents.",
