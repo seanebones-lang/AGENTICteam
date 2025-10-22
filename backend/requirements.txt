@@ -36,8 +36,14 @@ redis==5.2.0
 # Monitoring (optional)
 prometheus-client==0.21.0
 
-# Anthropic AI
+# AI & LLM Dependencies
 anthropic==0.39.0
+langchain-anthropic==0.3.0
+langchain-core==0.3.15
+langchain==0.3.7
+
+# Vector Database
+qdrant-client==1.12.1
 
 # Database
 psycopg2-binary==2.9.10
