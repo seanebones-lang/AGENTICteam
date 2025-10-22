@@ -65,6 +65,13 @@ app.add_middleware(
     expose_headers=["*"]
 )
 
+# Configure logging FIRST
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Initialize Real AI Agents
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 agent_instances = {}
@@ -115,13 +122,6 @@ async def monitoring_middleware(request: Request, call_next):
     )
     
     return response
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 # Initialize database
 db = DatabaseManager()
