@@ -565,14 +565,6 @@ class ReportGeneratorAgent:
     
     async def _generate_report_file(self, result: ReportOutput, format_type: ReportFormat) -> str:
         """Generate report file in specified format"""
-        # In production, this would generate actual files
-        timestamp = int(datetime.now().timestamp())
-        
-        if format_type == ReportFormat.PDF:
-            return f"https://reports.example.com/{result.report_id}.pdf"
-        elif format_type == ReportFormat.HTML:
-            return f"https://reports.example.com/{result.report_id}.html"
-        elif format_type == ReportFormat.EXCEL:
-            return f"https://reports.example.com/{result.report_id}.xlsx"
-        else:
-            return f"https://reports.example.com/{result.report_id}.{format_type.value}"
+        # Note: File generation and hosting is not yet implemented
+        # In production, this would generate actual files and upload to S3/CDN
+        return f"Report generated successfully. File export feature coming soon. Report ID: {result.report_id}"

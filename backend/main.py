@@ -31,6 +31,18 @@ from simple_config import config
 # Import Security Service
 from security_service import security_service
 
+# Import Real AI Agents
+from agents.packages.ticket_resolver import TicketResolverAgent
+from agents.packages.security_scanner import SecurityScannerAgent
+from agents.packages.incident_responder import IncidentResponderAgent
+from agents.packages.knowledge_base import KnowledgeBaseAgent
+from agents.packages.data_processor import DataProcessorAgent
+from agents.packages.deployment_agent import DeploymentAgent
+from agents.packages.audit_agent import AuditAgent
+from agents.packages.report_generator import ReportGeneratorAgent
+from agents.packages.workflow_orchestrator import WorkflowOrchestratorAgent
+from agents.packages.escalation_manager import EscalationManagerAgent
+
 # Initialize FastAPI
 app = FastAPI(
     title="Agent Marketplace API - Integrated",
@@ -52,6 +64,21 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"]
 )
+
+# Initialize Real AI Agents
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+agent_instances = {
+    "ticket-resolver": TicketResolverAgent(api_key=ANTHROPIC_API_KEY),
+    "security-scanner": SecurityScannerAgent(api_key=ANTHROPIC_API_KEY),
+    "incident-responder": IncidentResponderAgent(api_key=ANTHROPIC_API_KEY),
+    "knowledge-base": KnowledgeBaseAgent(api_key=ANTHROPIC_API_KEY),
+    "data-processor": DataProcessorAgent(api_key=ANTHROPIC_API_KEY),
+    "deployment-agent": DeploymentAgent(api_key=ANTHROPIC_API_KEY),
+    "audit-agent": AuditAgent(api_key=ANTHROPIC_API_KEY),
+    "report-generator": ReportGeneratorAgent(api_key=ANTHROPIC_API_KEY),
+    "workflow-orchestrator": WorkflowOrchestratorAgent(api_key=ANTHROPIC_API_KEY),
+    "escalation-manager": EscalationManagerAgent(api_key=ANTHROPIC_API_KEY)
+}
 
 # Monitoring middleware
 @app.middleware("http")
@@ -507,8 +534,9 @@ async def execute_agent_simulation(package_id: str, task: str, input_data: Dict[
         }
     
     elif package_id == "report-generator":
+        report_id = f"report_{int(datetime.now().timestamp())}"
         return {
-            "report_id": f"report_{int(datetime.now().timestamp())}",
+            "report_id": report_id,
             "title": "Q4 2024 Performance Report",
             "format": "pdf",
             "sections_generated": 6,
@@ -523,7 +551,7 @@ async def execute_agent_simulation(package_id: str, task: str, input_data: Dict[
                 "Customer acquisition cost decreased by 8%",
                 "Mobile usage increased to 67% of total traffic"
             ],
-            "report_url": "https://reports.example.com/q4-2024.pdf",
+            "report_url": f"Report generated successfully. File export feature coming soon. Report ID: {report_id}",
             "generation_time_ms": 3200
         }
     
@@ -776,8 +804,29 @@ async def execute_agent(
                         detail=f"Insufficient credits. Required: ${execution_cost:.4f}, Available: ${user_balance:.4f}"
                     )
             
-            # Step 5: Execute the agent
-            result = await execute_agent_simulation(package_id, execution.task, execution.input_data)
+            # Step 5: Execute the real AI agent
+            if package_id in agent_instances:
+                agent = agent_instances[package_id]
+                
+                # Prepare input data based on agent type
+                agent_input = {
+                    "task": execution.task,
+                    **execution.input_data
+                }
+                
+                # Execute the agent
+                agent_result = await agent.execute(agent_input)
+                
+                # Convert Pydantic model to dict if needed
+                if hasattr(agent_result, 'model_dump'):
+                    result = agent_result.model_dump()
+                elif hasattr(agent_result, 'dict'):
+                    result = agent_result.dict()
+                else:
+                    result = agent_result
+            else:
+                # Fallback to simulation if agent not found
+                result = await execute_agent_simulation(package_id, execution.task, execution.input_data)
             
             # Calculate duration
             duration = datetime.now() - start_time
