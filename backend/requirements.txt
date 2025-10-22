@@ -1,10 +1,10 @@
 # Simple Production Requirements for BizBot.Store API
-# Only essential packages that actually exist
+# Using pre-compiled packages only
 
 # Core Framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
-pydantic==2.5.0
+pydantic==2.4.2
 
 # Payment Processing
 stripe==7.8.0
@@ -16,12 +16,7 @@ httpx==0.25.2
 # Environment
 python-dotenv==1.0.0
 
-# Basic Security
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-cryptography==41.0.7
-
-# JSON Web Tokens
+# Basic Security (simplified)
 PyJWT==2.8.0
 
 # Date & Time
