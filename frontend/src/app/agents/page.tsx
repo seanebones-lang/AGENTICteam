@@ -169,17 +169,20 @@ export default function AgentsPage() {
   useEffect(() => {
     const loadAgents = async () => {
       try {
+        console.log('Loading agents from API...')
         const response = await apiService.getAgents()
+        console.log('API Response:', response)
         setAgents(response.packages)
       } catch (error) {
-        console.error('Failed to load agents:', error)
+        console.error('Failed to load agents - ERROR DETAILS:', error)
+        // Don't fallback to mock - show the real error
         toast({
           title: "Failed to load agents",
-          description: "Using mock data instead",
+          description: error instanceof Error ? error.message : "API connection failed",
           variant: "destructive",
         })
-        // Fallback to mock data
-        setAgents(mockAgents)
+        // Use real API data or empty array
+        setAgents([])
       } finally {
         setLoading(false)
       }
