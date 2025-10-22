@@ -295,7 +295,7 @@ export default function AgentPageClient() {
         <Card className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <BookOpen className="h-6 w-6 text-blue-600" />
+              <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               <div>
                 <p className="font-bold text-gray-900 dark:text-white">New to this agent?</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -304,7 +304,7 @@ export default function AgentPageClient() {
               </div>
             </div>
             <Link href={`/agents/${agentId}/how-to-use`}>
-              <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-50">
+              <Button variant="outline" className="border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                 <BookOpen className="h-4 w-4 mr-2" />
                 How to Use Guide
               </Button>
@@ -328,7 +328,7 @@ export default function AgentPageClient() {
                 </div>
               </div>
               <Link href="/pricing">
-                <Button variant="outline" size="sm" className="border-purple-300 text-purple-600 hover:bg-purple-50">
+                <Button variant="outline" size="sm" className="border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30">
                   View Pricing
                 </Button>
               </Link>
