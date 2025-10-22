@@ -936,21 +936,63 @@ async def create_payment_intent(payment_data: dict):
         logger.error(f"Payment intent creation failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.post("/webhook")
 @app.post("/api/v1/payments/webhook")
 async def stripe_webhook(request: Request):
-    """Handle Stripe webhooks"""
+    """Handle Stripe webhooks for payment processing"""
     try:
         payload = await request.body()
         sig_header = request.headers.get('stripe-signature')
+        webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
         
         if not sig_header:
             raise HTTPException(status_code=400, detail="Missing signature header")
         
-        # Process webhook
-        result = await stripe_integration.handle_webhook(payload, sig_header)
+        if not webhook_secret:
+            logger.warning("STRIPE_WEBHOOK_SECRET not set - webhook signature verification disabled")
         
-        return result
+        # Verify webhook signature
+        try:
+            if webhook_secret:
+                event = stripe.Webhook.construct_event(
+                    payload, sig_header, webhook_secret
+                )
+            else:
+                # Parse without verification (development only)
+                event = json.loads(payload)
+        except ValueError as e:
+            logger.error(f"Invalid payload: {str(e)}")
+            raise HTTPException(status_code=400, detail="Invalid payload")
+        except stripe.error.SignatureVerificationError as e:
+            logger.error(f"Invalid signature: {str(e)}")
+            raise HTTPException(status_code=400, detail="Invalid signature")
         
+        # Handle the event
+        event_type = event.get('type')
+        logger.info(f"Received webhook event: {event_type}")
+        
+        if event_type == 'checkout.session.completed':
+            session = event['data']['object']
+            customer_email = session.get('customer_email') or session.get('customer_details', {}).get('email')
+            amount_total = session.get('amount_total', 0) / 100  # Convert cents to dollars
+            
+            logger.info(f"Payment completed: {customer_email} paid ${amount_total}")
+            
+            # TODO: Credit user account with credits based on package purchased
+            # For now, just log the successful payment
+            
+        elif event_type == 'payment_intent.succeeded':
+            payment_intent = event['data']['object']
+            logger.info(f"Payment intent succeeded: {payment_intent.get('id')}")
+            
+        elif event_type == 'invoice.paid':
+            invoice = event['data']['object']
+            logger.info(f"Invoice paid: {invoice.get('id')}")
+        
+        return {"status": "success", "event_type": event_type}
+        
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Webhook processing failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
