@@ -167,66 +167,27 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Execution Timeline */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Execution Timeline (24h)</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={executionData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Area type="monotone" dataKey="success" stackId="1" stroke="#10b981" fill="#10b981" name="Success" />
-                <Area type="monotone" dataKey="failed" stackId="1" stroke="#ef4444" fill="#ef4444" name="Failed" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </Card>
-
-          {/* Agent Usage Distribution */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Agent Usage Distribution</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={agentUsageData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {agentUsageData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </Card>
-        </div>
-
-        {/* Performance Metrics */}
-        <Card className="p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {performanceData.map((metric) => (
-              <div key={metric.metric} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{metric.metric}</span>
-                  <Badge variant={metric.change > 0 ? 'default' : 'secondary'} className="text-xs">
-                    {metric.change > 0 ? '+' : ''}{metric.change}%
+        {/* Popular Agents */}
+        {stats && stats.popular_agents && stats.popular_agents.length > 0 && (
+          <Card className="p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-4 dark:text-white">Most Popular Agents</h3>
+            <div className="space-y-3">
+              {stats.popular_agents.slice(0, 5).map((agent, index) => (
+                <div key={agent.agent_id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                      {index + 1}
+                    </div>
+                    <span className="font-medium dark:text-white">{agent.agent_id}</span>
+                  </div>
+                  <Badge variant="outline">
+                    {agent.executions.toLocaleString()} executions
                   </Badge>
                 </div>
-                <div className="text-2xl font-bold">{metric.value}</div>
-              </div>
-            ))}
-          </div>
-        </Card>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {/* Recent Executions */}
         <Card className="p-6">
