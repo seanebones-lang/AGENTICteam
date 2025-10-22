@@ -2,7 +2,7 @@
  * Button Component
  */
 
-import { FC, ButtonHTMLAttributes } from 'react';
+import { FC, ButtonHTMLAttributes, ReactNode, cloneElement, isValidElement } from 'react';
 import { clsx } from 'clsx';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,7 +24,7 @@ export const Button: FC<ButtonProps> = ({
   asChild,
   ...props
 }) => {
-  const baseStyles = 'font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variantStyles = {
     default: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
@@ -44,16 +44,26 @@ export const Button: FC<ButtonProps> = ({
     icon: 'p-2',
   };
 
+  const combinedClassName = clsx(
+    baseStyles,
+    variantStyles[variant],
+    sizeStyles[size],
+    fullWidth && 'w-full',
+    (disabled || loading) && 'opacity-50 cursor-not-allowed',
+    className
+  );
+
+  // If asChild is true, clone the child element and pass the className to it
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as any, {
+      className: clsx((children as any).props.className, combinedClassName),
+      ...(disabled && { 'aria-disabled': true }),
+    });
+  }
+
   return (
     <button
-      className={clsx(
-        baseStyles,
-        variantStyles[variant],
-        sizeStyles[size],
-        fullWidth && 'w-full',
-        (disabled || loading) && 'opacity-50 cursor-not-allowed',
-        className
-      )}
+      className={combinedClassName}
       disabled={disabled || loading}
       {...props}
     >
