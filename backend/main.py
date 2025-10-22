@@ -732,33 +732,32 @@ async def execute_agent(
             headers={"Retry-After": str(retry_after)}
         )
     
-    # Step 2: Check free trial eligibility (for ticket-resolver only)
+    # Step 2: Check free trial eligibility (for ALL agents)
     is_free_trial = False
-    if package_id == "ticket-resolver":
-        trial_allowed, queries_remaining, block_reason = security_service.check_free_trial(
+    trial_allowed, queries_remaining, block_reason = security_service.check_free_trial(
+        ip_address,
+        device_fingerprint,
+        package_id,
+        user_agent
+    )
+    
+    if trial_allowed:
+        is_free_trial = True
+        logger.info(f"Free trial allowed for {ip_address}: {queries_remaining} queries remaining for {package_id}")
+    elif not x_api_key:
+        # No free trial and no API key - require signup
+        security_service.log_security_event(
+            "free_trial_denied",
             ip_address,
-            device_fingerprint,
-            package_id,
-            user_agent
+            user_agent=user_agent,
+            endpoint=f"/api/v1/packages/{package_id}/execute",
+            threat_level="low",
+            details=f"Free trial exhausted: {block_reason}"
         )
-        
-        if trial_allowed:
-            is_free_trial = True
-            logger.info(f"Free trial allowed for {ip_address}: {queries_remaining} queries remaining")
-        elif not x_api_key:
-            # No free trial and no API key - require signup
-            security_service.log_security_event(
-                "free_trial_denied",
-                ip_address,
-                user_agent=user_agent,
-                endpoint=f"/api/v1/packages/{package_id}/execute",
-                threat_level="low",
-                details=f"Free trial exhausted: {block_reason}"
-            )
-            raise HTTPException(
-                status_code=402,
-                detail=f"Free trial exhausted. {block_reason}. Please sign up at https://bizbot.store/signup"
-            )
+        raise HTTPException(
+            status_code=402,
+            detail=f"Free trial exhausted. {block_reason}. Please sign up at https://bizbot.store/signup"
+        )
     
     # Step 3: Verify API key if not free trial
     if not is_free_trial:
