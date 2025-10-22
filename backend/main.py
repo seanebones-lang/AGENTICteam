@@ -1545,6 +1545,125 @@ async def get_system_status():
         logger.error(f"System status check failed: {str(e)}")
         raise HTTPException(status_code=500, detail="System status unavailable")
 
+# Support Chat Models
+class SupportChatMessage(BaseModel):
+    message: str
+    conversation_history: List[Dict[str, Any]] = Field(default_factory=list)
+
+class SupportChatResponse(BaseModel):
+    response: str
+    suggested_actions: List[Dict[str, str]] = Field(default_factory=list)
+
+# Support Chat Endpoint
+@app.post("/api/support-chat", response_model=SupportChatResponse)
+async def support_chat(chat_request: SupportChatMessage):
+    """
+    Claude-powered support chatbot with full system knowledge
+    """
+    try:
+        from langchain_anthropic import ChatAnthropic
+        from support_knowledge import get_system_prompt
+        import re
+        
+        # Initialize Claude
+        llm = ChatAnthropic(
+            model="claude-3-5-sonnet-20241022",
+            anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY"),
+            temperature=0.7,
+            max_tokens=2000
+        )
+        
+        # Build conversation context
+        conversation_context = ""
+        if chat_request.conversation_history:
+            # Include last 5 messages for context
+            recent_history = chat_request.conversation_history[-5:]
+            for msg in recent_history:
+                role = msg.get('type', 'user')
+                content = msg.get('content', '')
+                conversation_context += f"\n{role.upper()}: {content}"
+        
+        # Build prompt
+        system_prompt = get_system_prompt()
+        user_prompt = f"""Previous conversation context:
+{conversation_context}
+
+Current user message: {chat_request.message}
+
+Please provide a helpful, professional response. If you have suggested actions, format them at the end as:
+SUGGESTED_ACTIONS:
+[{{"label": "Button Text", "action": "link|message|contact", "value": "/url or value"}}]
+"""
+        
+        # Call Claude
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        response = llm.invoke(messages)
+        response_text = response.content
+        
+        # Parse suggested actions if present
+        suggested_actions = []
+        if "SUGGESTED_ACTIONS:" in response_text:
+            parts = response_text.split("SUGGESTED_ACTIONS:")
+            response_text = parts[0].strip()
+            
+            # Try to parse JSON actions
+            try:
+                actions_text = parts[1].strip()
+                # Extract JSON array
+                import json
+                actions_match = re.search(r'\[.*\]', actions_text, re.DOTALL)
+                if actions_match:
+                    suggested_actions = json.loads(actions_match.group(0))
+            except Exception as e:
+                logger.warning(f"Failed to parse suggested actions: {e}")
+        
+        # If no suggested actions, provide some defaults based on keywords
+        if not suggested_actions:
+            message_lower = chat_request.message.lower()
+            if any(word in message_lower for word in ['price', 'cost', 'pay', 'credit', 'subscription']):
+                suggested_actions = [
+                    {"label": "View Pricing", "action": "link", "value": "/pricing"},
+                    {"label": "View Dashboard", "action": "link", "value": "/dashboard"}
+                ]
+            elif any(word in message_lower for word in ['agent', 'execute', 'run', 'try']):
+                suggested_actions = [
+                    {"label": "Browse Agents", "action": "link", "value": "/agents"},
+                    {"label": "Try Free Agent", "action": "link", "value": "/agents/ticket-resolver"}
+                ]
+            elif any(word in message_lower for word in ['login', 'account', 'password', 'signup']):
+                suggested_actions = [
+                    {"label": "Login", "action": "link", "value": "/login"},
+                    {"label": "Sign Up", "action": "link", "value": "/signup"},
+                    {"label": "Email Support", "action": "contact", "value": "email"}
+                ]
+            else:
+                suggested_actions = [
+                    {"label": "Browse Agents", "action": "link", "value": "/agents"},
+                    {"label": "View Pricing", "action": "link", "value": "/pricing"},
+                    {"label": "Email Support", "action": "contact", "value": "email"}
+                ]
+        
+        return SupportChatResponse(
+            response=response_text,
+            suggested_actions=suggested_actions
+        )
+        
+    except Exception as e:
+        logger.error(f"Support chat error: {str(e)}")
+        # Return helpful fallback response
+        return SupportChatResponse(
+            response="I'm having trouble connecting to my knowledge base right now. For immediate assistance, please:\n\n• Email: support@bizbot.store (1 hour response)\n• Phone: (817) 675-9898 (Mon-Fri 9AM-6PM EST)\n• Check our documentation at /docs\n\nI apologize for the inconvenience!",
+            suggested_actions=[
+                {"label": "Email Support", "action": "contact", "value": "email"},
+                {"label": "View Docs", "action": "link", "value": "/docs"},
+                {"label": "System Status", "action": "link", "value": "/status"}
+            ]
+        )
+
 # Startup event
 @app.on_event("startup")
 async def startup_event():

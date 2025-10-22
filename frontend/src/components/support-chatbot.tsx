@@ -143,9 +143,11 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
     try {
       // Call Claude API for intelligent response with timeout
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout for AI response
       
-      const response = await fetch('/api/support-chat', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
+      
+      const response = await fetch(`${API_BASE_URL}/api/support-chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
