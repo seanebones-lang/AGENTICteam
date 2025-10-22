@@ -28,14 +28,14 @@ Missing dependencies in `requirements.txt`:
 # AI & LLM Dependencies
 anthropic==0.39.0
 langchain-anthropic==0.3.0
-langchain-core==0.3.15
+langchain-core==0.3.17  # Fixed: was 0.3.15, caused dependency conflict
 langchain==0.3.7
 
 # Vector Database
 qdrant-client==1.12.1
 ```
 
-**Commit:** `e9d4033`
+**Commits:** `e9d4033`, `963022e` (dependency fix)
 
 ### 2. Enhanced Agent Initialization Logging ✅
 **File:** `backend/main.py`
