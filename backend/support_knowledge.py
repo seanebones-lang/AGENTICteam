@@ -379,7 +379,7 @@ BizBot.Store is an AI-powered agent marketplace that provides 10 specialized AI 
 
 ### Enterprise Support
 - Dedicated account manager
-- 24/7 phone support
+- Priority email support (response within 15 minutes)
 - Custom SLA agreements
 - Priority feature requests
 - Contact: hello@bizbot.store

@@ -68,7 +68,7 @@ export default function LoginPage() {
       console.error('Login error:', error)
       toast({
         title: "Login Failed",
-        description: error instanceof Error ? error.message : "Invalid email or password. Please sign up if you don't have an account.",
+        description: error instanceof Error ? error.message : "Invalid email or password. If you just paid, try signing up with the same email.",
         variant: "destructive",
       })
     } finally {
@@ -110,7 +110,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
               <Link
-                href="/forgot-password"
+                href="/reset-password"
                 className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Forgot password?
@@ -145,6 +145,15 @@ export default function LoginPage() {
           <Link href="/signup" className="text-blue-600 hover:underline font-semibold">
             Sign up
           </Link>
+        </div>
+
+        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <p className="text-sm text-blue-800 dark:text-blue-300">
+            <strong>Just completed payment?</strong> You'll need to sign up first to create your account, then your credits will be added.
+          </p>
+          <p className="text-xs text-blue-700 dark:text-blue-400 mt-2">
+            Need help? Contact <a href="mailto:support@bizbot.store" className="underline">support@bizbot.store</a>
+          </p>
         </div>
 
         {/* Demo credentials removed for production security */}
