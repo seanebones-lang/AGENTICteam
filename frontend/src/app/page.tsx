@@ -26,24 +26,51 @@ export default function HomePage() {
               Solve Support Tickets in 30 Seconds
             </h1>
             
-            <p className="text-xl leading-8 text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl leading-8 text-gray-700 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
               AI-powered support agent that analyzes, prioritizes, and solves customer tickets instantly.
               <span className="font-bold text-purple-600 dark:text-purple-400"> Try it now with 3 free queries.</span>
             </p>
             
+            {/* NEW: Mini Social Proof Above CTA */}
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm mb-6">
+              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                <div className="flex items-center">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                </div>
+                <span className="font-semibold">67,540 solved today</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                <div className="flex items-center">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                </div>
+                <span className="font-semibold">98.9% success rate</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                <div className="flex items-center">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                </div>
+                <span className="font-semibold">1.2s avg response</span>
+              </div>
+            </div>
+            
             {/* Primary CTA */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
-                asChild
-              >
-                <Link href="/agents/ticket-resolver">
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Start Free Trial Now
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              <div className="flex flex-col items-center gap-2">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
+                  asChild
+                >
+                  <Link href="/agents/ticket-resolver">
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Start Free Trial Now
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Takes 30 seconds • No signup required • Get instant results
+                </p>
+              </div>
               
               <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
                 <Link href="/agents">

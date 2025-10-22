@@ -123,6 +123,33 @@ function PaywallModal({ isOpen, onClose, queriesUsed }: { isOpen: boolean, onClo
   )
 }
 
+// Smart placeholder examples for different agents
+const PLACEHOLDER_EXAMPLES: Record<string, string[]> = {
+  'ticket-resolver': [
+    'Customer reports: "Error 403 when resetting password. Tried clearing cache but issue persists."',
+    'User says: "Can\'t login after changing email address. Getting \'Account not found\' error."',
+    'Support ticket: "Payment failed but card was charged. Transaction ID: #12345"',
+    'Customer complaint: "Uploaded file won\'t open. Shows \'corrupted file\' message."'
+  ],
+  'security-scanner': [
+    'Scan our production API endpoints for common vulnerabilities',
+    'Check for SQL injection risks in our user input forms',
+    'Audit authentication system for security weaknesses',
+    'Review our file upload functionality for security issues'
+  ],
+  'data-processor': [
+    'Extract customer emails from this CSV and format as JSON',
+    'Clean and normalize this dataset: remove duplicates and fix formatting',
+    'Convert this Excel spreadsheet to a structured database format',
+    'Parse these log files and extract error patterns'
+  ],
+  'default': [
+    'Describe your task in detail for best results...',
+    'The more context you provide, the better the solution',
+    'Include any error messages, steps taken, or relevant details'
+  ]
+}
+
 export default function AgentPageClient() {
   const params = useParams()
   const router = useRouter()
@@ -135,6 +162,7 @@ export default function AgentPageClient() {
   const [task, setTask] = useState('')
   const [freeQueriesUsed, setFreeQueriesUsed] = useState(0)
   const [showPaywall, setShowPaywall] = useState(false)
+  const [placeholderIndex, setPlaceholderIndex] = useState(0)
   
   // Find the specific agent from packages
   const agent = packages.find(pkg => pkg.id === agentId)
@@ -160,6 +188,15 @@ export default function AgentPageClient() {
       setTask('Customer says: "I cannot reset my password. When I click the reset link, I get error 403 Forbidden."')
     }
   }, [agentId, task])
+  
+  // Rotate placeholder examples every 3 seconds
+  useEffect(() => {
+    const examples = PLACEHOLDER_EXAMPLES[agentId] || PLACEHOLDER_EXAMPLES['default']
+    const interval = setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % examples.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [agentId])
 
   const handleExecute = async () => {
     if (!task.trim()) return
@@ -558,17 +595,20 @@ export default function AgentPageClient() {
               
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="task" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="task" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Task Description
                   </label>
                   <textarea
                     id="task"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
-                    placeholder={`Describe the task for ${agent.name}...`}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder={(PLACEHOLDER_EXAMPLES[agentId] || PLACEHOLDER_EXAMPLES['default'])[placeholderIndex]}
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-400 dark:placeholder:text-gray-500"
                     rows={4}
                   />
+                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    💡 Tip: The more details you provide, the better the solution
+                  </p>
                 </div>
                 
                 <Button
