@@ -237,17 +237,14 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
       if (option.value === 'human') {
         addMessage({
           type: 'bot',
-          content: "I'll connect you with our support team. Choose your preferred contact method:",
+          content: "I'll connect you with our support team via email. Our team typically responds within 1 hour during business hours.",
           options: [
-            { label: "📧 Email Support", action: "contact", value: "email" },
-            { label: "📞 Phone Support", action: "contact", value: "phone" }
+            { label: "📧 Email Support", action: "contact", value: "email" }
           ]
         })
       } else if (option.value === 'email') {
         // Use location.href for mailto links to avoid popup blockers
         window.location.href = 'mailto:support@bizbot.store?subject=Support Request from Chatbot'
-      } else if (option.value === 'phone') {
-        window.location.href = 'tel:+18176759898'
       }
     }
   }

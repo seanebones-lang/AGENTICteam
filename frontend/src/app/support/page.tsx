@@ -438,23 +438,25 @@ export default function SupportPage() {
               </Button>
             </Card>
 
-            {/* Phone Support */}
-            <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            {/* Phone Support - Currently Unavailable */}
+            <Card className="p-6 text-center bg-gray-50 dark:bg-gray-800/50">
+              <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Phone className="w-6 h-6 text-gray-400 dark:text-gray-500" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Phone Support</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Speak directly with our experts
+              <h3 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">Phone Support</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                Currently unavailable
               </p>
-              <div className="text-sm text-gray-500 mb-4">
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 <Clock className="w-4 h-4 inline mr-1" />
-                Mon-Fri 9AM-6PM EST
+                Use live chat or email for immediate assistance
               </div>
-              <Button variant="outline" className="w-full" asChild>
-                <a href="tel:+18176759898">
-                  (817) 675-9898
-                </a>
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                disabled
+              >
+                Coming Soon
               </Button>
             </Card>
           </div>

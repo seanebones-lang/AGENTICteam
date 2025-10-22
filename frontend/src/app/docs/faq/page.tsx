@@ -7,7 +7,7 @@ export default function FAQPage() {
   const faqs = [
     {
       question: "How do I get started with Agent Marketplace?",
-      answer: "Contact us at bizbot.store or call (817) 675-9898 to obtain an API key and license. Then follow our Quick Start guide to deploy your first agent in under 5 minutes."
+      answer: "Contact us at bizbot.store or call support@bizbot.store to obtain an API key and license. Then follow our Quick Start guide to deploy your first agent in under 5 minutes."
     },
     {
       question: "What agents are available?",
@@ -43,7 +43,7 @@ export default function FAQPage() {
     },
     {
       question: "How do I report a bug or request a feature?",
-      answer: "Contact our support team at bizbot.store or call (817) 675-9898. Enterprise customers can use their dedicated support channel."
+      answer: "Contact our support team at bizbot.store or call support@bizbot.store. Enterprise customers can use their dedicated support channel."
     }
   ]
 
@@ -90,10 +90,10 @@ export default function FAQPage() {
               Visit BizBot.store
             </a>
             <a
-              href="tel:+18176759898"
+              href="mailto:support@bizbot.store"
               className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
             >
-              Call (817) 675-9898
+              Call support@bizbot.store
             </a>
           </div>
         </Card>

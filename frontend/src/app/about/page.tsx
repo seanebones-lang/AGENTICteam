@@ -59,9 +59,9 @@ export default function AboutPage() {
                   </a>
                 </Button>
                 <Button variant="outline" asChild>
-                  <a href="tel:+18176759898">
+                  <a href="mailto:support@bizbot.store">
                     <Phone className="mr-2 h-4 w-4" />
-                    (817) 675-9898
+                    support@bizbot.store
                   </a>
                 </Button>
               </div>
@@ -199,9 +199,9 @@ export default function AboutPage() {
                 </a>
               </Button>
               <Button variant="outline" asChild>
-                <a href="tel:+18176759898">
+                <a href="mailto:support@bizbot.store">
                   <Phone className="mr-2 h-4 w-4" />
-                  (817) 675-9898
+                  support@bizbot.store
                 </a>
               </Button>
             </div>
@@ -226,9 +226,9 @@ export default function AboutPage() {
               </a>
             </Button>
             <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10" asChild>
-              <a href="tel:+18176759898">
+              <a href="mailto:support@bizbot.store">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (817) 675-9898
+                Call support@bizbot.store
               </a>
             </Button>
           </div>

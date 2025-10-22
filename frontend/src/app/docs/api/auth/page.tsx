@@ -74,7 +74,7 @@ Response:
                     <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a>
                   </p>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    <strong>Phone:</strong> <a href="tel:+18176759898" className="text-blue-600 hover:underline">(817) 675-9898</a>
+                    <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a>
                   </p>
                 </div>
               </div>

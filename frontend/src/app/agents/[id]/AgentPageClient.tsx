@@ -420,8 +420,8 @@ export default function AgentPageClient() {
             </div>
             
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{agent.name}</h1>
-              <p className="text-xl text-gray-600 mb-4">{agent.description}</p>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{agent.name}</h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">{agent.description}</p>
               
               <div className="flex items-center gap-4 mb-4 flex-wrap">
                 <Badge variant="secondary" className="px-3 py-1">
@@ -480,7 +480,7 @@ export default function AgentPageClient() {
                       {agent.features?.map((feature: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{feature}</span>
+                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -490,12 +490,12 @@ export default function AgentPageClient() {
               
               <TabsContent value="capabilities" className="mt-6">
                 <Card className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">Capabilities</h3>
+                  <h3 className="text-xl font-semibold mb-4 dark:text-white">Capabilities</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {agent.features?.map((capability: string, index: number) => (
-                      <div key={index} className="flex items-start p-3 bg-gray-50 rounded-lg">
+                      <div key={index} className="flex items-start p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <Zap className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{capability}</span>
+                        <span className="text-gray-700 dark:text-gray-300">{capability}</span>
                       </div>
                     ))}
                   </div>
@@ -504,22 +504,22 @@ export default function AgentPageClient() {
               
               <TabsContent value="examples" className="mt-6">
                 <Card className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">Usage Examples</h3>
+                  <h3 className="text-xl font-semibold mb-4 dark:text-white">Usage Examples</h3>
                   <div className="space-y-4">
                     {agentId === 'ticket-resolver' && (
                       <>
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                          <h4 className="font-medium text-green-900 mb-2 flex items-center">
+                        <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                          <h4 className="font-medium text-green-900 dark:text-green-100 mb-2 flex items-center">
                             <Sparkles className="h-4 w-4 mr-2" />
                             Pre-filled Example (Try Now!)
                           </h4>
-                          <code className="text-sm text-green-800 bg-white p-2 rounded block">
+                          <code className="text-sm text-green-800 dark:text-green-200 bg-white dark:bg-gray-900 p-2 rounded block">
                             Customer says: "I cannot reset my password. When I click the reset link, I get error 403 Forbidden."
                           </code>
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h4 className="font-medium text-gray-900 mb-2">Another Example</h4>
-                          <code className="text-sm text-gray-600 bg-white p-2 rounded block">
+                        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Another Example</h4>
+                          <code className="text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 p-2 rounded block">
                             User reports: "The checkout page is showing a blank screen after I add items to cart."
                           </code>
                         </div>
@@ -527,15 +527,15 @@ export default function AgentPageClient() {
                     )}
                     {agentId !== 'ticket-resolver' && (
                       <>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h4 className="font-medium text-gray-900 mb-2">Basic Usage</h4>
-                          <code className="text-sm text-gray-600 bg-white p-2 rounded block">
+                        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Basic Usage</h4>
+                          <code className="text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 p-2 rounded block">
                             Execute {agent.name.toLowerCase()} with your specific task requirements
                           </code>
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h4 className="font-medium text-gray-900 mb-2">Advanced Usage</h4>
-                          <code className="text-sm text-gray-600 bg-white p-2 rounded block">
+                        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Advanced Usage</h4>
+                          <code className="text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 p-2 rounded block">
                             Execute with custom parameters and detailed analysis options
                           </code>
                         </div>

@@ -191,7 +191,7 @@ export default function PrivacyPage() {
                   <li><strong>Withdraw Consent:</strong> Withdraw consent for data processing where consent was the legal basis</li>
                 </ul>
                 <p className="mt-4">
-                  To exercise these rights, please contact us at <a href="https://bizbot.store" className="text-blue-600 hover:underline">bizbot.store</a> or <a href="tel:+18176759898" className="text-blue-600 hover:underline">(817) 675-9898</a>.
+                  To exercise these rights, please contact us at <a href="https://bizbot.store" className="text-blue-600 hover:underline">bizbot.store</a> or <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a>.
                 </p>
               </div>
             </Card>
@@ -287,7 +287,7 @@ export default function PrivacyPage() {
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                   <p className="font-semibold mb-2">BizBot / Sean McDonnell</p>
                   <p>Website: <a href="https://bizbot.store" className="text-blue-600 hover:underline">bizbot.store</a></p>
-                  <p>Phone: <a href="tel:+18176759898" className="text-blue-600 hover:underline">(817) 675-9898</a></p>
+                  <p>Phone: <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a></p>
                   <p className="mt-2 text-sm">Response time: Within 30 days of receipt</p>
                 </div>
               </div>

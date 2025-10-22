@@ -320,7 +320,7 @@ export default function StatusPage() {
             Enterprise customers receive real-time alerts for any service disruptions
           </p>
           <p className="text-blue-100">
-            Contact us at <a href="tel:+18176759898" className="underline font-semibold">(817) 675-9898</a> or visit{' '}
+            Contact us at <a href="mailto:support@bizbot.store" className="underline font-semibold">support@bizbot.store</a> or visit{' '}
             <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="underline font-semibold">bizbot.store</a> to learn more
           </p>
         </div>

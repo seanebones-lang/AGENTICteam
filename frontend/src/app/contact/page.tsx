@@ -61,8 +61,8 @@ export default function ContactPage() {
                 Speak directly with our team
               </p>
               <Button asChild className="w-full bg-green-600 hover:bg-green-700">
-                <a href="tel:+18176759898">
-                  (817) 675-9898
+                <a href="mailto:support@bizbot.store">
+                  support@bizbot.store
                 </a>
               </Button>
             </Card>
@@ -105,7 +105,7 @@ export default function ContactPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Phone className="h-4 w-4" />
-                  <a href="tel:+18176759898" className="hover:text-blue-600">(817) 675-9898</a>
+                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600">support@bizbot.store</a>
                 </div>
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Globe className="h-4 w-4" />
@@ -123,7 +123,7 @@ export default function ContactPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Phone className="h-4 w-4" />
-                  <a href="tel:+18176759898" className="hover:text-blue-600">(817) 675-9898</a>
+                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600">support@bizbot.store</a>
                 </div>
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Globe className="h-4 w-4" />
@@ -169,7 +169,7 @@ export default function ContactPage() {
                 <p className="font-medium">BizBot</p>
                 <p>Texas, United States</p>
                 <p className="mt-4">
-                  <strong>Phone:</strong> <a href="tel:+18176759898" className="hover:text-blue-600">(817) 675-9898</a>
+                  <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="hover:text-blue-600">support@bizbot.store</a>
                 </p>
                 <p>
                   <strong>Web:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">bizbot.store</a>
@@ -194,7 +194,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-semibold mb-2">How do I purchase a license?</h3>
                 <p className="text-gray-700 dark:text-gray-300">
-                  Contact us at <a href="tel:+18176759898" className="text-blue-600 hover:underline">(817) 675-9898</a> or visit <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a> to discuss licensing options. We offer flexible plans for businesses of all sizes.
+                  Contact us at <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a> or visit <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a> to discuss licensing options. We offer flexible plans for businesses of all sizes.
                 </p>
               </div>
               <div>
@@ -237,9 +237,9 @@ export default function ContactPage() {
               </a>
             </Button>
             <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10" asChild>
-              <a href="tel:+18176759898">
+              <a href="mailto:support@bizbot.store">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (817) 675-9898
+                Call support@bizbot.store
               </a>
             </Button>
           </div>

@@ -62,7 +62,7 @@ Agentic AI Solutions is an enterprise-grade platform that allows users to:
 ## SUPPORT CHANNELS
 - **Live Chat**: 24/7 availability, 2-minute average response
 - **Email**: support@bizbot.store, 1-hour response time
-- **Phone**: (817) 675-9898, business hours
+- **Phone**: support@bizbot.store, business hours
 - **Documentation**: /docs for detailed guides
 
 ## SECURITY & COMPLIANCE

@@ -10,8 +10,8 @@ SYSTEM_KNOWLEDGE = """
 BizBot.Store is an AI-powered agent marketplace that provides 10 specialized AI agents for business automation.
 - Website: https://bizbot.store
 - Support Email: support@bizbot.store
-- Phone: (817) 675-9898
-- Business Hours: 24/7 automated support, human support Mon-Fri 9AM-6PM EST
+- Contact: hello@bizbot.store, info@bizbot.store
+- Business Hours: 24/7 automated support, email support within 1 hour
 
 ## PRICING & BILLING
 
@@ -364,9 +364,9 @@ BizBot.Store is an AI-powered agent marketplace that provides 10 specialized AI 
 ## CONTACT & SUPPORT
 
 ### Support Channels (Priority Order)
-1. **Live Chat**: Click chat icon (bottom right) - 2 min avg response
+1. **Live Chat**: Click chat icon (bottom right) - AI-powered, instant responses
 2. **Email**: support@bizbot.store - 1 hour response time
-3. **Phone**: (817) 675-9898 - Mon-Fri 9AM-6PM EST
+3. **General Inquiries**: hello@bizbot.store or info@bizbot.store
 
 ### What to Include in Support Requests
 - Your email address
