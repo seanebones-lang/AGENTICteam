@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { CheckCircle, Zap, ArrowRight, Sparkles, Play, Loader2, Bot, Save, Star, X, Plus, Maximize2, Minimize2 } from 'lucide-react'
 import { useAgents } from '@/hooks/useAgents'
 import { useToast } from '@/hooks/use-toast'
-import { getCredits, useCredits, getCreditCost } from '@/lib/credits'
+import { getCredits, deductCredits, getCreditCost } from '@/lib/credits'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
 
@@ -122,7 +122,7 @@ export default function ConsolePage() {
 
     // Check and deduct credits
     const creditCost = getCreditCost(tab.agentId)
-    const creditResult = useCredits(creditCost)
+    const creditResult = deductCredits(creditCost)
     
     if (!creditResult.success) {
       toast({

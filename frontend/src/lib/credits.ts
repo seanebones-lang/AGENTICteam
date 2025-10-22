@@ -44,7 +44,7 @@ export const addCredits = (amount: number): CreditBalance => {
   return updated
 }
 
-export const useCredits = (amount: number): { success: boolean; balance: CreditBalance } => {
+export const deductCredits = (amount: number): { success: boolean; balance: CreditBalance } => {
   const current = getCredits()
   
   if (current.remaining < amount) {
