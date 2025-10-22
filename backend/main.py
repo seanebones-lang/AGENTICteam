@@ -104,6 +104,52 @@ class ExecutionResult(BaseModel):
     agent_used: str
     timestamp: str
 
+# Credit cost mapping for agents (credits per execution)
+AGENT_CREDIT_COSTS = {
+    # LIGHT TIER (1-3 credits)
+    "knowledge-base": 2,        # Simple queries, fast responses
+    "ticket-resolver": 3,       # ML classification, moderate complexity
+    
+    # MEDIUM TIER (4-6 credits)
+    "security-scanner": 4,      # Comprehensive scanning
+    "report-generator": 5,      # AI-powered report generation
+    "data-processor": 5,        # ETL and data transformation
+    "escalation-manager": 6,    # Complex routing logic
+    
+    # HEAVY TIER (7-9 credits)
+    "incident-responder": 6,    # Root cause analysis
+    "workflow-orchestrator": 7, # Multi-step workflow execution
+    "deployment-agent": 8,      # CI/CD automation
+    "audit-agent": 9,           # Comprehensive compliance auditing
+}
+
+# Credit package pricing
+CREDIT_PACKAGES = {
+    "starter": {"credits": 500, "price": 20.00, "bonus": 0},
+    "growth": {"credits": 1500, "price": 50.00, "bonus": 0},
+    "business": {"credits": 3500, "price": 100.00, "bonus": 0},
+    "enterprise": {"credits": 10000, "price": 250.00, "bonus": 0},
+}
+
+# Subscription tiers
+SUBSCRIPTION_TIERS = {
+    "basic": {
+        "price": 49.00,
+        "credits_per_month": 1000,
+        "features": ["1,000 credits/month", "1 free re-run daily", "Email support"],
+    },
+    "pro": {
+        "price": 99.00,
+        "credits_per_month": 3000,
+        "features": ["3,000 credits/month", "Unlimited re-runs", "Priority support", "Advanced analytics"],
+    },
+    "enterprise": {
+        "price": 299.00,
+        "credits_per_month": 15000,
+        "features": ["15,000 credits/month", "Unlimited re-runs", "Dedicated Slack support", "Custom integrations", "SLA guarantee"],
+    },
+}
+
 # Agent package definitions with real capabilities
 AGENT_PACKAGES = [
     AgentPackage(
@@ -553,26 +599,36 @@ async def health_check():
 
 @app.get("/api/v1/packages")
 async def get_packages(category: Optional[str] = None):
-    """Get all available agent packages"""
+    """Get all available agent packages with credit costs"""
     packages = AGENT_PACKAGES
     
     if category:
         packages = [pkg for pkg in packages if pkg.category.lower() == category.lower()]
     
+    # Add credit costs to packages
+    packages_with_credits = []
+    for pkg in packages:
+        pkg_dict = pkg.dict()
+        pkg_dict["credit_cost"] = AGENT_CREDIT_COSTS.get(pkg.id, 5)
+        packages_with_credits.append(pkg_dict)
+    
     return {
-        "packages": packages,
+        "packages": packages_with_credits,
         "total": len(packages),
         "categories": list(set(pkg.category for pkg in AGENT_PACKAGES))
     }
 
 @app.get("/api/v1/packages/{package_id}")
 async def get_package(package_id: str):
-    """Get specific agent package details"""
+    """Get specific agent package details with credit cost"""
     package = next((pkg for pkg in AGENT_PACKAGES if pkg.id == package_id), None)
     if not package:
         raise HTTPException(status_code=404, detail="Package not found")
     
-    return package
+    pkg_dict = package.dict()
+    pkg_dict["credit_cost"] = AGENT_CREDIT_COSTS.get(package_id, 5)
+    
+    return pkg_dict
 
 @app.post("/api/v1/packages/{package_id}/execute")
 async def execute_agent(
@@ -1119,6 +1175,59 @@ async def get_platform_stats():
             ]
         },
         "timestamp": datetime.now().isoformat()
+    }
+
+# Pricing Endpoints
+@app.get("/api/v1/pricing/credits")
+async def get_credit_packages():
+    """Get available credit packages"""
+    return {
+        "packages": CREDIT_PACKAGES,
+        "credit_value": 0.04,  # $0.04 per credit
+        "currency": "USD"
+    }
+
+@app.get("/api/v1/pricing/subscriptions")
+async def get_subscription_tiers():
+    """Get available subscription tiers"""
+    return {
+        "tiers": SUBSCRIPTION_TIERS,
+        "currency": "USD",
+        "billing_period": "monthly"
+    }
+
+@app.get("/api/v1/pricing/agents")
+async def get_agent_pricing():
+    """Get credit costs for all agents"""
+    agent_pricing = []
+    for agent in AGENT_PACKAGES:
+        credit_cost = AGENT_CREDIT_COSTS.get(agent.id, 5)
+        dollar_cost = credit_cost * 0.04
+        
+        # Determine tier
+        if credit_cost <= 3:
+            tier = "light"
+        elif credit_cost <= 6:
+            tier = "medium"
+        else:
+            tier = "heavy"
+        
+        agent_pricing.append({
+            "id": agent.id,
+            "name": agent.name,
+            "category": agent.category,
+            "credit_cost": credit_cost,
+            "dollar_cost": dollar_cost,
+            "tier": tier
+        })
+    
+    return {
+        "agents": agent_pricing,
+        "tiers": {
+            "light": {"range": "1-3 credits", "description": "Simple queries, fast responses"},
+            "medium": {"range": "4-6 credits", "description": "Moderate complexity, comprehensive analysis"},
+            "heavy": {"range": "7-9 credits", "description": "Complex workflows, deep analysis"}
+        }
     }
 
 # Monitoring and Health Check Endpoints
