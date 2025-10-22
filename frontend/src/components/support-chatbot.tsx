@@ -272,8 +272,8 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[9999] w-96 max-w-[calc(100vw-2rem)]">
-          <Card className="h-[500px] flex flex-col shadow-2xl">
+        <div className="fixed bottom-24 right-6 z-[9999] w-[480px] max-w-[calc(100vw-2rem)]">
+          <Card className="h-[600px] flex flex-col shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b bg-blue-600 text-white rounded-t-lg">
               <div className="flex items-center gap-2">
@@ -294,55 +294,55 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {messages.map((message) => (
                 <div
                   key={message.id}
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[80%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                  <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
                     <div
-                      className={`rounded-lg p-3 ${
+                      className={`rounded-lg p-4 ${
                         message.type === 'user'
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                       }`}
                     >
-                      <p className="text-sm whitespace-pre-line">{message.content}</p>
+                      <p className="text-sm whitespace-pre-line leading-relaxed">{message.content}</p>
                     </div>
                     
                     {/* Options */}
                     {message.options && (
-                      <div className="mt-2 space-y-1">
+                      <div className="mt-3 space-y-2">
                         {message.options.map((option, index) => (
                           <Button
                             key={index}
                             variant="outline"
                             size="sm"
                             onClick={() => handleOptionClick(option)}
-                            className="w-full justify-start text-xs h-8"
+                            className="w-full justify-start text-sm h-9 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                           >
-                            {option.action === 'link' && <ExternalLink className="h-3 w-3 mr-1" />}
-                            {option.action === 'contact' && <HelpCircle className="h-3 w-3 mr-1" />}
+                            {option.action === 'link' && <ExternalLink className="h-4 w-4 mr-2" />}
+                            {option.action === 'contact' && <HelpCircle className="h-4 w-4 mr-2" />}
                             {option.label}
                           </Button>
                         ))}
                       </div>
                     )}
                     
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                       {formatTime(message.timestamp)}
                     </p>
                   </div>
                   
-                  <div className={`flex-shrink-0 ${message.type === 'user' ? 'order-1 mr-2' : 'order-2 ml-2'}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  <div className={`flex-shrink-0 ${message.type === 'user' ? 'order-1 mr-3' : 'order-2 ml-3'}`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       message.type === 'user' ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                     }`}>
                       {message.type === 'user' ? (
-                        <User className="h-4 w-4 text-white" />
+                        <User className="h-5 w-5 text-white" />
                       ) : (
-                        <Bot className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                        <Bot className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                       )}
                     </div>
                   </div>
@@ -371,25 +371,25 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
             </div>
 
             {/* Input */}
-            <div className="border-t p-4">
-              <div className="flex gap-2">
+            <div className="border-t p-5 bg-gray-50 dark:bg-gray-900">
+              <div className="flex gap-3">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Type your message..."
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white text-sm"
+                  className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white text-sm"
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim()}
-                  size="sm"
+                  className="px-4 py-3"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-5 w-5" />
                 </Button>
               </div>
-              <p className="text-xs text-gray-500 mt-2 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
                 Powered by Claude AI • Can help with any platform question
               </p>
             </div>
