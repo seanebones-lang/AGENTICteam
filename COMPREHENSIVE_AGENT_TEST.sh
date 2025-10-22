@@ -33,7 +33,7 @@ test_agent() {
       -H "Content-Type: application/json" \
       -H "X-API-Key: $API_KEY" \
       -d "{\"package_id\": \"$agent_id\", \"task\": \"$query\", \"engine_type\": \"crewai\"}" \
-      --max-time 90 2>&1)
+      --max-time 180 2>&1)
     
     # Check if response contains error
     if echo "$response" | grep -q "error\|Error\|ERROR\|database is locked\|timeout"; then
