@@ -9,7 +9,6 @@ from datetime import datetime
 from pydantic import BaseModel, Field, HttpUrl
 import validators
 from bs4 import BeautifulSoup
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 import re
