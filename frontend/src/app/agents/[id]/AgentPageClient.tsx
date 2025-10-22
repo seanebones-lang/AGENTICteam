@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/badge'
@@ -22,37 +22,209 @@ import {
   Clock,
   DollarSign,
   Users,
-  Star
+  Star,
+  Lock,
+  CreditCard,
+  Sparkles
 } from 'lucide-react'
 import { useAgents } from '@/hooks/useAgents'
 import Link from 'next/link'
+import { useToast } from '@/hooks/use-toast'
+
+// Free trial configuration
+const FREE_TRIAL_AGENT = 'ticket-resolver'
+const FREE_TRIAL_QUERIES = 3
+const MINIMUM_PURCHASE = 20 // $20 minimum
+
+// Paywall Modal Component
+function PaywallModal({ isOpen, onClose, queriesUsed }: { isOpen: boolean, onClose: () => void, queriesUsed: number }) {
+  const router = useRouter()
+  
+  if (!isOpen) return null
+  
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Card className="max-w-md w-full p-8 relative">
+        <div className="text-center mb-6">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-100 to-red-100 rounded-full flex items-center justify-center mb-4">
+            <Lock className="h-8 w-8 text-orange-600" />
+          </div>
+          
+          <h2 className="text-2xl font-bold mb-2">Free Trial Complete!</h2>
+          <p className="text-gray-600 mb-4">
+            You've used all {queriesUsed} free queries. Ready to unlock the full platform?
+          </p>
+          
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Sparkles className="h-5 w-5 text-purple-600" />
+              <span className="font-semibold text-lg">Get Started for ${MINIMUM_PURCHASE}</span>
+            </div>
+            <p className="text-sm text-gray-600">
+              500 credits • Access all agents • Credits never expire
+            </p>
+          </div>
+        </div>
+        
+        <div className="space-y-3 mb-6">
+          <div className="flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+            <div>
+              <p className="font-medium">10 Powerful AI Agents</p>
+              <p className="text-sm text-gray-600">Security, support, analytics, and more</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+            <div>
+              <p className="font-medium">Credits Never Expire</p>
+              <p className="text-sm text-gray-600">Use them whenever you need</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+            <div>
+              <p className="font-medium">75% Cost Savings</p>
+              <p className="text-sm text-gray-600">vs. hiring full-time engineers</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="space-y-3">
+          <Button 
+            className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            onClick={() => router.push('/signup')}
+          >
+            <CreditCard className="h-5 w-5 mr-2" />
+            Sign Up & Purchase Credits
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="w-full"
+            onClick={() => router.push('/pricing')}
+          >
+            View All Pricing Options
+          </Button>
+          
+          <button
+            onClick={onClose}
+            className="w-full text-sm text-gray-500 hover:text-gray-700 py-2"
+          >
+            Maybe later
+          </button>
+        </div>
+      </Card>
+    </div>
+  )
+}
 
 export default function AgentPageClient() {
   const params = useParams()
+  const router = useRouter()
   const agentId = params?.id as string
   const { packages, loading, error } = useAgents()
+  const { toast } = useToast()
+  
   const [isExecuting, setIsExecuting] = useState(false)
   const [executionResult, setExecutionResult] = useState<any>(null)
   const [task, setTask] = useState('')
+  const [freeQueriesUsed, setFreeQueriesUsed] = useState(0)
+  const [showPaywall, setShowPaywall] = useState(false)
   
   // Find the specific agent from packages
   const agent = packages.find(pkg => pkg.id === agentId)
+  
+  // Check if this is the free trial agent
+  const isFreeTrialAgent = agentId === FREE_TRIAL_AGENT
+  const hasFreeTrial = isFreeTrialAgent && freeQueriesUsed < FREE_TRIAL_QUERIES
+  const freeQueriesRemaining = Math.max(0, FREE_TRIAL_QUERIES - freeQueriesUsed)
+  
+  // Load free query count from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('free_queries_used')
+      if (stored) {
+        setFreeQueriesUsed(parseInt(stored, 10))
+      }
+    }
+  }, [])
+  
+  // Set pre-filled example for Ticket Resolver
+  useEffect(() => {
+    if (agentId === 'ticket-resolver' && !task) {
+      setTask('Customer says: "I cannot reset my password. When I click the reset link, I get error 403 Forbidden."')
+    }
+  }, [agentId, task])
 
   const handleExecute = async () => {
     if (!task.trim()) return
     
+    // Check if user needs to pay
+    if (!hasFreeTrial && isFreeTrialAgent) {
+      setShowPaywall(true)
+      return
+    }
+    
     setIsExecuting(true)
+    setExecutionResult(null)
+    
     try {
-      // Simulate agent execution for demo
-      const result = {
-        success: true,
-        message: `Agent ${agentId} executed successfully`,
-        task: task,
-        timestamp: new Date().toISOString()
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
+      const apiKey = process.env.NEXT_PUBLIC_DEMO_API_KEY || localStorage.getItem('api_key')
+      
+      const response = await fetch(`${API_BASE_URL}/api/v1/packages/${agentId}/execute`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(apiKey && { 'X-API-Key': apiKey }),
+        },
+        body: JSON.stringify({
+          package_id: agentId,
+          task: task,
+          engine_type: 'crewai'
+        }),
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || `API Error: ${response.status}`)
       }
+      
+      const result = await response.json()
       setExecutionResult(result)
+      
+      // Increment free query counter if applicable
+      if (hasFreeTrial) {
+        const newCount = freeQueriesUsed + 1
+        setFreeQueriesUsed(newCount)
+        localStorage.setItem('free_queries_used', newCount.toString())
+        
+        // Show paywall if this was the last free query
+        if (newCount >= FREE_TRIAL_QUERIES) {
+          setTimeout(() => setShowPaywall(true), 2000)
+        }
+        
+        toast({
+          title: "Success!",
+          description: `Free query ${newCount}/${FREE_TRIAL_QUERIES} used. ${FREE_TRIAL_QUERIES - newCount} remaining.`,
+        })
+      } else {
+        toast({
+          title: "Agent Executed Successfully",
+          description: `${agent?.name} completed your task.`,
+        })
+      }
+      
     } catch (error) {
       console.error('Execution failed:', error)
+      toast({
+        title: "Execution Failed",
+        description: error instanceof Error ? error.message : "Failed to execute agent",
+        variant: "destructive",
+      })
     } finally {
       setIsExecuting(false)
     }
@@ -104,10 +276,41 @@ export default function AgentPageClient() {
   }
 
   const Icon = getAgentIcon(agentId)
+  
+  // Get credit cost from agent data
+  const creditCost = (agent as any).credit_cost || 3
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <PaywallModal 
+        isOpen={showPaywall} 
+        onClose={() => setShowPaywall(false)}
+        queriesUsed={freeQueriesUsed}
+      />
+      
       <div className="container mx-auto px-4 py-8">
+        {/* Free Trial Banner */}
+        {isFreeTrialAgent && hasFreeTrial && (
+          <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl p-4 border-2 border-green-200 dark:border-green-800">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-6 w-6 text-green-600" />
+                <div>
+                  <p className="font-semibold text-gray-900">Free Trial Active</p>
+                  <p className="text-sm text-gray-600">
+                    {freeQueriesRemaining} free {freeQueriesRemaining === 1 ? 'query' : 'queries'} remaining
+                  </p>
+                </div>
+              </div>
+              <Link href="/pricing">
+                <Button variant="outline" size="sm">
+                  View Pricing
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+        
         {/* Header */}
         <div className="mb-8">
           <Link href="/agents" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
@@ -124,19 +327,25 @@ export default function AgentPageClient() {
               <h1 className="text-4xl font-bold text-gray-900 mb-2">{agent.name}</h1>
               <p className="text-xl text-gray-600 mb-4">{agent.description}</p>
               
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-4 flex-wrap">
                 <Badge variant="secondary" className="px-3 py-1">
                   {agent.category}
                 </Badge>
                 <div className="flex items-center text-gray-600">
                   <DollarSign className="h-4 w-4 mr-1" />
-                  <span className="font-medium">${agent.price}</span>
+                  <span className="font-medium">{creditCost} credits</span>
                   <span className="ml-1">per execution</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Users className="h-4 w-4 mr-1" />
                   <span>All Tiers</span>
                 </div>
+                {isFreeTrialAgent && (
+                  <Badge className="bg-green-500 text-white px-3 py-1">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    Free Trial Available
+                  </Badge>
+                )}
               </div>
               
               <div className="flex items-center gap-2">
@@ -201,18 +410,41 @@ export default function AgentPageClient() {
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">Usage Examples</h3>
                   <div className="space-y-4">
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <h4 className="font-medium text-gray-900 mb-2">Basic Usage</h4>
-                      <code className="text-sm text-gray-600 bg-white p-2 rounded block">
-                        Execute {agent.name.toLowerCase()} with task: "Analyze security vulnerabilities"
-                      </code>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <h4 className="font-medium text-gray-900 mb-2">Advanced Usage</h4>
-                      <code className="text-sm text-gray-600 bg-white p-2 rounded block">
-                        Execute with custom parameters and detailed analysis options
-                      </code>
-                    </div>
+                    {agentId === 'ticket-resolver' && (
+                      <>
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                          <h4 className="font-medium text-green-900 mb-2 flex items-center">
+                            <Sparkles className="h-4 w-4 mr-2" />
+                            Pre-filled Example (Try Now!)
+                          </h4>
+                          <code className="text-sm text-green-800 bg-white p-2 rounded block">
+                            Customer says: "I cannot reset my password. When I click the reset link, I get error 403 Forbidden."
+                          </code>
+                        </div>
+                        <div className="p-4 bg-gray-50 rounded-lg">
+                          <h4 className="font-medium text-gray-900 mb-2">Another Example</h4>
+                          <code className="text-sm text-gray-600 bg-white p-2 rounded block">
+                            User reports: "The checkout page is showing a blank screen after I add items to cart."
+                          </code>
+                        </div>
+                      </>
+                    )}
+                    {agentId !== 'ticket-resolver' && (
+                      <>
+                        <div className="p-4 bg-gray-50 rounded-lg">
+                          <h4 className="font-medium text-gray-900 mb-2">Basic Usage</h4>
+                          <code className="text-sm text-gray-600 bg-white p-2 rounded block">
+                            Execute {agent.name.toLowerCase()} with your specific task requirements
+                          </code>
+                        </div>
+                        <div className="p-4 bg-gray-50 rounded-lg">
+                          <h4 className="font-medium text-gray-900 mb-2">Advanced Usage</h4>
+                          <code className="text-sm text-gray-600 bg-white p-2 rounded block">
+                            Execute with custom parameters and detailed analysis options
+                          </code>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </Card>
               </TabsContent>
@@ -227,18 +459,30 @@ export default function AgentPageClient() {
                         <p className="text-sm text-gray-600">Pay as you use</p>
                       </div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold text-gray-900">${agent.price}</span>
-                        <p className="text-sm text-gray-600">per execution</p>
+                        <span className="text-2xl font-bold text-gray-900">{creditCost} credits</span>
+                        <p className="text-sm text-gray-600">${(creditCost * 0.04).toFixed(2)} per execution</p>
                       </div>
                     </div>
                     
+                    {isFreeTrialAgent && (
+                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <h4 className="font-medium text-green-900 mb-2 flex items-center">
+                          <Sparkles className="h-5 w-5 mr-2" />
+                          Free Trial Available
+                        </h4>
+                        <p className="text-sm text-green-800">
+                          Try this agent {FREE_TRIAL_QUERIES} times for free! No credit card required.
+                        </p>
+                      </div>
+                    )}
+                    
                     <div className="p-4 bg-blue-50 rounded-lg">
-                      <h4 className="font-medium text-blue-900 mb-2">Subscription Benefits</h4>
+                      <h4 className="font-medium text-blue-900 mb-2">Credit Packages</h4>
                       <ul className="text-sm text-blue-800 space-y-1">
-                        <li>• Reduced per-execution costs with higher tiers</li>
-                        <li>• Priority execution queue</li>
-                        <li>• Advanced analytics and reporting</li>
-                        <li>• 24/7 premium support</li>
+                        <li>• $20 = 500 credits (${MINIMUM_PURCHASE} minimum to start)</li>
+                        <li>• $50 = 1,500 credits</li>
+                        <li>• $100 = 3,500 credits</li>
+                        <li>• $250 = 10,000 credits</li>
                       </ul>
                     </div>
                   </div>
@@ -278,21 +522,46 @@ export default function AgentPageClient() {
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Executing...
                     </>
-                  ) : (
+                  ) : hasFreeTrial ? (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Try Free ({freeQueriesRemaining} left)
+                    </>
+                  ) : !isFreeTrialAgent ? (
                     <>
                       <Play className="h-4 w-4 mr-2" />
                       Execute Agent
                     </>
+                  ) : (
+                    <>
+                      <Lock className="h-4 w-4 mr-2" />
+                      Purchase Credits to Continue
+                    </>
                   )}
                 </Button>
+                
+                {isFreeTrialAgent && !hasFreeTrial && (
+                  <p className="text-sm text-center text-gray-600">
+                    Free trial complete. <Link href="/pricing" className="text-blue-600 hover:underline">View pricing</Link>
+                  </p>
+                )}
               </div>
               
               {executionResult && (
-                <div className="mt-4 p-4 bg-green-50 rounded-lg">
+                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <h4 className="font-medium text-green-900 mb-2">Execution Result</h4>
-                  <pre className="text-sm text-green-800 whitespace-pre-wrap">
-                    {JSON.stringify(executionResult, null, 2)}
-                  </pre>
+                  <div className="text-sm text-green-800 space-y-2">
+                    <p><strong>Status:</strong> {executionResult.success ? 'Success' : 'Failed'}</p>
+                    <p><strong>Duration:</strong> {executionResult.duration_ms}ms</p>
+                    {executionResult.result && (
+                      <details className="mt-2">
+                        <summary className="cursor-pointer font-medium">View Full Result</summary>
+                        <pre className="mt-2 text-xs bg-white p-2 rounded overflow-x-auto">
+                          {JSON.stringify(executionResult.result, null, 2)}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
                 </div>
               )}
             </Card>
@@ -303,8 +572,13 @@ export default function AgentPageClient() {
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Executions</span>
-                  <span className="font-semibold">1,234</span>
+                  <span className="text-gray-600">Credit Cost</span>
+                  <span className="font-semibold text-blue-600">{creditCost} credits</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Dollar Cost</span>
+                  <span className="font-semibold">${(creditCost * 0.04).toFixed(2)}</span>
                 </div>
                 
                 <div className="flex justify-between items-center">
@@ -316,39 +590,20 @@ export default function AgentPageClient() {
                   <span className="text-gray-600">Avg. Response Time</span>
                   <span className="font-semibold">2.3s</span>
                 </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Last Updated</span>
-                  <span className="font-semibold">2 hours ago</span>
-                </div>
               </div>
             </Card>
 
-            {/* Related Agents */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Related Agents</h3>
-              
-              <div className="space-y-3">
-                <Link href="/agents/incident-responder" className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <div className="flex items-center">
-                    <AlertTriangle className="h-5 w-5 text-orange-500 mr-3" />
-                    <div>
-                      <h4 className="font-medium text-gray-900">Incident Responder</h4>
-                      <p className="text-sm text-gray-600">Security incident analysis</p>
-                    </div>
-                  </div>
-                </Link>
-                
-                <Link href="/agents/audit-agent" className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <div>
-                      <h4 className="font-medium text-gray-900">Audit Agent</h4>
-                      <p className="text-sm text-gray-600">Compliance auditing</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
+            {/* CTA Card */}
+            <Card className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-800">
+              <h3 className="text-lg font-semibold mb-2">Ready for More?</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Access all 10 agents with our credit packages starting at ${MINIMUM_PURCHASE}.
+              </p>
+              <Link href="/pricing">
+                <Button className="w-full" variant="default">
+                  View Pricing
+                </Button>
+              </Link>
             </Card>
           </div>
         </div>
@@ -356,3 +611,4 @@ export default function AgentPageClient() {
     </div>
   )
 }
+
