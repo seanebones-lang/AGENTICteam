@@ -9,6 +9,27 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+        {/* New User CTA */}
+        <Card className="p-6 mb-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-bold mb-2">🎉 Welcome! Your Account is Ready</h2>
+              <p className="text-blue-100">
+                You have 10 free credits to test any agent. Get 500 more credits for just $20 to unlock full access!
+              </p>
+            </div>
+            <Button 
+              size="lg" 
+              className="bg-white text-blue-600 hover:bg-gray-100 font-semibold whitespace-nowrap"
+              asChild
+            >
+              <Link href="/pricing">
+                Get Credits Now →
+              </Link>
+            </Button>
+          </div>
+        </Card>
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 dark:text-white">Welcome to Agent Marketplace</h1>
