@@ -24,19 +24,17 @@ export default function TermsPage() {
       </section>
 
       {/* Important Notice */}
-      <section className="py-8 bg-yellow-50 dark:bg-yellow-900/20 border-y border-yellow-200 dark:border-yellow-800">
+      <section className="py-8 bg-blue-50 dark:bg-blue-900/20 border-y border-blue-200 dark:border-blue-800">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="flex items-start gap-4">
-            <AlertTriangle className="h-6 w-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-1" />
+            <Scale className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
-                PROPRIETARY SOFTWARE - FOR SALE
+              <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                Important Legal Information
               </h3>
-              <p className="text-yellow-800 dark:text-yellow-200">
-                This software is proprietary and sold "AS IS" without warranty. All rights reserved. 
-                <strong> NO EVALUATION OR USE WITHOUT LICENSE.</strong> Contact Sean McDonnell at{' '}
-                <a href="https://bizbot.store" className="underline font-semibold">bizbot.store</a> or{' '}
-                <a href="tel:+18176759898" className="underline font-semibold">(817) 675-9898</a> for licensing.
+              <p className="text-blue-800 dark:text-blue-200">
+                By using BizBot services, you agree to these terms. For questions or concerns, contact us at{' '}
+                <a href="mailto:support@bizbot.store" className="underline font-semibold hover:text-blue-600 dark:hover:text-blue-400">support@bizbot.store</a>.
               </p>
             </div>
           </div>

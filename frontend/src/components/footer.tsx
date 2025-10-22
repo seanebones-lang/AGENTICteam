@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Zap, Phone, Globe } from 'lucide-react'
+import { Zap, Mail } from 'lucide-react'
 
 const navigation = {
   product: [
@@ -35,28 +35,28 @@ export function Footer() {
               Agentic AI Solutions with military-grade security. Deploy, manage, and scale autonomous agents.
             </p>
             
-            {/* Legal Notice */}
-            <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <p className="text-xs font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
-                ⚠️ PROPRIETARY SOFTWARE - FOR SALE
-              </p>
-              <p className="text-xs text-yellow-800 dark:text-yellow-200 mb-2">
-                This software is sold "AS IS" without warranty. All rights reserved.
+            {/* Contact Information */}
+            <div className="mb-4 space-y-2">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                Contact Us
               </p>
               <div className="space-y-1">
-                <p className="text-xs font-semibold text-yellow-900 dark:text-yellow-100">
-                  Contact for Purchase:
-                </p>
-                <div className="flex items-center gap-2 text-xs text-yellow-800 dark:text-yellow-200">
-                  <Globe className="h-3 w-3" />
-                  <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="hover:underline font-semibold">
-                    bizbot.store
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <Mail className="h-4 w-4" />
+                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600 dark:hover:text-blue-400">
+                    support@bizbot.store
                   </a>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-yellow-800 dark:text-yellow-200">
-                  <Phone className="h-3 w-3" />
-                  <a href="tel:+18176759898" className="hover:underline font-semibold">
-                    (817) 675-9898
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <Mail className="h-4 w-4" />
+                  <a href="mailto:hello@bizbot.store" className="hover:text-blue-600 dark:hover:text-blue-400">
+                    hello@bizbot.store
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <Mail className="h-4 w-4" />
+                  <a href="mailto:info@bizbot.store" className="hover:text-blue-600 dark:hover:text-blue-400">
+                    info@bizbot.store
                   </a>
                 </div>
               </div>
