@@ -649,6 +649,25 @@ async def health_check():
         "timestamp": datetime.now().isoformat()
     }
 
+@app.get("/api/v1/agent-status")
+async def agent_status():
+    """Detailed agent initialization status"""
+    return {
+        "total_agents": len(agent_classes),
+        "initialized_agents": len(agent_instances),
+        "failed_agents": len(agent_init_errors),
+        "agent_list": {
+            agent_id: {
+                "initialized": agent_id in agent_instances,
+                "error": agent_init_errors.get(agent_id, None)
+            }
+            for agent_id in agent_classes.keys()
+        },
+        "anthropic_api_key_present": bool(os.getenv("ANTHROPIC_API_KEY")),
+        "anthropic_api_key_length": len(os.getenv("ANTHROPIC_API_KEY", "")) if os.getenv("ANTHROPIC_API_KEY") else 0,
+        "simulation_mode": len(agent_instances) == 0
+    }
+
 @app.get("/api/v1/packages")
 async def get_packages(category: Optional[str] = None):
     """Get all available agent packages with credit costs"""
