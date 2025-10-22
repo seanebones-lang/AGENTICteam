@@ -575,8 +575,23 @@ async def get_package(package_id: str):
     return package
 
 @app.post("/api/v1/packages/{package_id}/execute")
-async def execute_agent(package_id: str, execution: AgentExecution):
+async def execute_agent(
+    package_id: str, 
+    execution: AgentExecution,
+    request: Request,
+    x_api_key: str = Header(None, alias="X-API-Key")
+):
     """Execute an agent with advanced rate limiting, credit management, and billing"""
+    
+    # TEMPORARY: Require API key for agent execution
+    # TODO: Implement proper authentication system
+    valid_api_key = os.getenv("DEMO_API_KEY", "demo-key-12345")
+    
+    if not x_api_key or x_api_key != valid_api_key:
+        raise HTTPException(
+            status_code=401, 
+            detail="API key required. Please sign up at https://bizbot.store/signup"
+        )
     
     # Verify package exists
     package = next((pkg for pkg in AGENT_PACKAGES if pkg.id == package_id), None)
