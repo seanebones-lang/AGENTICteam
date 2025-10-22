@@ -785,10 +785,27 @@ async def execute_agent(
     execution_id = f"exec_{int(datetime.now().timestamp())}"
     start_time = datetime.now()
     
-    # Get demo user (in production, get from authentication)
-    demo_user = db.get_user_by_email("demo@example.com")
-    user_id = demo_user["id"] if demo_user else 1
-    user_tier = RateLimitTier(demo_user.get("tier", "basic")) if demo_user else RateLimitTier.BASIC
+    # Get user from API key or use demo user
+    if x_api_key and not is_free_trial:
+        # Extract user_id from token format: token_{id}_{timestamp}
+        try:
+            user_id = int(x_api_key.split("_")[1])
+            user = db.get_user_by_id(user_id)
+            if not user:
+                # Fallback to demo user
+                user = db.get_user_by_email("demo@example.com")
+                user_id = user["id"] if user else 1
+            user_tier = RateLimitTier(user.get("tier", "basic")) if user else RateLimitTier.BASIC
+        except:
+            # If token parsing fails, use demo user
+            user = db.get_user_by_email("demo@example.com")
+            user_id = user["id"] if user else 1
+            user_tier = RateLimitTier(user.get("tier", "basic")) if user else RateLimitTier.BASIC
+    else:
+        # Free trial - use demo user for tracking
+        demo_user = db.get_user_by_email("demo@example.com")
+        user_id = demo_user["id"] if demo_user else 1
+        user_tier = RateLimitTier(demo_user.get("tier", "basic")) if demo_user else RateLimitTier.BASIC
     
     try:
         logger.info(f"Executing agent {package_id} with task: {execution.task[:100]}...")
