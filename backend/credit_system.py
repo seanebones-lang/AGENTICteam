@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 import json
 from dataclasses import dataclass
+import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -78,9 +79,17 @@ class CreditSystem:
         self.db_path = db_path
         self._init_credit_tables()
     
+    def _get_connection(self) -> sqlite3.Connection:
+        """Get a database connection with proper settings for concurrency"""
+        conn = sqlite3.connect(self.db_path, timeout=30.0, check_same_thread=False)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')  # 30 second timeout
+        return conn
+    
     def _init_credit_tables(self):
         """Initialize credit system tables"""
-        conn = sqlite3.connect(self.db_path)
+        conn = sqlite3.connect(self.db_path, timeout=30.0)
+        conn.execute('PRAGMA journal_mode=WAL')  # Enable Write-Ahead Logging for better concurrency
         cursor = conn.cursor()
         
         # Credit transactions table
@@ -204,7 +213,7 @@ class CreditSystem:
             }
         ]
         
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         for package in default_packages:
@@ -222,7 +231,7 @@ class CreditSystem:
     
     def get_user_balance(self, user_id: int) -> float:
         """Get user's current credit balance"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         cursor.execute('''
@@ -243,7 +252,7 @@ class CreditSystem:
         metadata: Dict[str, Any] = None
     ) -> CreditTransaction:
         """Add credits to user account"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         # Get current balance
@@ -256,8 +265,8 @@ class CreditSystem:
             WHERE id = ?
         ''', (new_balance, user_id))
         
-        # Create transaction record
-        transaction_id = f"tx_{int(datetime.now().timestamp())}_{user_id}"
+        # Create transaction record with unique ID
+        transaction_id = f"tx_{uuid.uuid4().hex[:16]}"
         cursor.execute('''
             INSERT INTO credit_transactions 
             (id, user_id, transaction_type, amount, balance_after, description, metadata)
@@ -291,7 +300,7 @@ class CreditSystem:
         metadata: Dict[str, Any] = None
     ) -> Tuple[bool, CreditTransaction]:
         """Deduct credits from user account"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         # Get current balance
@@ -309,8 +318,8 @@ class CreditSystem:
             WHERE id = ?
         ''', (new_balance, user_id))
         
-        # Create transaction record
-        transaction_id = f"tx_{int(datetime.now().timestamp())}_{user_id}"
+        # Create transaction record with unique ID
+        transaction_id = f"tx_{uuid.uuid4().hex[:16]}"
         cursor.execute('''
             INSERT INTO credit_transactions 
             (id, user_id, transaction_type, amount, balance_after, description, metadata)
@@ -348,10 +357,10 @@ class CreditSystem:
         current_period_end: datetime
     ) -> UserSubscription:
         """Create a new subscription for user"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
-        subscription_id = f"sub_{int(datetime.now().timestamp())}_{user_id}"
+        subscription_id = f"sub_{uuid.uuid4().hex[:16]}"
         
         cursor.execute('''
             INSERT INTO user_subscriptions 
@@ -394,7 +403,7 @@ class CreditSystem:
     
     def get_user_subscription(self, user_id: int) -> Optional[UserSubscription]:
         """Get user's active subscription"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         cursor.execute('''
@@ -475,7 +484,7 @@ class CreditSystem:
         covered_by_subscription: bool = False
     ) -> bool:
         """Record an agent execution and handle billing"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         try:
@@ -530,7 +539,7 @@ class CreditSystem:
     
     def get_user_transactions(self, user_id: int, limit: int = 50) -> List[CreditTransaction]:
         """Get user's credit transaction history"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         cursor.execute('''
@@ -565,7 +574,7 @@ class CreditSystem:
         if not month:
             month = datetime.now().strftime("%Y-%m")
         
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         cursor.execute('''
@@ -594,7 +603,7 @@ class CreditSystem:
     
     def get_credit_packages(self) -> List[Dict[str, Any]]:
         """Get available credit packages"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         cursor.execute('''
@@ -624,7 +633,7 @@ class CreditSystem:
     
     def _get_user_tier(self, user_id: int) -> str:
         """Get user's current tier"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         cursor.execute('SELECT tier FROM users WHERE id = ?', (user_id,))
