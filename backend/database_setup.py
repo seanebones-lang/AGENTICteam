@@ -78,6 +78,55 @@ def init_database():
         )
     ''')
     
+    # Free trial tracking table (server-side, secure)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS free_trial_tracking (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip_address TEXT NOT NULL,
+            device_fingerprint TEXT,
+            user_agent TEXT,
+            queries_used INTEGER DEFAULT 0,
+            agent_id TEXT NOT NULL,
+            first_query_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_query_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            is_blocked BOOLEAN DEFAULT FALSE,
+            block_reason TEXT,
+            UNIQUE(ip_address, agent_id)
+        )
+    ''')
+    
+    # Security audit log table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS security_audit_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_type TEXT NOT NULL,
+            ip_address TEXT,
+            user_id INTEGER,
+            user_agent TEXT,
+            endpoint TEXT,
+            request_data TEXT,
+            response_status INTEGER,
+            threat_level TEXT,
+            details TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    ''')
+    
+    # Rate limiting table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS rate_limit_tracking (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip_address TEXT NOT NULL,
+            endpoint TEXT NOT NULL,
+            request_count INTEGER DEFAULT 1,
+            window_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            is_blocked BOOLEAN DEFAULT FALSE,
+            block_expires_at TIMESTAMP,
+            UNIQUE(ip_address, endpoint, window_start)
+        )
+    ''')
+    
     conn.commit()
     conn.close()
     print(f"✅ Database initialized: {DATABASE_PATH}")

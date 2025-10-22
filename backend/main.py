@@ -28,6 +28,9 @@ from rate_limiting import rate_limiter, RateLimitTier, RateLimitType
 from simple_monitoring import monitor, record_request, record_agent_execution, record_credit_usage, record_rate_limit_hit
 from simple_config import config
 
+# Import Security Service
+from security_service import security_service
+
 # Initialize FastAPI
 app = FastAPI(
     title="Agent Marketplace API - Integrated",
@@ -637,17 +640,75 @@ async def execute_agent(
     request: Request,
     x_api_key: str = Header(None, alias="X-API-Key")
 ):
-    """Execute an agent with advanced rate limiting, credit management, and billing"""
+    """Execute an agent with enterprise security, rate limiting, and free trial tracking"""
     
-    # TEMPORARY: Require API key for agent execution
-    # TODO: Implement proper authentication system
-    valid_api_key = os.getenv("DEMO_API_KEY", "demo-key-12345")
+    # Get client information for security
+    ip_address = security_service.get_client_ip(request)
+    device_fingerprint = security_service.get_device_fingerprint(request)
+    user_agent = request.headers.get("User-Agent", "unknown")
     
-    if not x_api_key or x_api_key != valid_api_key:
-        raise HTTPException(
-            status_code=401, 
-            detail="API key required. Please sign up at https://bizbot.store/signup"
+    # Step 1: Check IP-based rate limiting
+    is_allowed, retry_after = security_service.check_rate_limit(ip_address, f"/api/v1/packages/{package_id}/execute")
+    if not is_allowed:
+        security_service.log_security_event(
+            "rate_limit_blocked",
+            ip_address,
+            user_agent=user_agent,
+            endpoint=f"/api/v1/packages/{package_id}/execute",
+            threat_level="medium",
+            details=f"Rate limit exceeded, blocked for {retry_after}s"
         )
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limit exceeded. Try again in {retry_after} seconds.",
+            headers={"Retry-After": str(retry_after)}
+        )
+    
+    # Step 2: Check free trial eligibility (for ticket-resolver only)
+    is_free_trial = False
+    if package_id == "ticket-resolver":
+        trial_allowed, queries_remaining, block_reason = security_service.check_free_trial(
+            ip_address,
+            device_fingerprint,
+            package_id,
+            user_agent
+        )
+        
+        if trial_allowed:
+            is_free_trial = True
+            logger.info(f"Free trial allowed for {ip_address}: {queries_remaining} queries remaining")
+        elif not x_api_key:
+            # No free trial and no API key - require signup
+            security_service.log_security_event(
+                "free_trial_denied",
+                ip_address,
+                user_agent=user_agent,
+                endpoint=f"/api/v1/packages/{package_id}/execute",
+                threat_level="low",
+                details=f"Free trial exhausted: {block_reason}"
+            )
+            raise HTTPException(
+                status_code=402,
+                detail=f"Free trial exhausted. {block_reason}. Please sign up at https://bizbot.store/signup"
+            )
+    
+    # Step 3: Verify API key if not free trial
+    if not is_free_trial:
+        valid_api_key = os.getenv("DEMO_API_KEY", "demo-key-12345")
+        
+        if not x_api_key or x_api_key != valid_api_key:
+            security_service.log_security_event(
+                "unauthorized_access_attempt",
+                ip_address,
+                user_agent=user_agent,
+                endpoint=f"/api/v1/packages/{package_id}/execute",
+                threat_level="high",
+                details="Invalid or missing API key"
+            )
+            raise HTTPException(
+                status_code=401, 
+                detail="API key required. Please sign up at https://bizbot.store/signup"
+            )
     
     # Verify package exists
     package = next((pkg for pkg in AGENT_PACKAGES if pkg.id == package_id), None)
@@ -746,7 +807,20 @@ async def execute_agent(
                 cost=execution_cost
             )
             
-            logger.info(f"Agent {package_id} executed successfully in {duration_ms}ms, cost: ${execution_cost}")
+            # Step 8: Increment free trial counter if applicable
+            if is_free_trial:
+                security_service.increment_free_trial_usage(ip_address, package_id)
+                security_service.log_security_event(
+                    "free_trial_query_used",
+                    ip_address,
+                    user_agent=user_agent,
+                    endpoint=f"/api/v1/packages/{package_id}/execute",
+                    response_status=200,
+                    threat_level="low",
+                    details=f"Free trial query executed successfully"
+                )
+            
+            logger.info(f"Agent {package_id} executed successfully in {duration_ms}ms, cost: ${execution_cost}, free_trial: {is_free_trial}")
             
             # Record monitoring metrics
             record_agent_execution(package_id, True, duration_ms / 1000.0, execution_cost)
@@ -1175,6 +1249,30 @@ async def get_platform_stats():
             ]
         },
         "timestamp": datetime.now().isoformat()
+    }
+
+# Free Trial Status Endpoint
+@app.get("/api/v1/free-trial/status")
+async def get_free_trial_status(request: Request):
+    """Get free trial status for current IP"""
+    ip_address = security_service.get_client_ip(request)
+    device_fingerprint = security_service.get_device_fingerprint(request)
+    user_agent = request.headers.get("User-Agent", "unknown")
+    
+    trial_allowed, queries_remaining, block_reason = security_service.check_free_trial(
+        ip_address,
+        device_fingerprint,
+        "ticket-resolver",
+        user_agent
+    )
+    
+    return {
+        "agent_id": "ticket-resolver",
+        "trial_available": trial_allowed,
+        "queries_remaining": queries_remaining,
+        "total_queries": 3,
+        "block_reason": block_reason,
+        "ip_address": ip_address[:10] + "..." if len(ip_address) > 10 else ip_address  # Partial IP for privacy
     }
 
 # Pricing Endpoints
