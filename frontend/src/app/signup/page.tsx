@@ -49,25 +49,34 @@ export default function SignupPage() {
       localStorage.setItem('user_data', JSON.stringify(response.user))
       
       toast({
-        title: "Account Created!",
-        description: "Welcome to BizBot.store! Redirecting to payment...",
+        title: "Account Created Successfully!",
+        description: "You've received 10 free credits to get started. Purchase more credits to continue using agents.",
       })
       
-      // Check if payment is required
-      if (response.requires_payment) {
-        // Redirect to payment page with minimum $20 requirement
-        router.push('/pricing?required=20&reason=signup&package=' + formData.tier)
-      } else {
-        // User already has sufficient credits
+      // Always redirect to dashboard after signup
+      // User can purchase credits from there
+      setTimeout(() => {
         router.push('/dashboard')
-      }
+      }, 1500)
     } catch (error) {
       console.error('Registration error:', error)
-      toast({
-        title: "Registration Failed",
-        description: error instanceof Error ? error.message : "Please try again",
-        variant: "destructive",
-      })
+      
+      // Handle 409 Conflict (email already exists)
+      if (error instanceof Error && error.message.includes('409')) {
+        toast({
+          title: "Email Already Registered",
+          description: "This email is already in use. Please sign in instead.",
+          variant: "destructive",
+        })
+        // Redirect to login after 2 seconds
+        setTimeout(() => router.push('/login'), 2000)
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: error instanceof Error ? error.message : "Please try again",
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsLoading(false)
     }
