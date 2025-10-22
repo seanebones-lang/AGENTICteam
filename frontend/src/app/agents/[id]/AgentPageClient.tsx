@@ -289,24 +289,60 @@ export default function AgentPageClient() {
       />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Free Trial Banner */}
+        {/* Free Trial Banner with Progress */}
         {isFreeTrialAgent && hasFreeTrial && (
-          <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl p-4 border-2 border-green-200 dark:border-green-800">
-            <div className="flex items-center justify-between">
+          <div className="mb-6 bg-gradient-to-r from-purple-50 via-blue-50 to-pink-50 dark:from-purple-900/20 dark:via-blue-900/20 dark:to-pink-900/20 rounded-xl p-6 border-2 border-purple-200 dark:border-purple-800 shadow-lg">
+            <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Sparkles className="h-6 w-6 text-green-600" />
+                <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl">
+                  <Gift className="h-6 w-6 text-white" />
+                </div>
                 <div>
-                  <p className="font-semibold text-gray-900">Free Trial Active</p>
-                  <p className="text-sm text-gray-600">
-                    {freeQueriesRemaining} free {freeQueriesRemaining === 1 ? 'query' : 'queries'} remaining
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">🎁 Free Trial Active!</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    No credit card required • Instant results
                   </p>
                 </div>
               </div>
               <Link href="/pricing">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-purple-300 text-purple-600 hover:bg-purple-50">
                   View Pricing
                 </Button>
               </Link>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-semibold text-gray-700 dark:text-gray-300">
+                  Query {freeQueriesUsed + 1} of {FREE_TRIAL_QUERIES}
+                </span>
+                <span className="text-purple-600 dark:text-purple-400 font-medium">
+                  {freeQueriesRemaining} {freeQueriesRemaining === 1 ? 'query' : 'queries'} remaining
+                </span>
+              </div>
+              
+              <div className="relative w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-pink-600 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${((freeQueriesUsed) / FREE_TRIAL_QUERIES) * 100}%` }}
+                >
+                  <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-center gap-2 mt-3">
+                {[...Array(FREE_TRIAL_QUERIES)].map((_, i) => (
+                  <div 
+                    key={i}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      i < freeQueriesUsed 
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-600 scale-110' 
+                        : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         )}

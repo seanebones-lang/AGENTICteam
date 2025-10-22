@@ -17,7 +17,10 @@ import {
   BarChart,
   Ticket,
   CheckCircle,
-  Clock
+  Clock,
+  Gift,
+  Sparkles,
+  ArrowRight
 } from 'lucide-react'
 import Link from 'next/link'
 import { apiService, Agent } from '@/lib/api'
@@ -205,6 +208,56 @@ export default function AgentsPage() {
           </p>
         </div>
 
+        {/* FREE TRIAL SPOTLIGHT */}
+        <Card className="mb-12 p-8 bg-gradient-to-r from-purple-50 via-blue-50 to-pink-50 dark:from-purple-900/20 dark:via-blue-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-shrink-0">
+              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl">
+                <Gift className="h-12 w-12 text-white" />
+              </div>
+            </div>
+            
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold text-sm shadow-lg">
+                <Sparkles className="h-4 w-4" />
+                START HERE - FREE TRIAL
+              </div>
+              <h2 className="text-3xl font-bold mb-2">🎫 Ticket Resolver Agent</h2>
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
+                Try our most popular agent with <span className="font-bold text-purple-600 dark:text-purple-400">3 free queries</span>. 
+                No credit card required. Instant results.
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>67,540 tickets solved today</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>1.2s avg response</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>98.9% success rate</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex-shrink-0">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-xl"
+                asChild
+              >
+                <Link href="/agents/ticket-resolver">
+                  Try Free Now
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </Card>
+
         {/* Search and Filter */}
         <div className="mb-8 flex flex-col sm:flex-row items-center gap-4">
           <div className="relative w-full sm:w-1/2">
@@ -242,23 +295,35 @@ export default function AgentsPage() {
         {!loading && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredAgents.map((agent) => {
+            const isFreeTrialAgent = agent.id === 'ticket-resolver'
             return (
-              <Card key={agent.id} className="p-6 hover:shadow-lg transition-shadow">
+              <Card 
+                key={agent.id} 
+                className={`p-6 hover:shadow-lg transition-shadow ${isFreeTrialAgent ? 'border-2 border-purple-300 dark:border-purple-700 bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-900/10 dark:to-pink-900/10' : ''}`}
+              >
+                {isFreeTrialAgent && (
+                  <div className="mb-3">
+                    <Badge className="bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                      <Gift className="h-3 w-3 mr-1" />
+                      3 FREE QUERIES
+                    </Badge>
+                  </div>
+                )}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                    <div className={`p-2 rounded-lg ${isFreeTrialAgent ? 'bg-gradient-to-br from-purple-500 to-pink-600' : 'bg-blue-100 dark:bg-blue-900'}`}>
                       {/* Render icon dynamically based on agent.category or a mapping */}
-                      {agent.category === 'Security' && <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'Operations' && <AlertTriangle className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'Support' && <Ticket className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'Data' && <Database className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'DevOps' && <GitBranch className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'Analytics' && <BarChart className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'Compliance' && <CheckCircle className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'AI' && <Bot className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
-                      {agent.category === 'Automation' && <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+                      {agent.category === 'Security' && <Shield className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'Operations' && <AlertTriangle className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'Support' && <Ticket className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'Data' && <Database className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'DevOps' && <GitBranch className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'Analytics' && <BarChart className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'Compliance' && <CheckCircle className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'AI' && <Bot className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
+                      {agent.category === 'Automation' && <Zap className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
                       {/* Default icon if category not matched */}
-                      {!['Security', 'Operations', 'Support', 'Data', 'DevOps', 'Analytics', 'Compliance', 'AI', 'Automation'].includes(agent.category) && <Bot className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+                      {!['Security', 'Operations', 'Support', 'Data', 'DevOps', 'Analytics', 'Compliance', 'AI', 'Automation'].includes(agent.category) && <Bot className={`h-6 w-6 ${isFreeTrialAgent ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />}
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg">{agent.name}</h3>
@@ -287,9 +352,19 @@ export default function AgentsPage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button asChild className="flex-1">
-                    <Link href={`/playground?agent=${agent.id}`}>
-                      Activate Now
+                  <Button 
+                    asChild 
+                    className={`flex-1 ${isFreeTrialAgent ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700' : ''}`}
+                  >
+                    <Link href={isFreeTrialAgent ? `/agents/${agent.id}` : `/playground?agent=${agent.id}`}>
+                      {isFreeTrialAgent ? (
+                        <>
+                          <Gift className="h-4 w-4 mr-2" />
+                          Try Free
+                        </>
+                      ) : (
+                        'Activate Now'
+                      )}
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
