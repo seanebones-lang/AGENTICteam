@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { CheckCircle, Zap, ArrowRight, Sparkles, Play, Loader2, Bot, Save, Star, X, Plus, Maximize2, Minimize2 } from 'lucide-react'
 import { useAgents } from '@/hooks/useAgents'
 import { useToast } from '@/hooks/use-toast'
+import { getCredits, useCredits, getCreditCost } from '@/lib/credits'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
 
@@ -29,12 +30,17 @@ export default function ConsolePage() {
   const [tabs, setTabs] = useState<AgentTab[]>([])
   const [activeTabId, setActiveTabId] = useState<string | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [userCredits, setUserCredits] = useState(0)
 
-  // Create initial tab
+  // Create initial tab and load credits
   useEffect(() => {
     if (tabs.length === 0) {
       createNewTab()
     }
+    
+    // Load user credits
+    const credits = getCredits()
+    setUserCredits(credits.remaining)
   }, [])
 
   const createNewTab = (agentId?: string) => {
@@ -113,6 +119,22 @@ export default function ConsolePage() {
       })
       return
     }
+
+    // Check and deduct credits
+    const creditCost = getCreditCost(tab.agentId)
+    const creditResult = useCredits(creditCost)
+    
+    if (!creditResult.success) {
+      toast({
+        title: "Insufficient Credits",
+        description: `You need ${creditCost} credits to execute this agent. Purchase more credits to continue.`,
+        variant: "destructive",
+      })
+      return
+    }
+    
+    // Update displayed credits
+    setUserCredits(creditResult.balance.remaining)
 
     updateTab(tabId, { executing: true, result: null })
 
@@ -451,6 +473,18 @@ export default function ConsolePage() {
             {/* Sidebar - Hidden in fullscreen */}
             {!isFullscreen && (
               <div className="space-y-6">
+                {/* Credits Card */}
+                <Card className="p-6 bg-gradient-to-br from-green-600 to-blue-600 text-white border-0">
+                  <h3 className="font-bold mb-2 flex items-center">
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Available Credits
+                  </h3>
+                  <div className="text-4xl font-bold mb-4">{userCredits}</div>
+                  <Button size="sm" className="w-full bg-white !text-blue-600 hover:bg-gray-100" asChild>
+                    <Link href="/pricing">Get More Credits</Link>
+                  </Button>
+                </Card>
+              
                 {/* Quick Stats */}
                 <Card className="p-6">
                   <h3 className="font-semibold mb-4 dark:text-white">Active Sessions</h3>

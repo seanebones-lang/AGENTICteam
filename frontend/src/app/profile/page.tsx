@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import Link from 'next/link'
+import { getCredits, CreditBalance } from '@/lib/credits'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
 
@@ -55,6 +56,8 @@ export default function ProfilePage() {
     tier: 'Starter',
     joined: new Date().toISOString().split('T')[0]
   })
+  
+  const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null)
   
   const [editForm, setEditForm] = useState({
     name: '',
@@ -95,6 +98,11 @@ export default function ProfilePage() {
     if (savedFavorites) {
       setFavoriteAgents(JSON.parse(savedFavorites))
     }
+    
+    // Load credit balance
+    const credits = getCredits()
+    setCreditBalance(credits)
+    setUserData(prev => ({ ...prev, credits: credits.remaining }))
   }, [])
   
   const handleEditToggle = () => {
@@ -112,11 +120,12 @@ export default function ProfilePage() {
         title: "Profile Updated",
         description: "Your profile has been saved successfully",
       })
+      setIsEditing(false)
     } else {
       // Enter edit mode
       setEditForm({ name: userData.name, email: userData.email })
+      setIsEditing(true)
     }
-    setIsEditing(!isEditing)
   }
   
   const handleInputChange = (field: string, value: string) => {
@@ -187,9 +196,14 @@ export default function ProfilePage() {
                     <Input 
                       value={isEditing ? editForm.name : userData.name} 
                       onChange={(e) => handleInputChange('name', e.target.value)}
-                      readOnly={!isEditing}
-                      placeholder="Enter your name"
-                      className={isEditing ? 'border-blue-500 dark:border-blue-600' : ''}
+                      onFocus={() => {
+                        if (!isEditing) {
+                          setEditForm({ name: userData.name, email: userData.email })
+                          setIsEditing(true)
+                        }
+                      }}
+                      placeholder="Click to enter your name"
+                      className={isEditing ? 'border-blue-500 dark:border-blue-600' : 'cursor-pointer'}
                     />
                   </div>
                   
@@ -198,46 +212,54 @@ export default function ProfilePage() {
                     <Input 
                       value={isEditing ? editForm.email : userData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      readOnly={!isEditing}
-                      placeholder="Enter your email"
+                      onFocus={() => {
+                        if (!isEditing) {
+                          setEditForm({ name: userData.name, email: userData.email })
+                          setIsEditing(true)
+                        }
+                      }}
+                      placeholder="Click to enter your email"
                       type="email"
-                      className={isEditing ? 'border-blue-500 dark:border-blue-600' : ''}
+                      className={isEditing ? 'border-blue-500 dark:border-blue-600' : 'cursor-pointer'}
                     />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium mb-2 dark:text-gray-300">Member Since</label>
-                    <Input value={userData.joined ? new Date(userData.joined).toLocaleDateString() : 'Not set'} readOnly className="bg-gray-50 dark:bg-gray-800" />
+                    <Input value={userData.joined ? new Date(userData.joined).toLocaleDateString() : 'Today'} readOnly className="bg-gray-50 dark:bg-gray-800" />
                   </div>
 
-                  <Button 
-                    variant={isEditing ? "default" : "outline"} 
-                    className="w-full"
-                    onClick={handleEditToggle}
-                  >
-                    {isEditing ? (
-                      <>
+                  {isEditing && (
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="default" 
+                        className="flex-1"
+                        onClick={handleEditToggle}
+                      >
                         <CheckCircle className="mr-2 h-4 w-4" />
                         Save Changes
-                      </>
-                    ) : (
-                      <>
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit Profile
-                      </>
-                    )}
-                  </Button>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="flex-1"
+                        onClick={() => {
+                          setIsEditing(false)
+                          setEditForm({ name: userData.name, email: userData.email })
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
                   
-                  {isEditing && (
+                  {!isEditing && (userData.name || userData.email) && (
                     <Button 
-                      variant="ghost" 
+                      variant="outline" 
                       className="w-full"
-                      onClick={() => {
-                        setIsEditing(false)
-                        setEditForm({ name: userData.name, email: userData.email })
-                      }}
+                      onClick={() => setIsEditing(true)}
                     >
-                      Cancel
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit Profile
                     </Button>
                   )}
                 </div>
@@ -251,12 +273,27 @@ export default function ProfilePage() {
                     Credits
                   </h3>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">
-                      {userData.credits}
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Available Credits</p>
+                    {userData.credits > 0 ? (
+                      <>
+                        <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">
+                          {userData.credits}
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Available Credits</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-4xl font-bold text-gray-400 mb-2">
+                          0
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                          Purchase credits to start using agents
+                        </p>
+                      </>
+                    )}
                     <Button size="sm" className="w-full" asChild>
-                      <Link href="/pricing">Get More Credits</Link>
+                      <Link href="/pricing">
+                        {userData.credits > 0 ? 'Get More Credits' : 'Buy Credits Now'}
+                      </Link>
                     </Button>
                   </div>
                 </Card>
