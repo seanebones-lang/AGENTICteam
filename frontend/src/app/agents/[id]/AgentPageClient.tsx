@@ -25,7 +25,9 @@ import {
   Star,
   Lock,
   CreditCard,
-  Sparkles
+  Sparkles,
+  Gift,
+  BookOpen
 } from 'lucide-react'
 import { useAgents } from '@/hooks/useAgents'
 import Link from 'next/link'
@@ -289,28 +291,26 @@ export default function AgentPageClient() {
       />
       
       <div className="container mx-auto px-4 py-8">
-        {/* How to Use Guide Link - Prominent */}
-        {isFreeTrialAgent && (
-          <Card className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <BookOpen className="h-6 w-6 text-blue-600" />
-                <div>
-                  <p className="font-bold text-gray-900 dark:text-white">New to this agent?</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Learn all 15+ ways to use it and what it can (and can't) do
-                  </p>
-                </div>
+        {/* How to Use Guide Link - Prominent (ALL AGENTS) */}
+        <Card className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <BookOpen className="h-6 w-6 text-blue-600" />
+              <div>
+                <p className="font-bold text-gray-900 dark:text-white">New to this agent?</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Learn how to use it effectively and what it can (and can't) do
+                </p>
               </div>
-              <Link href="/agents/ticket-resolver/how-to-use">
-                <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-50">
-                  <BookOpen className="h-4 w-4 mr-2" />
-                  How to Use Guide
-                </Button>
-              </Link>
             </div>
-          </Card>
-        )}
+            <Link href={`/agents/${agentId}/how-to-use`}>
+              <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-50">
+                <BookOpen className="h-4 w-4 mr-2" />
+                How to Use Guide
+              </Button>
+            </Link>
+          </div>
+        </Card>
         
         {/* Free Trial Banner with Progress */}
         {isFreeTrialAgent && hasFreeTrial && (
