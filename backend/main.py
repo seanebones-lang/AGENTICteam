@@ -67,18 +67,35 @@ app.add_middleware(
 
 # Initialize Real AI Agents
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-agent_instances = {
-    "ticket-resolver": TicketResolverAgent(api_key=ANTHROPIC_API_KEY),
-    "security-scanner": SecurityScannerAgent(api_key=ANTHROPIC_API_KEY),
-    "incident-responder": IncidentResponderAgent(api_key=ANTHROPIC_API_KEY),
-    "knowledge-base": KnowledgeBaseAgent(api_key=ANTHROPIC_API_KEY),
-    "data-processor": DataProcessorAgent(api_key=ANTHROPIC_API_KEY),
-    "deployment-agent": DeploymentAgent(api_key=ANTHROPIC_API_KEY),
-    "audit-agent": AuditAgent(api_key=ANTHROPIC_API_KEY),
-    "report-generator": ReportGeneratorAgent(api_key=ANTHROPIC_API_KEY),
-    "workflow-orchestrator": WorkflowOrchestratorAgent(api_key=ANTHROPIC_API_KEY),
-    "escalation-manager": EscalationManagerAgent(api_key=ANTHROPIC_API_KEY)
+agent_instances = {}
+agent_init_errors = {}
+
+# Initialize each agent with error handling
+agent_classes = {
+    "ticket-resolver": TicketResolverAgent,
+    "security-scanner": SecurityScannerAgent,
+    "incident-responder": IncidentResponderAgent,
+    "knowledge-base": KnowledgeBaseAgent,
+    "data-processor": DataProcessorAgent,
+    "deployment-agent": DeploymentAgent,
+    "audit-agent": AuditAgent,
+    "report-generator": ReportGeneratorAgent,
+    "workflow-orchestrator": WorkflowOrchestratorAgent,
+    "escalation-manager": EscalationManagerAgent
 }
+
+for agent_id, AgentClass in agent_classes.items():
+    try:
+        agent_instances[agent_id] = AgentClass(api_key=ANTHROPIC_API_KEY)
+        logger.info(f"✅ Successfully initialized {agent_id}")
+    except Exception as e:
+        agent_init_errors[agent_id] = str(e)
+        logger.error(f"❌ Failed to initialize {agent_id}: {e}")
+
+# Log initialization summary
+logger.info(f"Agent initialization complete: {len(agent_instances)}/{len(agent_classes)} agents ready")
+if agent_init_errors:
+    logger.warning(f"Agent initialization errors: {agent_init_errors}")
 
 # Monitoring middleware
 @app.middleware("http")
@@ -613,8 +630,10 @@ async def root():
         "status": "operational",
         "version": "2.0.0",
         "agents_available": len(AGENT_PACKAGES),
-        "real_ai_simulation": True,
+        "real_ai_agents_active": len(agent_instances),
+        "real_ai_simulation": len(agent_instances) == 0,
         "anthropic_ready": bool(os.getenv("ANTHROPIC_API_KEY")),
+        "agent_init_errors": len(agent_init_errors),
         "timestamp": datetime.now().isoformat()
     }
 
@@ -623,8 +642,10 @@ async def health_check():
     return {
         "status": "healthy",
         "agents_available": len(AGENT_PACKAGES),
+        "real_ai_agents_active": len(agent_instances),
         "anthropic_configured": bool(os.getenv("ANTHROPIC_API_KEY")),
-        "simulation_mode": True,
+        "simulation_mode": len(agent_instances) == 0,
+        "agent_init_errors": agent_init_errors if agent_init_errors else None,
         "timestamp": datetime.now().isoformat()
     }
 
@@ -806,27 +827,45 @@ async def execute_agent(
             
             # Step 5: Execute the real AI agent
             if package_id in agent_instances:
-                agent = agent_instances[package_id]
-                
-                # Prepare input data based on agent type
-                agent_input = {
-                    "task": execution.task,
-                    **execution.input_data
-                }
-                
-                # Execute the agent
-                agent_result = await agent.execute(agent_input)
-                
-                # Convert Pydantic model to dict if needed
-                if hasattr(agent_result, 'model_dump'):
-                    result = agent_result.model_dump()
-                elif hasattr(agent_result, 'dict'):
-                    result = agent_result.dict()
-                else:
-                    result = agent_result
+                try:
+                    agent = agent_instances[package_id]
+                    logger.info(f"Executing real AI agent: {package_id}")
+                    
+                    # Prepare input data based on agent type
+                    agent_input = {
+                        "task": execution.task,
+                        **execution.input_data
+                    }
+                    
+                    # Execute the agent
+                    agent_result = await agent.execute(agent_input)
+                    logger.info(f"Real AI agent {package_id} completed successfully")
+                    
+                    # Convert Pydantic model to dict if needed
+                    if hasattr(agent_result, 'model_dump'):
+                        result = agent_result.model_dump()
+                    elif hasattr(agent_result, 'dict'):
+                        result = agent_result.dict()
+                    else:
+                        result = agent_result
+                    
+                    # Mark as real AI execution
+                    result["_real_ai_execution"] = True
+                    result["_agent_type"] = "claude_anthropic"
+                    
+                except Exception as e:
+                    logger.error(f"Real AI agent {package_id} failed: {e}", exc_info=True)
+                    # Fallback to simulation on error
+                    logger.warning(f"Falling back to simulation for {package_id}")
+                    result = await execute_agent_simulation(package_id, execution.task, execution.input_data)
+                    result["_real_ai_execution"] = False
+                    result["_fallback_reason"] = str(e)
             else:
                 # Fallback to simulation if agent not found
+                logger.warning(f"Agent {package_id} not in agent_instances, using simulation")
                 result = await execute_agent_simulation(package_id, execution.task, execution.input_data)
+                result["_real_ai_execution"] = False
+                result["_fallback_reason"] = "agent_not_initialized"
             
             # Calculate duration
             duration = datetime.now() - start_time
