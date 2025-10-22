@@ -46,6 +46,12 @@ langchain==0.3.7
 pandas==2.2.3
 numpy==2.2.1
 
+# Security Scanner Dependencies
+aiohttp==3.11.11
+validators==0.34.0
+beautifulsoup4==4.12.3
+lxml==5.3.0
+
 # Vector Database
 qdrant-client==1.12.1
 
