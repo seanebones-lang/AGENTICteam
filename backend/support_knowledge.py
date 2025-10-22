@@ -42,13 +42,13 @@ BizBot.Store is an AI-powered agent marketplace that provides 10 specialized AI 
 ## FREE TRIAL
 
 ### Ticket Resolver Agent - 3 FREE Queries
-- **Agent**: Ticket Resolver (Customer Support AI)
-- **Free Queries**: 3 queries per user (tracked by browser fingerprint + IP)
-- **No Credit Card Required**: Users can try immediately
+- **Agents**: ALL 10 AI Agents available
+- **Free Queries**: 3 queries total per user (tracked by browser fingerprint + IP)
+- **No Credit Card Required**: Users can try ANY agent immediately
 - **Limitations**: 
-  - Only available for Ticket Resolver agent
+  - 3 queries total across all agents
   - Cannot be reset or extended
-  - After 3 queries, must purchase credits
+  - After 3 queries, must purchase credits or subscribe
 
 ### Trial Tracking
 - Tracked by: Browser fingerprint + IP address + User agent

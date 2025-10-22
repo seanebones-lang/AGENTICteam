@@ -22,7 +22,7 @@ JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
 # Free trial configuration
-FREE_TRIAL_AGENT = "ticket-resolver"
+FREE_TRIAL_AGENT = "ticket-resolver"  # Legacy constant - now ALL agents support free trial
 FREE_TRIAL_QUERIES = 3
 FREE_TRIAL_WINDOW_HOURS = 24
 
