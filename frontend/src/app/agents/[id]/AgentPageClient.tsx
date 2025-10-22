@@ -48,21 +48,21 @@ function PaywallModal({ isOpen, onClose, queriesUsed }: { isOpen: boolean, onClo
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <Card className="max-w-md w-full p-8 relative">
         <div className="text-center mb-6">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-100 to-red-100 rounded-full flex items-center justify-center mb-4">
-            <Lock className="h-8 w-8 text-orange-600" />
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/40 dark:to-red-900/40 rounded-full flex items-center justify-center mb-4">
+            <Lock className="h-8 w-8 text-orange-600 dark:text-orange-400" />
           </div>
           
-          <h2 className="text-2xl font-bold mb-2">Free Trial Complete!</h2>
-          <p className="text-gray-600 mb-4">
+          <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Free Trial Complete!</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
             You've used all {queriesUsed} free queries. Ready to unlock the full platform?
           </p>
           
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
-              <span className="font-semibold text-lg">Get Started for ${MINIMUM_PURCHASE}</span>
+              <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <span className="font-semibold text-lg text-gray-900 dark:text-white">Get Started for ${MINIMUM_PURCHASE}</span>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               500 credits • Access all agents • Credits never expire
             </p>
           </div>
@@ -72,24 +72,24 @@ function PaywallModal({ isOpen, onClose, queriesUsed }: { isOpen: boolean, onClo
           <div className="flex items-start gap-3">
             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
             <div>
-              <p className="font-medium">10 Powerful AI Agents</p>
-              <p className="text-sm text-gray-600">Security, support, analytics, and more</p>
+              <p className="font-medium text-gray-900 dark:text-white">10 Powerful AI Agents</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Security, support, analytics, and more</p>
             </div>
           </div>
           
           <div className="flex items-start gap-3">
             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
             <div>
-              <p className="font-medium">Credits Never Expire</p>
-              <p className="text-sm text-gray-600">Use them whenever you need</p>
+              <p className="font-medium text-gray-900 dark:text-white">Credits Never Expire</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Use them whenever you need</p>
             </div>
           </div>
           
           <div className="flex items-start gap-3">
             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
             <div>
-              <p className="font-medium">75% Cost Savings</p>
-              <p className="text-sm text-gray-600">vs. hiring full-time engineers</p>
+              <p className="font-medium text-gray-900 dark:text-white">75% Cost Savings</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">vs. hiring full-time engineers</p>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@ function PaywallModal({ isOpen, onClose, queriesUsed }: { isOpen: boolean, onClo
           
           <button
             onClick={onClose}
-            className="w-full text-sm text-gray-500 hover:text-gray-700 py-2"
+            className="w-full text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 py-2"
           >
             Maybe later
           </button>
@@ -234,10 +234,10 @@ export default function AgentPageClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading agent details...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading agent details...</p>
         </div>
       </div>
     )
@@ -245,11 +245,11 @@ export default function AgentPageClient() {
 
   if (error || !agent) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
           <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Agent Not Found</h1>
-          <p className="text-gray-600 mb-4">The requested agent could not be found.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Agent Not Found</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">The requested agent could not be found.</p>
           <Link href="/agents">
             <Button>
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -283,7 +283,7 @@ export default function AgentPageClient() {
   const creditCost = (agent as any).credit_cost || 3
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <PaywallModal 
         isOpen={showPaywall} 
         onClose={() => setShowPaywall(false)}
@@ -390,12 +390,12 @@ export default function AgentPageClient() {
                 <Badge variant="secondary" className="px-3 py-1">
                   {agent.category}
                 </Badge>
-                <div className="flex items-center text-gray-600">
+                <div className="flex items-center text-gray-600 dark:text-gray-400">
                   <DollarSign className="h-4 w-4 mr-1" />
                   <span className="font-medium">{creditCost} credits</span>
                   <span className="ml-1">per execution</span>
                 </div>
-                <div className="flex items-center text-gray-600">
+                <div className="flex items-center text-gray-600 dark:text-gray-400">
                   <Users className="h-4 w-4 mr-1" />
                   <span>All Tiers</span>
                 </div>
@@ -413,7 +413,7 @@ export default function AgentPageClient() {
                     <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <span className="text-sm text-gray-600">(4.9/5 from 1,234 executions)</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">(4.9/5 from 1,234 executions)</span>
               </div>
             </div>
           </div>
@@ -432,9 +432,9 @@ export default function AgentPageClient() {
               
               <TabsContent value="overview" className="mt-6">
                 <Card className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">Agent Overview</h3>
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Agent Overview</h3>
                   <div className="prose prose-gray max-w-none">
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                       {agent.description}
                     </p>
                     
