@@ -1213,7 +1213,7 @@ async def startup_event():
         await monitor.start_monitoring(interval=30)
         
         # Record startup
-        monitor.metrics_collector.increment_counter("app_starts_total")
+        monitor.metrics.increment_counter("app_starts_total")
         
         logger.info("✅ Agent Marketplace API started successfully")
         
