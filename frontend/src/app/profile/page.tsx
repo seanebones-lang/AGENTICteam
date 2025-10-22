@@ -45,14 +45,20 @@ export default function ProfilePage() {
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
   const [loading, setLoading] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   
   // User data
   const [userData, setUserData] = useState({
-    name: 'Demo User',
-    email: 'demo@example.com',
-    credits: 510,
+    name: '',
+    email: '',
+    credits: 0,
     tier: 'Starter',
-    joined: '2025-10-22'
+    joined: new Date().toISOString().split('T')[0]
+  })
+  
+  const [editForm, setEditForm] = useState({
+    name: '',
+    email: ''
   })
 
   // Analytics data
@@ -73,11 +79,46 @@ export default function ProfilePage() {
 
   // Load saved data from localStorage
   useEffect(() => {
+    // Load saved prompts
     const saved = localStorage.getItem('saved_prompts')
     if (saved) {
       setSavedPrompts(JSON.parse(saved))
     }
+    
+    // Load user profile data
+    const savedProfile = localStorage.getItem('user_profile')
+    if (savedProfile) {
+      const profile = JSON.parse(savedProfile)
+      setUserData(profile)
+      setEditForm({ name: profile.name, email: profile.email })
+    }
   }, [])
+  
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // Save changes
+      const updatedData = {
+        ...userData,
+        name: editForm.name,
+        email: editForm.email
+      }
+      setUserData(updatedData)
+      localStorage.setItem('user_profile', JSON.stringify(updatedData))
+      
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been saved successfully",
+      })
+    } else {
+      // Enter edit mode
+      setEditForm({ name: userData.name, email: userData.email })
+    }
+    setIsEditing(!isEditing)
+  }
+  
+  const handleInputChange = (field: string, value: string) => {
+    setEditForm(prev => ({ ...prev, [field]: value }))
+  }
 
   const savePrompt = (agentId: string, agentName: string, prompt: string) => {
     const newPrompt: SavedPrompt = {
@@ -140,23 +181,62 @@ export default function ProfilePage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2 dark:text-gray-300">Name</label>
-                    <Input value={userData.name} readOnly />
+                    <Input 
+                      value={isEditing ? editForm.name : userData.name} 
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      readOnly={!isEditing}
+                      placeholder="Enter your name"
+                      className={isEditing ? 'border-blue-500 dark:border-blue-600' : ''}
+                    />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium mb-2 dark:text-gray-300">Email</label>
-                    <Input value={userData.email} readOnly />
+                    <Input 
+                      value={isEditing ? editForm.email : userData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      readOnly={!isEditing}
+                      placeholder="Enter your email"
+                      type="email"
+                      className={isEditing ? 'border-blue-500 dark:border-blue-600' : ''}
+                    />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium mb-2 dark:text-gray-300">Member Since</label>
-                    <Input value={new Date(userData.joined).toLocaleDateString()} readOnly />
+                    <Input value={userData.joined ? new Date(userData.joined).toLocaleDateString() : 'Not set'} readOnly className="bg-gray-50 dark:bg-gray-800" />
                   </div>
 
-                  <Button variant="outline" className="w-full">
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit Profile
+                  <Button 
+                    variant={isEditing ? "default" : "outline"} 
+                    className="w-full"
+                    onClick={handleEditToggle}
+                  >
+                    {isEditing ? (
+                      <>
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        Save Changes
+                      </>
+                    ) : (
+                      <>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit Profile
+                      </>
+                    )}
                   </Button>
+                  
+                  {isEditing && (
+                    <Button 
+                      variant="ghost" 
+                      className="w-full"
+                      onClick={() => {
+                        setIsEditing(false)
+                        setEditForm({ name: userData.name, email: userData.email })
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  )}
                 </div>
               </Card>
 
