@@ -24,32 +24,51 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // Import apiService dynamically to avoid SSR issues
-      const { apiService } = await import('@/lib/api')
+      // Check if user exists in localStorage (simple auth for now)
+      const savedProfile = localStorage.getItem('user_profile')
       
-      // Real authentication API call
-      const response = await apiService.login(formData.email, formData.password)
+      if (savedProfile) {
+        const profile = JSON.parse(savedProfile)
+        
+        // Simple email match (no password validation for demo)
+        if (profile.email && profile.email.toLowerCase() === formData.email.toLowerCase()) {
+          // Store auth token
+          localStorage.setItem('auth_token', 'demo-token-' + Date.now())
+          localStorage.setItem('user_email', formData.email)
+          
+          toast({
+            title: "Login Successful",
+            description: `Welcome back, ${profile.name || formData.email}!`,
+          })
+          
+          router.push('/console')
+          return
+        }
+      }
       
-      // Store auth token
-      localStorage.setItem('auth_token', response.access_token)
-      localStorage.setItem('user_data', JSON.stringify(response.user))
-      
-      toast({
-        title: "Login Successful",
-        description: `Welcome back, ${response.user.name || response.user.email}!`,
-      })
-      
-      // Check if user needs to add credits
-      if (response.requires_payment) {
-        router.push('/pricing?required=8&reason=insufficient_credits')
-      } else {
-        router.push('/dashboard')
+      // If no profile found, try backend API
+      try {
+        const { apiService } = await import('@/lib/api')
+        const response = await apiService.login(formData.email, formData.password)
+        
+        localStorage.setItem('auth_token', response.access_token)
+        localStorage.setItem('user_data', JSON.stringify(response.user))
+        
+        toast({
+          title: "Login Successful",
+          description: `Welcome back!`,
+        })
+        
+        router.push('/console')
+      } catch (apiError) {
+        // Backend not available or user not found
+        throw new Error("No account found with this email. Please sign up first.")
       }
     } catch (error) {
       console.error('Login error:', error)
       toast({
         title: "Login Failed",
-        description: error instanceof Error ? error.message : "Invalid email or password",
+        description: error instanceof Error ? error.message : "Invalid email or password. Please sign up if you don't have an account.",
         variant: "destructive",
       })
     } finally {

@@ -44,6 +44,26 @@ export const addCredits = (amount: number): CreditBalance => {
   return updated
 }
 
+// Manual credit addition for purchases (call from browser console)
+export const addPurchasedCredits = (packageAmount: number) => {
+  const creditAmounts: { [key: number]: number } = {
+    20: 500,   // $20 = 500 credits
+    50: 1500,  // $50 = 1500 credits
+    100: 3500, // $100 = 3500 credits
+    250: 10000 // $250 = 10000 credits
+  }
+  
+  const credits = creditAmounts[packageAmount] || packageAmount
+  const result = addCredits(credits)
+  console.log(`✅ Added ${credits} credits! New balance: ${result.remaining}`)
+  return result
+}
+
+// Make it available globally for easy access
+if (typeof window !== 'undefined') {
+  (window as any).addCredits = addPurchasedCredits
+}
+
 export const deductCredits = (amount: number): { success: boolean; balance: CreditBalance } => {
   const current = getCredits()
   
