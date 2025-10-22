@@ -28,7 +28,7 @@ export default function RestAPIPage() {
 
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Server className="h-8 w-8 text-blue-600" />
+              <Server className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">Authentication</h2>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -41,7 +41,7 @@ export default function RestAPIPage() {
 
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Zap className="h-8 w-8 text-blue-600" />
+              <Zap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">Endpoints</h2>
             </div>
 
@@ -162,7 +162,7 @@ Response:
           <Card className="p-8">
             <h2 className="text-2xl font-bold mb-4">Rate Limits</h2>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
-              API rate limits vary by tier. See <Link href="/docs/api/rate-limits" className="text-blue-600 hover:underline">Rate Limits documentation</Link> for details.
+              API rate limits vary by tier. See <Link href="/docs/api/rate-limits" className="text-blue-600 dark:text-blue-400 hover:underline">Rate Limits documentation</Link> for details.
             </p>
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
               <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -176,7 +176,7 @@ Response:
           <Card className="p-8">
             <h2 className="text-2xl font-bold mb-4">Error Handling</h2>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
-              The API uses standard HTTP status codes. See <Link href="/docs/api/errors" className="text-blue-600 hover:underline">Error Handling documentation</Link> for details.
+              The API uses standard HTTP status codes. See <Link href="/docs/api/errors" className="text-blue-600 dark:text-blue-400 hover:underline">Error Handling documentation</Link> for details.
             </p>
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
               <code>{`{

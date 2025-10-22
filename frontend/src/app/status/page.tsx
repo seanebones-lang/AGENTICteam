@@ -158,11 +158,11 @@ export default function StatusPage() {
               <div className="text-sm text-gray-700 dark:text-gray-300">Overall Uptime (30d)</div>
             </Card>
             <Card className="p-6 text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">45ms</div>
+              <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">45ms</div>
               <div className="text-sm text-gray-700 dark:text-gray-300">Global P99 Latency</div>
             </Card>
             <Card className="p-6 text-center">
-              <div className="text-4xl font-bold text-purple-600 mb-2">523,847</div>
+              <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">523,847</div>
               <div className="text-sm text-gray-700 dark:text-gray-300">Tasks Today</div>
             </Card>
             <Card className="p-6 text-center">
@@ -301,7 +301,7 @@ export default function StatusPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <h2 className="text-3xl font-bold mb-8 text-center">Scheduled Maintenance</h2>
           <Card className="p-8 text-center">
-            <Clock className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+            <Clock className="h-16 w-16 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">No Scheduled Maintenance</h3>
             <p className="text-gray-700 dark:text-gray-300">
               There is no planned maintenance at this time. We will notify customers at least 7 days in advance of any scheduled maintenance windows.

@@ -31,21 +31,21 @@ export default function PrivacyPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <Card className="p-6 text-center">
-              <Shield className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <Shield className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Military-Grade Security</h3>
               <p className="text-gray-700 dark:text-gray-300 text-sm">
                 End-to-end encryption and zero-trust architecture
               </p>
             </Card>
             <Card className="p-6 text-center">
-              <Lock className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <Lock className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">GDPR Compliant</h3>
               <p className="text-gray-700 dark:text-gray-300 text-sm">
                 Full compliance with international data protection laws
               </p>
             </Card>
             <Card className="p-6 text-center">
-              <UserCheck className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <UserCheck className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Your Data, Your Control</h3>
               <p className="text-gray-700 dark:text-gray-300 text-sm">
                 You own your data and can request deletion at any time
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
             
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Eye className="h-6 w-6 text-blue-600" />
+                <Eye className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 1. Information We Collect
               </h2>
               <div className="space-y-4 text-gray-700 dark:text-gray-300">
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Database className="h-6 w-6 text-blue-600" />
+                <Database className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 2. How We Use Your Information
               </h2>
               <div className="space-y-4 text-gray-700 dark:text-gray-300">
@@ -135,7 +135,7 @@ export default function PrivacyPage() {
 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Lock className="h-6 w-6 text-blue-600" />
+                <Lock className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 4. Data Security
               </h2>
               <div className="space-y-4 text-gray-700 dark:text-gray-300">
@@ -176,7 +176,7 @@ export default function PrivacyPage() {
 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <UserCheck className="h-6 w-6 text-blue-600" />
+                <UserCheck className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 6. Your Rights and Choices
               </h2>
               <div className="space-y-4 text-gray-700 dark:text-gray-300">
@@ -191,7 +191,7 @@ export default function PrivacyPage() {
                   <li><strong>Withdraw Consent:</strong> Withdraw consent for data processing where consent was the legal basis</li>
                 </ul>
                 <p className="mt-4">
-                  To exercise these rights, please contact us at <a href="https://bizbot.store" className="text-blue-600 hover:underline">bizbot.store</a> or <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a>.
+                  To exercise these rights, please contact us at <a href="https://bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a> or <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a>.
                 </p>
               </div>
             </Card>
@@ -216,7 +216,7 @@ export default function PrivacyPage() {
 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Globe className="h-6 w-6 text-blue-600" />
+                <Globe className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 8. International Data Transfers
               </h2>
               <div className="space-y-4 text-gray-700 dark:text-gray-300">
@@ -286,8 +286,8 @@ export default function PrivacyPage() {
                 </p>
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                   <p className="font-semibold mb-2">BizBot / Sean McDonnell</p>
-                  <p>Website: <a href="https://bizbot.store" className="text-blue-600 hover:underline">bizbot.store</a></p>
-                  <p>Phone: <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a></p>
+                  <p>Website: <a href="https://bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a></p>
+                  <p>Phone: <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a></p>
                   <p className="mt-2 text-sm">Response time: Within 30 days of receipt</p>
                 </div>
               </div>
@@ -298,7 +298,7 @@ export default function PrivacyPage() {
                 Copyright © 2025 Sean McDonnell. All Rights Reserved.
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300 text-center mt-2">
-                See also: <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> | <Link href="/license" className="text-blue-600 hover:underline">License Information</Link>
+                See also: <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">Terms of Service</Link> | <Link href="/license" className="text-blue-600 dark:text-blue-400 hover:underline">License Information</Link>
               </p>
             </div>
 

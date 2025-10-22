@@ -62,7 +62,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md p-8">
         <div className="flex items-center justify-center mb-8">
           <Link href="/" className="flex items-center gap-2">
-            <Zap className="h-8 w-8 text-blue-600" />
+            <Zap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
             <span className="text-2xl font-bold">Agent Marketplace</span>
           </Link>
         </div>
@@ -92,7 +92,7 @@ export default function LoginPage() {
               <Label htmlFor="password">Password</Label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-blue-600 hover:underline"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Forgot password?
               </Link>

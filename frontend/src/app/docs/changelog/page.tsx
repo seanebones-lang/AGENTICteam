@@ -74,9 +74,9 @@ export default function ChangelogPage() {
                   return (
                     <div key={idx} className="flex items-start gap-3">
                       <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${
-                        change.type === 'feature' ? 'text-green-600' :
-                        change.type === 'improvement' ? 'text-blue-600' :
-                        'text-orange-600'
+                        change.type === 'feature' ? 'text-green-600 dark:text-green-400' :
+                        change.type === 'improvement' ? 'text-blue-600 dark:text-blue-400' :
+                        'text-orange-600 dark:text-orange-400'
                       }`} />
                       <div>
                         <Badge variant="outline" className="text-xs mr-2">

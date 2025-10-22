@@ -14,7 +14,7 @@ export default function SecurityScannerPage() {
           </Link>
           <Badge className="mb-4">Agent Packages</Badge>
           <div className="flex items-center gap-4 mb-4">
-            <Shield className="h-12 w-12 text-blue-600" />
+            <Shield className="h-12 w-12 text-blue-600 dark:text-blue-400" />
             <h1 className="text-4xl font-bold">Security Scanner</h1>
           </div>
           <p className="text-lg text-gray-700 dark:text-gray-300">
@@ -30,19 +30,19 @@ export default function SecurityScannerPage() {
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">99.8%</div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">99.8%</div>
                 <div className="text-sm text-gray-700 dark:text-gray-300">Success Rate</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">2.3s</div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">2.3s</div>
                 <div className="text-sm text-gray-700 dark:text-gray-300">Avg Time</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">$0.05</div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">$0.05</div>
                 <div className="text-sm text-gray-700 dark:text-gray-300">Per Execution</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">45K+</div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">45K+</div>
                 <div className="text-sm text-gray-700 dark:text-gray-300">Executions</div>
               </div>
             </div>

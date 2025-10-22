@@ -97,7 +97,7 @@ export default function ContactPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="p-6">
-              <HeadphonesIcon className="h-10 w-10 text-blue-600 mb-4" />
+              <HeadphonesIcon className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Sales Inquiries</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Interested in purchasing or licensing Agent Marketplace? Our sales team is ready to discuss pricing, features, and custom enterprise solutions.
@@ -105,17 +105,17 @@ export default function ContactPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Phone className="h-4 w-4" />
-                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600">support@bizbot.store</a>
+                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600 dark:hover:text-blue-400">support@bizbot.store</a>
                 </div>
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Globe className="h-4 w-4" />
-                  <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">bizbot.store</a>
+                  <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">bizbot.store</a>
                 </div>
               </div>
             </Card>
 
             <Card className="p-6">
-              <Shield className="h-10 w-10 text-blue-600 mb-4" />
+              <Shield className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Technical Support</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Need help with implementation, integration, or troubleshooting? Our technical team provides comprehensive support for all licensed customers.
@@ -123,17 +123,17 @@ export default function ContactPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Phone className="h-4 w-4" />
-                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600">support@bizbot.store</a>
+                  <a href="mailto:support@bizbot.store" className="hover:text-blue-600 dark:hover:text-blue-400">support@bizbot.store</a>
                 </div>
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Globe className="h-4 w-4" />
-                  <a href="https://bizbot.store/support" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Support Portal</a>
+                  <a href="https://bizbot.store/support" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">Support Portal</a>
                 </div>
               </div>
             </Card>
 
             <Card className="p-6">
-              <Clock className="h-10 w-10 text-blue-600 mb-4" />
+              <Clock className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Business Hours</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Our team is available during the following hours:
@@ -160,7 +160,7 @@ export default function ContactPage() {
             </Card>
 
             <Card className="p-6">
-              <MapPin className="h-10 w-10 text-blue-600 mb-4" />
+              <MapPin className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Location</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Proudly serving clients worldwide from our headquarters in Texas, USA.
@@ -169,10 +169,10 @@ export default function ContactPage() {
                 <p className="font-medium">BizBot</p>
                 <p>Texas, United States</p>
                 <p className="mt-4">
-                  <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="hover:text-blue-600">support@bizbot.store</a>
+                  <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="hover:text-blue-600 dark:hover:text-blue-400">support@bizbot.store</a>
                 </p>
                 <p>
-                  <strong>Web:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">bizbot.store</a>
+                  <strong>Web:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">bizbot.store</a>
                 </p>
               </div>
             </Card>
@@ -194,7 +194,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-semibold mb-2">How do I purchase a license?</h3>
                 <p className="text-gray-700 dark:text-gray-300">
-                  Contact us at <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a> or visit <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a> to discuss licensing options. We offer flexible plans for businesses of all sizes.
+                  Contact us at <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a> or visit <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a> to discuss licensing options. We offer flexible plans for businesses of all sizes.
                 </p>
               </div>
               <div>

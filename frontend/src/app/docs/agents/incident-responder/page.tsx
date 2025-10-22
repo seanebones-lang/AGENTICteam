@@ -54,19 +54,19 @@ print(f"Actions Taken: {result.actions}")`}</code>
             content: (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">99.5%</div>
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">99.5%</div>
                   <div className="text-sm text-gray-700 dark:text-gray-300">Success Rate</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">1.8s</div>
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">1.8s</div>
                   <div className="text-sm text-gray-700 dark:text-gray-300">Avg Time</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">$0.08</div>
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">$0.08</div>
                   <div className="text-sm text-gray-700 dark:text-gray-300">Per Execution</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">38K+</div>
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">38K+</div>
                   <div className="text-sm text-gray-700 dark:text-gray-300">Executions</div>
                 </div>
               </div>

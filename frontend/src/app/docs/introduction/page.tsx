@@ -34,7 +34,7 @@ export default function IntroductionPage() {
             <h2 className="text-2xl font-bold mb-4">Key Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex items-start gap-3">
-                <Zap className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-semibold mb-2">10 Production-Ready Agents</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -43,7 +43,7 @@ export default function IntroductionPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Shield className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-semibold mb-2">Military-Grade Security</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -52,7 +52,7 @@ export default function IntroductionPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Globe className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Globe className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-semibold mb-2">Global Multi-Region</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -61,7 +61,7 @@ export default function IntroductionPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-semibold mb-2">99.999% Uptime SLA</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300">

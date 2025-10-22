@@ -87,7 +87,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-md p-8">
         <div className="flex items-center justify-center mb-8">
           <Link href="/" className="flex items-center gap-2">
-            <Zap className="h-8 w-8 text-blue-600" />
+            <Zap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
             <span className="text-2xl font-bold">Agent Marketplace</span>
           </Link>
         </div>

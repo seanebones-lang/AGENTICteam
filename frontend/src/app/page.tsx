@@ -149,7 +149,7 @@ export default function HomePage() {
               </p>
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 text-left text-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <Clock className="h-4 w-4 text-purple-600" />
+                  <Clock className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                   <span className="font-semibold">Analyzing...</span>
                 </div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">
@@ -238,7 +238,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Zap className="h-12 w-12 text-blue-600 mb-4" />
+              <Zap className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">AI-Driven Autoscaling</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 ML-based prediction scales infrastructure 5-15 minutes before load arrives. 75% faster than reactive scaling.
@@ -246,7 +246,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Shield className="h-12 w-12 text-blue-600 mb-4" />
+              <Shield className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Zero-Trust Sandbox</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Military-grade isolation with 7 layers of security. SOC 2, ISO 27001, and FedRAMP ready.
@@ -254,7 +254,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="p-6 hover:shadow-lg transition-shadow">
-              <GlobeIcon className="h-12 w-12 text-blue-600 mb-4" />
+              <GlobeIcon className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Global Multi-Region</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Deployed across US, EU, and APAC with intelligent geo-routing. 45ms P99 latency globally.
@@ -262,7 +262,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="p-6 hover:shadow-lg transition-shadow">
-              <TrendingUp className="h-12 w-12 text-blue-600 mb-4" />
+              <TrendingUp className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Predictive Maintenance</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Prevents 99% of outages before they happen. Auto-remediation for low-risk issues.
@@ -270,7 +270,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Users className="h-12 w-12 text-blue-600 mb-4" />
+              <Users className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Agent Swarms</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 100+ agents collaborating in real-time. 7 specialized roles for complex tasks.
@@ -278,7 +278,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Code className="h-12 w-12 text-blue-600 mb-4" />
+              <Code className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Multi-Modal Processing</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Handle text, images, and voice simultaneously. Richer context, better accuracy.

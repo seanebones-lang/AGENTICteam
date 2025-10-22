@@ -50,17 +50,17 @@ export default function FinancialsPage() {
             </Card>
 
             <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-              <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-              <div className="text-3xl font-bold text-blue-600 mb-2">127</div>
+              <Users className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">127</div>
               <div className="text-sm text-gray-700 dark:text-gray-300">Enterprise Customers</div>
-              <div className="text-xs text-blue-600 mt-2">↑ 215% YoY</div>
+              <div className="text-xs text-blue-600 dark:text-blue-400 mt-2">↑ 215% YoY</div>
             </Card>
 
             <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-              <DollarSign className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-              <div className="text-3xl font-bold text-purple-600 mb-2">$18.9K</div>
+              <DollarSign className="h-12 w-12 text-purple-600 dark:text-purple-400 mx-auto mb-4" />
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">$18.9K</div>
               <div className="text-sm text-gray-700 dark:text-gray-300">Average Contract Value (ACV)</div>
-              <div className="text-xs text-purple-600 mt-2">↑ 42% YoY</div>
+              <div className="text-xs text-purple-600 dark:text-purple-400 mt-2">↑ 42% YoY</div>
             </Card>
 
             <Card className="p-6 text-center hover:shadow-lg transition-shadow">
@@ -80,7 +80,7 @@ export default function FinancialsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card className="p-8">
               <div className="flex items-center gap-3 mb-6">
-                <PieChart className="h-8 w-8 text-blue-600" />
+                <PieChart className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-2xl font-semibold">Revenue by Segment</h3>
               </div>
               <div className="space-y-4">
@@ -116,7 +116,7 @@ export default function FinancialsPage() {
 
             <Card className="p-8">
               <div className="flex items-center gap-3 mb-6">
-                <BarChart className="h-8 w-8 text-blue-600" />
+                <BarChart className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-2xl font-semibold">Growth Metrics</h3>
               </div>
               <div className="space-y-6">
@@ -130,14 +130,14 @@ export default function FinancialsPage() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-700 dark:text-gray-300">Customer Acquisition Cost (CAC)</span>
-                    <span className="font-semibold text-blue-600">$4,200</span>
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">$4,200</span>
                   </div>
                   <p className="text-sm text-gray-700 dark:text-gray-300">Decreasing with scale efficiencies</p>
                 </div>
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-700 dark:text-gray-300">Lifetime Value (LTV)</span>
-                    <span className="font-semibold text-purple-600">$67K</span>
+                    <span className="font-semibold text-purple-600 dark:text-purple-400">$67K</span>
                   </div>
                   <p className="text-sm text-gray-700 dark:text-gray-300">LTV:CAC ratio of 16:1</p>
                 </div>
@@ -160,9 +160,9 @@ export default function FinancialsPage() {
           <h2 className="text-3xl font-bold mb-8 text-center">Market Opportunity</h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <Card className="p-6">
-              <Globe className="h-10 w-10 text-blue-600 mb-4" />
+              <Globe className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Total Addressable Market (TAM)</h3>
-              <div className="text-3xl font-bold text-blue-600 mb-2">$47B</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">$47B</div>
               <p className="text-gray-700 dark:text-gray-300">
                 Global AI agent and automation market by 2028
               </p>
@@ -178,9 +178,9 @@ export default function FinancialsPage() {
             </Card>
 
             <Card className="p-6">
-              <Rocket className="h-10 w-10 text-purple-600 mb-4" />
+              <Rocket className="h-10 w-10 text-purple-600 dark:text-purple-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Serviceable Obtainable Market (SOM)</h3>
-              <div className="text-3xl font-bold text-purple-600 mb-2">$850M</div>
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">$850M</div>
               <p className="text-gray-700 dark:text-gray-300">
                 Realistic 3-year market capture target
               </p>
@@ -195,7 +195,7 @@ export default function FinancialsPage() {
           <h2 className="text-3xl font-bold mb-8 text-center">Competitive Advantages</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="p-6">
-              <Shield className="h-10 w-10 text-blue-600 mb-4" />
+              <Shield className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Military-Grade Security</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Zero-trust architecture with 7 layers of security. SOC 2, ISO 27001, and FedRAMP ready compliance gives us enterprise credibility competitors lack.
@@ -204,7 +204,7 @@ export default function FinancialsPage() {
             </Card>
 
             <Card className="p-6">
-              <Zap className="h-10 w-10 text-blue-600 mb-4" />
+              <Zap className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">AI-Driven Autoscaling</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 ML-based prediction scales infrastructure 5-15 minutes before load arrives. 75% faster than reactive scaling, reducing costs by 40%.
@@ -213,7 +213,7 @@ export default function FinancialsPage() {
             </Card>
 
             <Card className="p-6">
-              <TrendingUp className="h-10 w-10 text-blue-600 mb-4" />
+              <TrendingUp className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">99.999% Uptime SLA</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Industry-leading reliability with only 5.26 minutes of allowed downtime per year. Backed by multi-region architecture and predictive maintenance.
@@ -222,7 +222,7 @@ export default function FinancialsPage() {
             </Card>
 
             <Card className="p-6">
-              <Award className="h-10 w-10 text-blue-600 mb-4" />
+              <Award className="h-10 w-10 text-blue-600 dark:text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-3">Multi-Modal Agents</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Support for text, images, and voice processing in a single agent. Enables use cases competitors can&apos;t address with 3x higher accuracy.
@@ -370,7 +370,7 @@ export default function FinancialsPage() {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg flex-shrink-0">
-                    <Shield className="h-5 w-5 text-blue-600" />
+                    <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Technology Moat</h4>
@@ -381,7 +381,7 @@ export default function FinancialsPage() {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg flex-shrink-0">
-                    <Target className="h-5 w-5 text-purple-600" />
+                    <Target className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Massive Market</h4>

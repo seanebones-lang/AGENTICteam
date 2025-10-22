@@ -22,7 +22,7 @@ export default function QuickStartPage() {
         <div className="space-y-8">
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Key className="h-8 w-8 text-blue-600" />
+              <Key className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">Step 1: Get Your API Key</h2>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -30,10 +30,10 @@ export default function QuickStartPage() {
             </p>
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a>
+                <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a>
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a>
+                <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a>
               </p>
             </div>
             <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -46,7 +46,7 @@ export default function QuickStartPage() {
 
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Terminal className="h-8 w-8 text-blue-600" />
+              <Terminal className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">Step 2: Install the SDK</h2>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -65,7 +65,7 @@ export default function QuickStartPage() {
 
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Zap className="h-8 w-8 text-blue-600" />
+              <Zap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">Step 3: Execute Your First Agent</h2>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">

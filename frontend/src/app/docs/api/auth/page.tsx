@@ -71,10 +71,10 @@ Response:
                 </p>
                 <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                   <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                    <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a>
+                    <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a>
                   </p>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a>
+                    <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a>
                   </p>
                 </div>
               </div>

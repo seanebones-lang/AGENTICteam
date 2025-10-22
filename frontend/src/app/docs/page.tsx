@@ -95,7 +95,7 @@ export default function DocsPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Get up and running in under 5 minutes
             </p>
-            <Link href="/docs/quick-start" className="text-sm font-semibold text-blue-600 hover:underline">
+            <Link href="/docs/quick-start" className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">
               Start Building →
             </Link>
           </Card>
@@ -143,7 +143,7 @@ export default function DocsPage() {
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className="text-sm text-blue-600 hover:underline"
+                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                         target={link.href.startsWith('http') ? '_blank' : undefined}
                       >
                         {link.name}

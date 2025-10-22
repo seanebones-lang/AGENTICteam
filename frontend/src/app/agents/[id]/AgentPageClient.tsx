@@ -416,7 +416,7 @@ export default function AgentPageClient() {
           
           <div className="flex items-start gap-6">
             <div className="p-4 bg-white rounded-xl shadow-sm">
-              <Icon className="h-12 w-12 text-blue-600" />
+              <Icon className="h-12 w-12 text-blue-600 dark:text-blue-400" />
             </div>
             
             <div className="flex-1">
@@ -641,7 +641,7 @@ export default function AgentPageClient() {
                 
                 {isFreeTrialAgent && !hasFreeTrial && (
                   <p className="text-sm text-center text-gray-600">
-                    Free trial complete. <Link href="/pricing" className="text-blue-600 hover:underline">View pricing</Link>
+                    Free trial complete. <Link href="/pricing" className="text-blue-600 dark:text-blue-400 hover:underline">View pricing</Link>
                   </p>
                 )}
               </div>
@@ -764,7 +764,7 @@ export default function AgentPageClient() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Credit Cost</span>
-                  <span className="font-semibold text-blue-600">{creditCost} credits</span>
+                  <span className="font-semibold text-blue-600 dark:text-blue-400">{creditCost} credits</span>
                 </div>
                 
                 <div className="flex justify-between items-center">

@@ -217,11 +217,11 @@ export default function PricingPage() {
               <span>No hidden fees</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <Zap className="h-5 w-5 text-blue-600" />
+              <Zap className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <span>Instant activation</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <Award className="h-5 w-5 text-purple-600" />
+              <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               <span>75% margin on agents</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
@@ -278,7 +278,7 @@ export default function PricingPage() {
                   <div className="text-center mb-4">
                     <h3 className="text-xl font-bold mb-2 capitalize">{name}</h3>
                     <div className="mb-3">
-                      <p className="text-4xl font-bold text-blue-600">
+                      <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">
                         ${pkg.price}
                       </p>
                       <p className="text-sm text-gray-500 mt-1">
@@ -354,7 +354,7 @@ export default function PricingPage() {
                   <div className="text-center mb-6">
                     <h3 className="text-2xl font-bold mb-2 capitalize">{name}</h3>
                     <div className="mb-4">
-                      <p className="text-4xl font-bold text-purple-600">
+                      <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">
                         ${tier.price}
                         <span className="text-lg text-gray-500 font-normal">/mo</span>
                       </p>
@@ -414,7 +414,7 @@ export default function PricingPage() {
                     <tr key={agent.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
                       <td className="py-3 px-4 font-medium">{agent.name}</td>
                       <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{agent.category}</td>
-                      <td className="text-center py-3 px-4 font-bold text-blue-600">{agent.credit_cost}</td>
+                      <td className="text-center py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{agent.credit_cost}</td>
                       <td className="text-center py-3 px-4 text-gray-600 dark:text-gray-400">
                         ${agent.dollar_cost.toFixed(2)}
                       </td>

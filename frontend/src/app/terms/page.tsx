@@ -48,7 +48,7 @@ export default function TermsPage() {
             
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Scale className="h-6 w-6 text-blue-600" />
+                <Scale className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 1. Acceptance of Terms
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -219,8 +219,8 @@ export default function TermsPage() {
                 </p>
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                   <p className="font-semibold mb-2">BizBot / Sean McDonnell</p>
-                  <p>Website: <a href="https://bizbot.store" className="text-blue-600 hover:underline">bizbot.store</a></p>
-                  <p>Phone: <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a></p>
+                  <p>Website: <a href="https://bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a></p>
+                  <p>Phone: <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a></p>
                 </div>
               </div>
             </Card>
@@ -230,7 +230,7 @@ export default function TermsPage() {
                 Copyright © 2025 Sean McDonnell. All Rights Reserved.
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300 text-center mt-2">
-                See also: <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link> | <Link href="/license" className="text-blue-600 hover:underline">License Information</Link>
+                See also: <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:underline">Privacy Policy</Link> | <Link href="/license" className="text-blue-600 dark:text-blue-400 hover:underline">License Information</Link>
               </p>
             </div>
 

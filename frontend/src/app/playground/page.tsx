@@ -265,7 +265,7 @@ function PlaygroundContent() {
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Execution Time</span>
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-blue-600" />
+                          <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                           <span className="font-semibold">{(executionTime / 1000).toFixed(2)}s</span>
                         </div>
                       </div>
@@ -324,7 +324,7 @@ function PlaygroundContent() {
         {/* Info Banner */}
         <Card className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
           <div className="flex items-start gap-4">
-            <Zap className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+            <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
             <div>
               <h3 className="font-semibold text-lg mb-2">Interactive Testing Environment</h3>
               <p className="text-sm text-gray-700 dark:text-gray-300">

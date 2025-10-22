@@ -65,7 +65,7 @@ export default function FAQPage() {
           {faqs.map((faq, index) => (
             <Card key={index} className="p-6">
               <div className="flex items-start gap-3">
-                <HelpCircle className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                <HelpCircle className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="text-lg font-semibold mb-2">{faq.question}</h3>
                   <p className="text-gray-700 dark:text-gray-300">{faq.answer}</p>

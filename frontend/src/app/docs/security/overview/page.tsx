@@ -32,19 +32,19 @@ export default function SecurityOverviewPage() {
             content: (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="font-bold text-blue-600">SOC 2 Type II</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">SOC 2 Type II</div>
                   <div className="text-xs text-gray-700 dark:text-gray-300 mt-1">Ready</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="font-bold text-blue-600">ISO 27001</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">ISO 27001</div>
                   <div className="text-xs text-gray-700 dark:text-gray-300 mt-1">Ready</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="font-bold text-blue-600">GDPR</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">GDPR</div>
                   <div className="text-xs text-gray-700 dark:text-gray-300 mt-1">Compliant</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="font-bold text-blue-600">HIPAA</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">HIPAA</div>
                   <div className="text-xs text-gray-700 dark:text-gray-300 mt-1">Ready</div>
                 </div>
               </div>

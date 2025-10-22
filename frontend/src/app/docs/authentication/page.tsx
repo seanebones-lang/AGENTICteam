@@ -21,7 +21,7 @@ export default function AuthenticationPage() {
         <div className="space-y-8">
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Key className="h-8 w-8 text-blue-600" />
+              <Key className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">API Key Authentication</h2>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -49,7 +49,7 @@ export default function AuthenticationPage() {
 
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Shield className="h-8 w-8 text-blue-600" />
+              <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">JWT Tokens</h2>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -83,7 +83,7 @@ Response:
 
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Lock className="h-8 w-8 text-blue-600" />
+              <Lock className="h-8 w-8 text-blue-600 dark:text-blue-400" />
               <h2 className="text-2xl font-bold">Best Practices</h2>
             </div>
             <div className="space-y-4">
@@ -112,7 +112,7 @@ AGENT_MARKETPLACE_API_KEY=your_api_key_here`}</code>
               <div>
                 <h3 className="font-semibold mb-2">4. Implement Rate Limiting</h3>
                 <p className="text-gray-700 dark:text-gray-300 text-sm">
-                  Implement client-side rate limiting to avoid hitting API rate limits. See <Link href="/docs/api/rate-limits" className="text-blue-600 hover:underline">Rate Limits documentation</Link>.
+                  Implement client-side rate limiting to avoid hitting API rate limits. See <Link href="/docs/api/rate-limits" className="text-blue-600 dark:text-blue-400 hover:underline">Rate Limits documentation</Link>.
                 </p>
               </div>
             </div>
@@ -125,10 +125,10 @@ AGENT_MARKETPLACE_API_KEY=your_api_key_here`}</code>
             </p>
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bizbot.store</a>
+                <strong>Website:</strong> <a href="https://bizbot.store" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">bizbot.store</a>
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 hover:underline">support@bizbot.store</a>
+                <strong>Phone:</strong> <a href="mailto:support@bizbot.store" className="text-blue-600 dark:text-blue-400 hover:underline">support@bizbot.store</a>
               </p>
             </div>
           </Card>
