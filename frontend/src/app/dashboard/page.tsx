@@ -20,10 +20,10 @@ export default function DashboardPage() {
             </div>
             <Button 
               size="lg" 
-              className="bg-white text-blue-600 hover:bg-gray-100 font-semibold whitespace-nowrap"
+              className="bg-white !text-blue-600 hover:bg-gray-100 font-semibold whitespace-nowrap shadow-lg"
               asChild
             >
-              <Link href="/pricing">
+              <Link href="/pricing" className="!text-blue-600">
                 Get Credits Now →
               </Link>
             </Button>
