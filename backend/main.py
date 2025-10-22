@@ -1496,11 +1496,27 @@ async def register(user_data: dict):
     }
 
 @app.get("/api/v1/auth/me")
-async def get_current_user():
-    """Get current user info (demo user for now)"""
-    user = db.get_user_by_email("demo@example.com")
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+async def get_current_user(authorization: str = Header(None)):
+    """Get current user info from JWT token"""
+    if not authorization or not authorization.startswith("Bearer "):
+        # Fallback to demo user if no token
+        user = db.get_user_by_email("demo@example.com")
+        if not user:
+            raise HTTPException(status_code=401, detail="Authentication required")
+    else:
+        # Extract token and get user
+        token = authorization.replace("Bearer ", "")
+        # For now, extract user_id from token format: token_{id}_{timestamp}
+        try:
+            user_id = int(token.split("_")[1])
+            user = db.get_user_by_id(user_id)
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+        except:
+            # Fallback to demo user
+            user = db.get_user_by_email("demo@example.com")
+            if not user:
+                raise HTTPException(status_code=401, detail="Invalid token")
     
     return {
         "id": user["id"],

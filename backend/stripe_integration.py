@@ -26,6 +26,11 @@ class PaymentStatus(str, Enum):
     FAILED = "failed"
     CANCELLED = "cancelled"
     REFUNDED = "refunded"
+    # Stripe payment intent statuses
+    REQUIRES_PAYMENT_METHOD = "requires_payment_method"
+    REQUIRES_CONFIRMATION = "requires_confirmation"
+    REQUIRES_ACTION = "requires_action"
+    REQUIRES_CAPTURE = "requires_capture"
 
 class SubscriptionTier(str, Enum):
     SOLO = "solo"           # $0.005/execution
