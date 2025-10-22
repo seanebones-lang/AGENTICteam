@@ -20,7 +20,6 @@ export default function SignupPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    tier: 'starter',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,7 +94,7 @@ export default function SignupPage() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold mb-2">Create Your Account</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Get started with $20 minimum • 500 credits • Credits never expire
+            Sign up free • Get 10 credits to start • No credit card required
           </p>
         </div>
 
@@ -122,24 +121,6 @@ export default function SignupPage() {
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="tier">Select Credit Package</Label>
-            <Select value={formData.tier} onValueChange={(value) => setFormData({ ...formData, tier: value })}>
-              <SelectTrigger id="tier">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="starter">Starter - $20 (500 credits)</SelectItem>
-                <SelectItem value="growth">Growth - $50 (1,500 credits)</SelectItem>
-                <SelectItem value="business">Business - $100 (3,500 credits)</SelectItem>
-                <SelectItem value="enterprise">Enterprise - $250 (10,000 credits)</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Credits never expire • Light agents: 1 credit • Medium: 3 credits • Heavy: 8 credits
-            </p>
           </div>
 
           <div className="space-y-2">
