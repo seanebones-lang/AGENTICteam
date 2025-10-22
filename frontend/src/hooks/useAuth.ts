@@ -19,20 +19,23 @@ export function useAuth() {
     try {
       const token = localStorage.getItem('access_token');
       if (token) {
-        // For now, create a mock user since auth.me() doesn't exist
-        const mockUser: Customer = {
-          id: 1,
-          name: 'Demo User',
-          email: 'demo@example.com',
-          tier: 'pro',
-          is_active: true,
-          created_at: new Date().toISOString()
-        };
-        setUser(mockUser);
+        // TODO: Replace with real API call when backend auth is ready
+        // const userData = await api.getCurrentUser();
+        // setUser(userData);
+        
+        // Temporary: Check if we have stored user data
+        const storedUser = localStorage.getItem('user_data');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        } else {
+          // Clear invalid token
+          localStorage.removeItem('access_token');
+        }
       }
     } catch (err) {
       console.error('Auth check failed:', err);
       localStorage.removeItem('access_token');
+      localStorage.removeItem('user_data');
     } finally {
       setLoading(false);
     }

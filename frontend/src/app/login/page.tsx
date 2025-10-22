@@ -128,15 +128,7 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <div className="mt-8 pt-6 border-t text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-4">
-            Demo Credentials (Mock Mode)
-          </p>
-          <div className="text-xs space-y-1 font-mono bg-gray-100 dark:bg-gray-800 p-3 rounded">
-            <p>Email: demo@example.com</p>
-            <p>Password: demo123</p>
-          </div>
-        </div>
+        {/* Demo credentials removed for production security */}
       </Card>
     </div>
   )
