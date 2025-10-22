@@ -24,55 +24,106 @@ const mockAgents = [
   { id: 'audit-agent', name: 'Audit Agent' },
   { id: 'knowledge-base', name: 'Knowledge Base' },
   { id: 'workflow-orchestrator', name: 'Workflow Orchestrator' },
-  { id: 'analytics-engine', name: 'Analytics Engine' },
+  { id: 'escalation-manager', name: 'Escalation Manager' },
 ]
 
 const mockScenarios = {
   'security-scanner': {
     title: 'Scan Web Application',
-    input: JSON.stringify({
-      package_id: 'security-scanner',
-      task: 'Scan https://example.com for vulnerabilities',
-      engine_type: 'crewai'
-    }, null, 2),
-    expectedOutput: {
-      success: true,
-      result: "Agent 'Security Scanner Agent' executed successfully!\n\nTask: Scan https://example.com for vulnerabilities\nEngine: crewai\nExecution ID: mock-execution-id\n\nResult: Task completed with 100% success rate. All objectives achieved.",
-      execution_id: 'mock-execution-id',
-      execution_time: 2.3,
-      tokens_used: 45
-    }
+    input: 'Scan https://example.com for vulnerabilities',
+    placeholderText: 'e.g., Scan our production website for security issues'
   },
   'ticket-resolver': {
     title: 'Classify Support Ticket',
-    input: JSON.stringify({
-      package_id: 'ticket-resolver',
-      task: 'Classify support ticket: Unable to login to dashboard',
-      engine_type: 'crewai'
-    }, null, 2),
-    expectedOutput: {
-      success: true,
-      result: "Agent 'Ticket Resolution Agent' executed successfully!\n\nTask: Classify support ticket: Unable to login to dashboard\nEngine: crewai\nExecution ID: mock-execution-id\n\nResult: Task completed with 100% success rate. All objectives achieved.",
-      execution_id: 'mock-execution-id',
-      execution_time: 1.2,
-      tokens_used: 38
-    }
+    input: 'Customer says: I cannot login to my dashboard, getting error 500',
+    placeholderText: 'e.g., Customer cannot access their account after password reset'
   },
   'knowledge-base': {
     title: 'Query Knowledge Base',
-    input: JSON.stringify({
-      package_id: 'knowledge-base',
-      task: 'Answer: How do I configure multi-factor authentication?',
-      engine_type: 'crewai'
-    }, null, 2),
-    expectedOutput: {
-      success: true,
-      result: "Agent 'Knowledge Base Agent' executed successfully!\n\nTask: Answer: How do I configure multi-factor authentication?\nEngine: crewai\nExecution ID: mock-execution-id\n\nResult: Task completed with 100% success rate. All objectives achieved.",
-      execution_id: 'mock-execution-id',
-      execution_time: 0.9,
-      tokens_used: 52
+    input: 'How do I configure multi-factor authentication?',
+    placeholderText: 'e.g., How do I reset my password?'
+  },
+  'incident-responder': {
+    title: 'Analyze Incident',
+    input: 'Our API is returning 500 errors for all authenticated requests',
+    placeholderText: 'e.g., Database is showing high CPU usage'
+  },
+  'data-processor': {
+    title: 'Process Data',
+    input: 'Analyze user signup trends from the last 30 days',
+    placeholderText: 'e.g., Summarize sales data from Q4'
+  },
+  'deployment-agent': {
+    title: 'Deploy Application',
+    input: 'Deploy version 2.0 to production with zero downtime',
+    placeholderText: 'e.g., Roll back to previous version'
+  },
+  'report-generator': {
+    title: 'Generate Report',
+    input: 'Create a weekly performance report for all services',
+    placeholderText: 'e.g., Generate monthly revenue report'
+  },
+  'audit-agent': {
+    title: 'Audit System',
+    input: 'Audit all user access logs from the past 7 days',
+    placeholderText: 'e.g., Review security compliance'
+  },
+  'workflow-orchestrator': {
+    title: 'Orchestrate Workflow',
+    input: 'Coordinate deployment across dev, staging, and production environments',
+    placeholderText: 'e.g., Set up automated testing pipeline'
+  },
+  'escalation-manager': {
+    title: 'Manage Escalation',
+    input: 'Critical bug reported by enterprise customer - needs immediate attention',
+    placeholderText: 'e.g., High priority incident needs escalation'
+  }
+}
+
+// Helper function to format agent response for display
+function formatResponse(data: any): string {
+  if (!data) return 'No response'
+  
+  // If there's a result field, extract and format it
+  if (data.result) {
+    if (typeof data.result === 'string') {
+      return data.result
+    }
+    if (typeof data.result === 'object') {
+      // Handle structured results from agents
+      let formatted = ''
+      
+      // Handle ticket analysis results
+      if (data.result.priority) {
+        formatted += `Priority: ${data.result.priority}\n`
+      }
+      if (data.result.category) {
+        formatted += `Category: ${data.result.category}\n`
+      }
+      if (data.result.estimated_resolution_time) {
+        formatted += `Estimated Time: ${data.result.estimated_resolution_time}\n`
+      }
+      if (data.result.analysis) {
+        formatted += `\nAnalysis:\n${data.result.analysis}\n`
+      }
+      if (data.result.resolution_steps) {
+        formatted += `\nResolution Steps:\n`
+        data.result.resolution_steps.forEach((step: string, i: number) => {
+          formatted += `${i + 1}. ${step}\n`
+        })
+      }
+      
+      // If no formatted content, stringify the object nicely
+      if (!formatted) {
+        formatted = JSON.stringify(data.result, null, 2)
+      }
+      
+      return formatted
     }
   }
+  
+  // Fallback to full data
+  return JSON.stringify(data, null, 2)
 }
 
 function PlaygroundContent() {
@@ -80,7 +131,7 @@ function PlaygroundContent() {
   const { toast } = useToast()
   
   const [selectedAgent, setSelectedAgent] = useState(searchParams.get('agent') || 'security-scanner')
-  const [mode, setMode] = useState<'live' | 'mock'>('mock')
+  const [mode, setMode] = useState<'live' | 'mock'>('live')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [isExecuting, setIsExecuting] = useState(false)
@@ -98,6 +149,15 @@ function PlaygroundContent() {
   }, [selectedAgent])
 
   const handleExecute = async () => {
+    if (!input.trim()) {
+      toast({
+        title: "Input Required",
+        description: "Please enter a task for the agent to execute",
+        variant: "destructive"
+      })
+      return
+    }
+
     setIsExecuting(true)
     setExecutionStatus('idle')
     setOutput('')
@@ -109,27 +169,27 @@ function PlaygroundContent() {
         // Simulate execution delay
         await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000))
         
-        const scenario = mockScenarios[selectedAgent as keyof typeof mockScenarios]
-        if (scenario) {
-          setOutput(JSON.stringify(scenario.expectedOutput, null, 2))
-          setExecutionStatus('success')
-          setExecutionTime(Date.now() - startTime)
-          
-          toast({
-            title: "Execution Successful",
-            description: `Agent executed in ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
-          })
-        }
+        const mockResponse = `Task executed successfully!\n\nYour request: "${input}"\n\nThe ${mockAgents.find(a => a.id === selectedAgent)?.name} has processed your request. This is a mock response for demonstration purposes.\n\nIn live mode, you would receive a detailed analysis powered by Claude AI.\n\nExecution completed in ${((Date.now() - startTime) / 1000).toFixed(2)}s`
+        
+        setOutput(mockResponse)
+        setExecutionStatus('success')
+        setExecutionTime(Date.now() - startTime)
+        
+        toast({
+          title: "Execution Successful",
+          description: `Agent executed in ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
+        })
       } else {
-        // Live mode - call actual API
-        const inputData = JSON.parse(input)
+        // Live mode - call actual API with plain text input
         const data = await apiService.executeAgent(
           selectedAgent,
-          inputData.task || 'Execute agent task',
-          inputData.engine_type || 'crewai'
+          input, // Pass the plain text directly
+          'crewai'
         )
         
-        setOutput(JSON.stringify(data, null, 2))
+        // Format the response for human readability
+        const formattedOutput = formatResponse(data)
+        setOutput(formattedOutput)
         setExecutionStatus('success')
         setExecutionTime(Date.now() - startTime)
         
@@ -140,21 +200,20 @@ function PlaygroundContent() {
       }
     } catch (error) {
       setExecutionStatus('error')
-      setOutput(JSON.stringify({
-        error: 'Execution failed',
-        message: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      }, null, 2))
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      setOutput(`❌ Execution Failed\n\n${errorMessage}\n\nPlease check:\n• Your API connection\n• Agent is available\n• You have sufficient credits\n• Input is valid`)
       
       toast({
         title: "Execution Failed",
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
       setIsExecuting(false)
     }
   }
+
+  const scenario = mockScenarios[selectedAgent as keyof typeof mockScenarios]
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -163,7 +222,7 @@ function PlaygroundContent() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">Agent Playground</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Test agents in real-time with live execution or explore mock scenarios.
+            Test agents in real-time with natural language - just type what you need in plain English!
           </p>
         </div>
 
@@ -175,7 +234,7 @@ function PlaygroundContent() {
                 Execution Mode
               </Label>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {mode === 'mock' ? 'Using simulated responses for demonstration' : 'Connected to live API'}
+                {mode === 'mock' ? 'Using simulated responses for demonstration' : 'Connected to live Claude AI'}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -185,7 +244,7 @@ function PlaygroundContent() {
                 checked={mode === 'live'}
                 onCheckedChange={(checked) => setMode(checked ? 'live' : 'mock')}
               />
-              <span className={mode === 'live' ? 'font-semibold' : 'text-gray-500'}>Live</span>
+              <span className={mode === 'live' ? 'font-semibold text-green-600' : 'text-gray-500'}>Live</span>
             </div>
           </div>
         </Card>
@@ -213,13 +272,13 @@ function PlaygroundContent() {
                   </Select>
                 </div>
 
-                {mode === 'mock' && mockScenarios[selectedAgent as keyof typeof mockScenarios] && (
+                {scenario && (
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
-                      Mock Scenario
+                      Example Scenario
                     </p>
                     <p className="text-xs text-blue-700 dark:text-blue-300">
-                      {mockScenarios[selectedAgent as keyof typeof mockScenarios].title}
+                      {scenario.title}
                     </p>
                   </div>
                 )}
@@ -273,7 +332,7 @@ function PlaygroundContent() {
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600 dark:text-gray-400">Mode</span>
                       <Badge variant={mode === 'live' ? 'default' : 'secondary'}>
-                        {mode === 'live' ? 'Live' : 'Mock'}
+                        {mode === 'live' ? '🟢 Live AI' : 'Mock'}
                       </Badge>
                     </div>
                   </div>
@@ -287,32 +346,35 @@ function PlaygroundContent() {
             <Card className="p-6">
               <Tabs defaultValue="input">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="input">Input</TabsTrigger>
-                  <TabsTrigger value="output">Output</TabsTrigger>
+                  <TabsTrigger value="input">Your Task</TabsTrigger>
+                  <TabsTrigger value="output">Agent Response</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="input" className="mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="input-json">Request Payload (JSON)</Label>
+                    <Label htmlFor="input-text">What would you like the agent to do? (Plain English)</Label>
                     <Textarea
-                      id="input-json"
+                      id="input-text"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      placeholder="Enter JSON input..."
-                      className="font-mono text-sm min-h-[400px]"
+                      placeholder={scenario?.placeholderText || "Type your request in plain English..."}
+                      className="text-sm min-h-[400px]"
                     />
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      💡 Tip: Just describe what you need in normal English - no JSON or technical format required!
+                    </p>
                   </div>
                 </TabsContent>
                 
                 <TabsContent value="output" className="mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="output-json">Response (JSON)</Label>
+                    <Label htmlFor="output-text">Agent Response</Label>
                     <Textarea
-                      id="output-json"
+                      id="output-text"
                       value={output}
                       readOnly
-                      placeholder="Execution output will appear here..."
-                      className="font-mono text-sm min-h-[400px] bg-gray-50 dark:bg-gray-800"
+                      placeholder="The agent's response will appear here in plain English..."
+                      className="text-sm min-h-[400px] bg-gray-50 dark:bg-gray-800 whitespace-pre-wrap"
                     />
                   </div>
                 </TabsContent>
@@ -326,11 +388,11 @@ function PlaygroundContent() {
           <div className="flex items-start gap-4">
             <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg mb-2">Interactive Testing Environment</h3>
+              <h3 className="font-semibold text-lg mb-2">Natural Language Interface</h3>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                This playground allows you to test all agent capabilities in both mock and live modes. 
-                Mock mode uses pre-configured scenarios for instant testing, while live mode connects to the actual API. 
-                All executions are logged and can be reviewed in your dashboard.
+                Our playground uses natural language processing - just type what you need in plain English! 
+                In Live mode, real Claude AI powers your requests with intelligent responses.
+                Try your first 3 queries free, then upgrade for unlimited access.
               </p>
             </div>
           </div>
@@ -347,4 +409,3 @@ export default function PlaygroundPage() {
     </Suspense>
   )
 }
-
