@@ -141,7 +141,10 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
     setInputValue('')
 
     try {
-      // Call Claude API for intelligent response
+      // Call Claude API for intelligent response with timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      
       const response = await fetch('/api/support-chat', {
         method: 'POST',
         headers: {
@@ -150,8 +153,11 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
         body: JSON.stringify({
           message: userMessage,
           conversation_history: messages.slice(-5) // Send last 5 messages for context
-        })
+        }),
+        signal: controller.signal
       })
+
+      clearTimeout(timeoutId)
 
       if (!response.ok) {
         throw new Error('Failed to get response')
@@ -210,7 +216,21 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
         addMessage(response)
       }
     } else if (option.action === 'link') {
-      window.open(option.value, '_blank')
+      // Use location.href for internal links to avoid circular reference issues
+      if (option.value.startsWith('/')) {
+        window.location.href = option.value
+      } else {
+        // Use window.location for external links with proper error handling
+        try {
+          window.location.href = option.value
+        } catch (error) {
+          console.error('Navigation error:', error)
+          addMessage({
+            type: 'bot',
+            content: `Unable to navigate to ${option.value}. Please try copying this link manually.`
+          })
+        }
+      }
     } else if (option.action === 'contact') {
       if (option.value === 'human') {
         addMessage({
@@ -218,22 +238,14 @@ export function SupportChatbot({ triggerOpen }: { triggerOpen?: boolean }) {
           content: "I'll connect you with our support team. Choose your preferred contact method:",
           options: [
             { label: "📧 Email Support", action: "contact", value: "email" },
-            { label: "📞 Phone Support", action: "contact", value: "phone" },
-            { label: "💬 Live Chat", action: "contact", value: "chat" }
+            { label: "📞 Phone Support", action: "contact", value: "phone" }
           ]
         })
       } else if (option.value === 'email') {
-        window.open('mailto:support@bizbot.store?subject=Support Request from Chatbot', '_blank')
+        // Use location.href for mailto links to avoid popup blockers
+        window.location.href = 'mailto:support@bizbot.store?subject=Support Request from Chatbot'
       } else if (option.value === 'phone') {
-        window.open('tel:+18176759898', '_blank')
-      } else if (option.value === 'chat') {
-        addMessage({
-          type: 'bot',
-          content: "Live chat is currently available! Our average response time is 2 minutes. You can start a live chat session from our main support page.",
-          options: [
-            { label: "Open Live Chat", action: "link", value: "/support#contact" }
-          ]
-        })
+        window.location.href = 'tel:+18176759898'
       }
     }
   }

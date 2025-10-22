@@ -647,20 +647,112 @@ export default function AgentPageClient() {
               </div>
               
               {executionResult && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <h4 className="font-medium text-green-900 mb-2">Execution Result</h4>
-                  <div className="text-sm text-green-800 space-y-2">
-                    <p><strong>Status:</strong> {executionResult.success ? 'Success' : 'Failed'}</p>
-                    <p><strong>Duration:</strong> {executionResult.duration_ms}ms</p>
-                    {executionResult.result && (
-                      <details className="mt-2">
-                        <summary className="cursor-pointer font-medium">View Full Result</summary>
-                        <pre className="mt-2 text-xs bg-white p-2 rounded overflow-x-auto">
-                          {JSON.stringify(executionResult.result, null, 2)}
-                        </pre>
-                      </details>
-                    )}
+                <div className="mt-6 space-y-4">
+                  {/* Status Header */}
+                  <div className={`p-4 rounded-lg border-2 ${
+                    executionResult.success 
+                      ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
+                      : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      {executionResult.success ? (
+                        <div className="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                          <CheckCircle className="h-6 w-6 text-white" />
+                        </div>
+                      ) : (
+                        <div className="flex-shrink-0 w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                          <AlertTriangle className="h-6 w-6 text-white" />
+                        </div>
+                      )}
+                      <div>
+                        <h4 className={`font-bold text-lg ${
+                          executionResult.success 
+                            ? 'text-green-900 dark:text-green-100' 
+                            : 'text-red-900 dark:text-red-100'
+                        }`}>
+                          {executionResult.success ? 'Execution Successful' : 'Execution Failed'}
+                        </h4>
+                        <p className={`text-sm ${
+                          executionResult.success 
+                            ? 'text-green-700 dark:text-green-300' 
+                            : 'text-red-700 dark:text-red-300'
+                        }`}>
+                          Completed in {executionResult.duration_ms}ms
+                        </p>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Result Details Card */}
+                  <Card className="p-4 bg-white dark:bg-gray-800">
+                    <div className="flex items-center gap-2 mb-3">
+                      <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <h5 className="font-semibold text-gray-900 dark:text-white">Agent Response</h5>
+                    </div>
+                    
+                    {executionResult.result && (
+                      <div className="space-y-3">
+                        {/* If result is a string, show it nicely formatted */}
+                        {typeof executionResult.result === 'string' ? (
+                          <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                            <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
+                              {executionResult.result}
+                            </p>
+                          </div>
+                        ) : (
+                          /* If result is an object, show structured data */
+                          <div className="space-y-2">
+                            {Object.entries(executionResult.result).map(([key, value]) => (
+                              <div key={key} className="p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+                                <div className="flex items-start gap-2">
+                                  <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                                      {key.replace(/_/g, ' ')}
+                                    </p>
+                                    <p className="text-sm text-gray-800 dark:text-gray-200 break-words">
+                                      {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Raw JSON Toggle */}
+                        <details className="mt-3">
+                          <summary className="cursor-pointer text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-2">
+                            <Database className="h-4 w-4" />
+                            View Raw JSON
+                          </summary>
+                          <pre className="mt-2 text-xs bg-gray-900 dark:bg-black text-green-400 p-3 rounded overflow-x-auto border border-gray-700">
+                            {JSON.stringify(executionResult.result, null, 2)}
+                          </pre>
+                        </details>
+                      </div>
+                    )}
+                  </Card>
+
+                  {/* Metadata Card */}
+                  <Card className="p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Duration</p>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white">{executionResult.duration_ms}ms</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="h-4 w-4 text-green-600 dark:text-green-400" />
+                        <div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Cost</p>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white">{creditCost} credits</p>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
                 </div>
               )}
             </Card>

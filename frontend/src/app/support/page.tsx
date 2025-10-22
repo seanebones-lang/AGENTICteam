@@ -397,9 +397,21 @@ export default function SupportPage() {
               <Button 
                 className="w-full"
                 onClick={() => {
-                  // Trigger the global chatbot
-                  const chatButton = document.querySelector('[data-chat-trigger]') as HTMLButtonElement
-                  if (chatButton) chatButton.click()
+                  try {
+                    // Trigger the global chatbot safely
+                    const chatButton = document.querySelector('[data-chat-trigger]') as HTMLButtonElement
+                    if (chatButton) {
+                      chatButton.click()
+                    } else {
+                      console.warn('Chat button not found')
+                      // Fallback: redirect to contact email
+                      window.location.href = 'mailto:support@bizbot.store?subject=Support Request'
+                    }
+                  } catch (error) {
+                    console.error('Chat trigger error:', error)
+                    // Fallback: redirect to contact email
+                    window.location.href = 'mailto:support@bizbot.store?subject=Support Request'
+                  }
                 }}
               >
                 Start Chat
