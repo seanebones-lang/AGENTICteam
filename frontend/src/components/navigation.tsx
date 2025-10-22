@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { Menu, X, Zap } from 'lucide-react'
-import { useState } from 'react'
+import { Menu, X, Zap, LogOut } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 
 const navigation = [
@@ -20,7 +20,29 @@ const navigation = [
 
 export function Navigation() {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  
+  useEffect(() => {
+    // Check if user is logged in
+    const authToken = localStorage.getItem('auth_token')
+    const userEmail = localStorage.getItem('user_email')
+    setIsLoggedIn(!!(authToken || userEmail))
+  }, [])
+  
+  const handleLogout = () => {
+    // Clear all auth data
+    localStorage.removeItem('auth_token')
+    localStorage.removeItem('user_email')
+    localStorage.removeItem('user_data')
+    
+    // Redirect to home
+    router.push('/')
+    
+    // Refresh to update UI
+    window.location.href = '/'
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -65,18 +87,32 @@ export function Navigation() {
         </div>
         
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center">
-          <Button variant="ghost" asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/console">Console</Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/profile">Profile</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/signup">Sign up</Link>
-          </Button>
+          {isLoggedIn ? (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link href="/console">Console</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link href="/profile">Profile</Link>
+              </Button>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/login">Log in</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/signup">Sign up</Link>
+              </Button>
+            </>
+          )}
         </div>
       </nav>
       
@@ -100,18 +136,32 @@ export function Navigation() {
               </Link>
             ))}
             <div className="flex flex-col gap-2 pt-4 border-t">
-              <Button variant="ghost" className="w-full" asChild>
-                <Link href="/dashboard">Dashboard</Link>
-              </Button>
-              <Button variant="ghost" className="w-full" asChild>
-                <Link href="/console">Console</Link>
-              </Button>
-              <Button variant="ghost" className="w-full" asChild>
-                <Link href="/profile">Profile</Link>
-              </Button>
-              <Button className="w-full" asChild>
-                <Link href="/signup">Sign up</Link>
-              </Button>
+              {isLoggedIn ? (
+                <>
+                  <Button variant="ghost" className="w-full" asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                  <Button variant="ghost" className="w-full" asChild>
+                    <Link href="/console">Console</Link>
+                  </Button>
+                  <Button variant="ghost" className="w-full" asChild>
+                    <Link href="/profile">Profile</Link>
+                  </Button>
+                  <Button variant="outline" className="w-full" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="ghost" className="w-full" asChild>
+                    <Link href="/login">Log in</Link>
+                  </Button>
+                  <Button className="w-full" asChild>
+                    <Link href="/signup">Sign up</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -23,7 +23,9 @@ import {
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { getCredits, CreditBalance } from '@/lib/credits'
+import { LogOut } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bizbot-api.onrender.com'
 
@@ -44,6 +46,7 @@ interface FavoriteAgent {
 
 export default function ProfilePage() {
   const { toast } = useToast()
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState('overview')
   const [loading, setLoading] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -262,6 +265,25 @@ export default function ProfilePage() {
                       Edit Profile
                     </Button>
                   )}
+                  
+                  {/* Logout Button */}
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
+                    onClick={() => {
+                      localStorage.removeItem('auth_token')
+                      localStorage.removeItem('user_email')
+                      localStorage.removeItem('user_data')
+                      toast({
+                        title: "Logged Out",
+                        description: "You have been successfully logged out",
+                      })
+                      router.push('/')
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </Button>
                 </div>
               </Card>
 
