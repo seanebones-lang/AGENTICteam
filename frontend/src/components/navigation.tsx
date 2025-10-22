@@ -67,7 +67,10 @@ export function Navigation() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center">
           <ThemeToggle />
           <Button variant="ghost" asChild>
-            <Link href="/login">Log in</Link>
+            <Link href="/profile">Profile</Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/dashboard">Dashboard</Link>
           </Button>
           <Button asChild>
             <Link href="/signup">Sign up</Link>
@@ -94,12 +97,17 @@ export function Navigation() {
                 {item.name}
               </Link>
             ))}
-            <div className="flex items-center gap-4 pt-4 border-t">
-              <ThemeToggle />
-              <Button variant="ghost" className="flex-1" asChild>
-                <Link href="/login">Log in</Link>
+            <div className="flex flex-col gap-2 pt-4 border-t">
+              <div className="flex items-center gap-4 mb-2">
+                <ThemeToggle />
+              </div>
+              <Button variant="ghost" className="w-full" asChild>
+                <Link href="/profile">Profile</Link>
               </Button>
-              <Button className="flex-1" asChild>
+              <Button variant="ghost" className="w-full" asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <Button className="w-full" asChild>
                 <Link href="/signup">Sign up</Link>
               </Button>
             </div>

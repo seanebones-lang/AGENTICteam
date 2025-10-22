@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, Zap, ArrowRight, Sparkles, Play, Loader2, Bot } from 'lucide-react'
+import { CheckCircle, Zap, ArrowRight, Sparkles, Play, Loader2, Bot, Save, Star } from 'lucide-react'
 import { useAgents } from '@/hooks/useAgents'
 import { useToast } from '@/hooks/use-toast'
 
@@ -19,6 +19,36 @@ export default function DashboardPage() {
   const [task, setTask] = useState('')
   const [executing, setExecuting] = useState(false)
   const [result, setResult] = useState<any>(null)
+
+  const handleSavePrompt = () => {
+    if (!selectedAgent || !task) {
+      toast({
+        title: "Nothing to Save",
+        description: "Please enter a task first",
+        variant: "destructive",
+      })
+      return
+    }
+
+    const agent = agents.find(a => a.id === selectedAgent)
+    const savedPrompts = JSON.parse(localStorage.getItem('saved_prompts') || '[]')
+    
+    const newPrompt = {
+      id: Date.now().toString(),
+      agent_id: selectedAgent,
+      agent_name: agent?.name || 'Unknown Agent',
+      prompt: task,
+      created_at: new Date().toISOString()
+    }
+    
+    savedPrompts.push(newPrompt)
+    localStorage.setItem('saved_prompts', JSON.stringify(savedPrompts))
+    
+    toast({
+      title: "Prompt Saved!",
+      description: "View it in your profile page",
+    })
+  }
 
   const handleExecute = async () => {
     if (!selectedAgent || !task) {
@@ -110,7 +140,7 @@ export default function DashboardPage() {
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="font-semibold dark:text-white">{agent.name}</h3>
                         <Badge variant="outline" className="text-xs">
-                          {agent.credit_cost || 3} credits
+                          3 credits
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
@@ -142,24 +172,36 @@ export default function DashboardPage() {
                     />
                   </div>
 
-                  <Button
-                    onClick={handleExecute}
-                    disabled={executing || !task}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                    size="lg"
-                  >
-                    {executing ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Executing...
-                      </>
-                    ) : (
-                      <>
-                        <Play className="mr-2 h-5 w-5" />
-                        Execute Agent
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={handleSavePrompt}
+                      disabled={!task}
+                      variant="outline"
+                      size="lg"
+                      className="flex-1"
+                    >
+                      <Save className="mr-2 h-5 w-5" />
+                      Save Prompt
+                    </Button>
+                    <Button
+                      onClick={handleExecute}
+                      disabled={executing || !task}
+                      className="flex-[2] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                      size="lg"
+                    >
+                      {executing ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Executing...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="mr-2 h-5 w-5" />
+                          Execute Agent
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </Card>
             )}
@@ -208,6 +250,13 @@ export default function DashboardPage() {
             <Card className="p-6">
               <h3 className="font-semibold mb-4 dark:text-white">Quick Actions</h3>
               <div className="space-y-3">
+                <Button variant="outline" className="w-full justify-start" asChild>
+                  <Link href="/profile">
+                    <Star className="mr-2 h-4 w-4" />
+                    View Profile
+                  </Link>
+                </Button>
+                
                 <Button variant="outline" className="w-full justify-start" asChild>
                   <Link href="/agents">
                     <Bot className="mr-2 h-4 w-4" />
