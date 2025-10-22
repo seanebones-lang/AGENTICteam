@@ -83,7 +83,7 @@ export default function DashboardPage() {
         total_spent: totalSpent,
         avg_execution_time: avgTime,
         success_rate: total > 0 ? (successful / total) * 100 : 0,
-        credits_remaining: 500 // Mock data
+        credits_remaining: getCredits().remaining
       })
     }
     setLoading(false)
