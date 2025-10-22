@@ -24,35 +24,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // Check if user exists in localStorage (simple auth for now)
-      const savedProfile = localStorage.getItem('user_profile')
-      
-      if (savedProfile) {
-        const profile = JSON.parse(savedProfile)
-        
-        // Simple email match (no password validation for demo)
-        if (profile.email && profile.email.toLowerCase() === formData.email.toLowerCase()) {
-          // Store auth token
-          localStorage.setItem('auth_token', 'demo-token-' + Date.now())
-          localStorage.setItem('user_email', formData.email)
-          
-          // Trigger storage event for navigation update
-          window.dispatchEvent(new Event('storage'))
-          
-          toast({
-            title: "Login Successful",
-            description: `Welcome back, ${profile.name || formData.email}!`,
-          })
-          
-          // Use setTimeout to ensure storage event is processed
-          setTimeout(() => {
-            router.push('/console')
-          }, 100)
-          return
-        }
-      }
-      
-      // If no profile found, try backend API
+      // Always try backend API first for real authentication
       try {
         const { apiService } = await import('@/lib/api')
         const response = await apiService.login(formData.email, formData.password)
@@ -66,16 +38,47 @@ export default function LoginPage() {
         
         toast({
           title: "Login Successful",
-          description: `Welcome back!`,
+          description: `Welcome back, ${response.user.name || formData.email}!`,
         })
         
         // Use setTimeout to ensure storage event is processed
         setTimeout(() => {
           router.push('/console')
         }, 100)
+        return
       } catch (apiError) {
-        // Backend not available or user not found
-        throw new Error("No account found with this email. Please sign up first.")
+        console.log('Backend API login failed, trying localStorage fallback:', apiError)
+        
+        // Fallback to localStorage check for demo users
+        const savedProfile = localStorage.getItem('user_profile')
+        
+        if (savedProfile) {
+          const profile = JSON.parse(savedProfile)
+          
+          // Simple email match (no password validation for demo)
+          if (profile.email && profile.email.toLowerCase() === formData.email.toLowerCase()) {
+            // Store auth token
+            localStorage.setItem('auth_token', 'demo-token-' + Date.now())
+            localStorage.setItem('user_email', formData.email)
+            
+            // Trigger storage event for navigation update
+            window.dispatchEvent(new Event('storage'))
+            
+            toast({
+              title: "Login Successful",
+              description: `Welcome back, ${profile.name || formData.email}!`,
+            })
+            
+            // Use setTimeout to ensure storage event is processed
+            setTimeout(() => {
+              router.push('/console')
+            }, 100)
+            return
+          }
+        }
+        
+        // If both backend and localStorage fail, show error
+        throw apiError
       }
     } catch (error) {
       console.error('Login error:', error)
