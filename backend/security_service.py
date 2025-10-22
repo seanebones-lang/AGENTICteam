@@ -200,11 +200,10 @@ class SecurityService:
         user_agent: str
     ) -> Tuple[bool, int, Optional[str]]:
         """
-        Check if IP/device can use free trial
+        Check if IP/device can use free trial for ANY agent
         Returns: (is_allowed, queries_remaining, block_reason)
         """
-        if agent_id != FREE_TRIAL_AGENT:
-            return False, 0, "Free trial only available for Ticket Resolver"
+        # Free trial now available for ALL agents (not just ticket-resolver)
         
         try:
             conn = self._get_connection()
