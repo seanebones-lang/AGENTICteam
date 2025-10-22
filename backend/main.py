@@ -1209,6 +1209,11 @@ async def startup_event():
     try:
         logger.info("Starting Agent Marketplace API...")
         
+        # Initialize database and create demo user
+        from database_setup import init_database, create_demo_user
+        init_database()
+        create_demo_user()
+        
         # Start monitoring
         await monitor.start_monitoring(interval=30)
         
