@@ -1,201 +1,159 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-// Agent definitions with minimalistic design
 const agents = [
-  {
-    id: "ticket-resolver",
-    name: "Ticket Resolver",
-    description: "AI-powered ticket classification and resolution",
-    icon: "🎫",
-    category: "Support",
-    model: "Haiku",
-    credits: 3,
-  },
-  {
-    id: "security-scanner", 
-    name: "Security Scanner",
-    description: "OWASP Top 10 vulnerability detection",
-    icon: "🔒",
-    category: "Security",
-    model: "Sonnet",
-    credits: 5,
-  },
-  {
-    id: "knowledge-base",
-    name: "Knowledge Base",
-    description: "Intelligent knowledge retrieval and Q&A",
-    icon: "📚",
-    category: "Support",
-    model: "Haiku",
-    credits: 2,
-  },
-  {
-    id: "incident-responder",
-    name: "Incident Responder", 
-    description: "Intelligent incident triage and root cause analysis",
-    icon: "🚨",
-    category: "Operations",
-    model: "Sonnet",
-    credits: 4,
-  },
-  {
-    id: "data-processor",
-    name: "Data Processor",
-    description: "Multi-source data extraction and transformation",
-    icon: "📊",
-    category: "Analytics",
-    model: "Sonnet",
-    credits: 4,
-  },
-  {
-    id: "report-generator",
-    name: "Report Generator",
-    description: "AI-powered report generation with insights",
-    icon: "📈",
-    category: "Analytics",
-    model: "Sonnet",
-    credits: 5,
-  },
-  {
-    id: "deployment-agent",
-    name: "Deployment Agent",
-    description: "Automated deployment planning and execution",
-    icon: "🚀",
-    category: "DevOps",
-    model: "Sonnet",
-    credits: 4,
-  },
-  {
-    id: "audit-agent",
-    name: "Audit Agent",
-    description: "Compliance and security auditing",
-    icon: "🔍",
-    category: "Security",
-    model: "Sonnet",
-    credits: 5,
-  },
-  {
-    id: "workflow-orchestrator",
-    name: "Workflow Orchestrator",
-    description: "Multi-step workflow automation",
-    icon: "⚙️",
-    category: "Automation",
-    model: "Sonnet",
-    credits: 4,
-  },
-  {
-    id: "escalation-manager",
-    name: "Escalation Manager",
-    description: "Smart escalation routing and management",
-    icon: "📞",
-    category: "Support",
-    model: "Haiku",
-    credits: 3,
-  },
+  { id: "ticket-resolver", name: "Ticket Resolver", desc: "AI-powered support ticket resolution", credits: 3, category: "Support" },
+  { id: "security-scanner", name: "Security Scanner", desc: "OWASP vulnerability detection", credits: 5, category: "Security" },
+  { id: "knowledge-base", name: "Knowledge Base", desc: "Intelligent Q&A and search", credits: 2, category: "Support" },
+  { id: "incident-responder", name: "Incident Responder", desc: "Incident triage and response", credits: 4, category: "Operations" },
+  { id: "data-processor", name: "Data Processor", desc: "Extract and transform data", credits: 4, category: "Analytics" },
+  { id: "report-generator", name: "Report Generator", desc: "AI-powered business reports", credits: 5, category: "Analytics" },
+  { id: "deployment-agent", name: "Deployment Agent", desc: "Automated deployment management", credits: 4, category: "DevOps" },
+  { id: "audit-agent", name: "Audit Agent", desc: "Compliance and security auditing", credits: 5, category: "Security" },
+  { id: "workflow-orchestrator", name: "Workflow Orchestrator", desc: "Multi-step workflow automation", credits: 4, category: "Automation" },
+  { id: "escalation-manager", name: "Escalation Manager", desc: "Smart escalation routing", credits: 3, category: "Support" }
 ];
-
-const categories = ["All", "Support", "Security", "Operations", "Analytics", "DevOps", "Automation"];
 
 export default function AgentsPage() {
   return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center space-y-4 mb-12">
-          <h1 className="text-4xl font-bold tracking-tight">
-            AI Agents
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            10 production-ready AI agents powered by Claude 4.5. 
-            Universal free trial: 3 queries across all agents.
-          </p>
-        </div>
-
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={category === "All" ? "default" : "outline"}
-              size="sm"
-              className="text-sm"
-            >
-              {category}
-            </Button>
+    <div style={{ 
+      backgroundColor: '#ffffff', 
+      minHeight: '100vh', 
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' 
+    }}>
+      {/* Header */}
+      <section style={{ 
+        padding: '60px 20px 40px', 
+        textAlign: 'center', 
+        maxWidth: '1000px', 
+        margin: '0 auto' 
+      }}>
+        <h1 style={{ 
+          fontSize: '48px', 
+          fontWeight: '600', 
+          color: '#000000', 
+          marginBottom: '16px'
+        }}>
+          AI Agents
+        </h1>
+        <p style={{ 
+          fontSize: '18px', 
+          color: '#666666', 
+          marginBottom: '32px'
+        }}>
+          10 production-ready agents. Universal free trial: 3 queries across all agents.
+        </p>
+        
+        <div style={{ 
+          display: 'inline-flex', 
+          padding: '8px', 
+          backgroundColor: '#f8fafc', 
+          borderRadius: '8px',
+          border: '1px solid #e2e8f0'
+        }}>
+          <span style={{ 
+            padding: '8px 16px', 
+            backgroundColor: '#0070f3', 
+            color: '#ffffff', 
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontWeight: '500'
+          }}>
+            All
+          </span>
+          {['Support', 'Security', 'Operations', 'Analytics', 'DevOps', 'Automation'].map(cat => (
+            <span key={cat} style={{ 
+              padding: '8px 16px', 
+              color: '#666666',
+              fontSize: '14px',
+              fontWeight: '500'
+            }}>
+              {cat}
+            </span>
           ))}
         </div>
+      </section>
 
-        {/* Agent Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {/* Agent Grid */}
+      <section style={{ 
+        padding: '0 20px 60px', 
+        maxWidth: '1000px', 
+        margin: '0 auto' 
+      }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: '20px'
+        }}>
           {agents.map((agent) => (
-            <Card key={agent.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl">{agent.icon}</div>
-                  <div className="text-right">
-                    <div className="text-xs text-muted-foreground">{agent.model}</div>
-                    <div className="text-xs font-medium">{agent.credits} credits</div>
-                  </div>
-                </div>
-                <CardTitle className="text-lg">{agent.name}</CardTitle>
-                <CardDescription className="text-sm">
-                  {agent.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-                    {agent.category}
-                  </span>
-                  <Button size="sm" asChild>
-                    <Link href={`/agents/${agent.id}`}>
-                      Try Now
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <div key={agent.id} style={{ 
+              backgroundColor: '#ffffff', 
+              padding: '24px', 
+              borderRadius: '8px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              transition: 'all 0.2s ease'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                <h3 style={{ 
+                  fontSize: '18px', 
+                  fontWeight: '600', 
+                  color: '#000000',
+                  margin: '0'
+                }}>
+                  {agent.name}
+                </h3>
+                <span style={{ 
+                  fontSize: '12px', 
+                  color: '#666666',
+                  backgroundColor: '#f8fafc',
+                  padding: '4px 8px',
+                  borderRadius: '4px'
+                }}>
+                  {agent.credits} credits
+                </span>
+              </div>
+              
+              <p style={{ 
+                fontSize: '14px', 
+                color: '#666666', 
+                marginBottom: '16px',
+                lineHeight: '1.4'
+              }}>
+                {agent.desc}
+              </p>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ 
+                  fontSize: '12px', 
+                  color: '#0070f3',
+                  backgroundColor: '#f0f9ff',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  fontWeight: '500'
+                }}>
+                  {agent.category}
+                </span>
+                
+                <Link 
+                  href={`/agents/${agent.id}`}
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#ffffff',
+                    backgroundColor: '#0070f3',
+                    borderRadius: '4px',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Try Now
+                </Link>
+              </div>
+            </div>
           ))}
         </div>
-
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-3xl font-bold text-blue-600">10</div>
-            <div className="text-sm text-muted-foreground">AI Agents</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-600">98.7%</div>
-            <div className="text-sm text-muted-foreground">Success Rate</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-600">2.1s</div>
-            <div className="text-sm text-muted-foreground">Avg Response</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-600">99.99%</div>
-            <div className="text-sm text-muted-foreground">Uptime</div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-16 text-center space-y-4">
-          <h2 className="text-2xl font-semibold">Ready to get started?</h2>
-          <p className="text-muted-foreground">
-            Try any agent with 3 free queries. No credit card required.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/playground">Start Free Trial</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/pricing">View Pricing</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }
