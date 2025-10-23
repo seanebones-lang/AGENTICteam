@@ -38,7 +38,7 @@ export default function LoginPage() {
         
         toast({
           title: "Login Successful",
-          description: `Welcome back, ${response.user.name || formData.email}!`,
+          description: `Welcome back, ${response.user.name || formData.email}! Your account is fully restored.`,
         })
         
         // Use setTimeout to ensure storage event is processed
