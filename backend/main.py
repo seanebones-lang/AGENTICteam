@@ -1404,30 +1404,50 @@ async def create_subscription(subscription_data: dict):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/v1/user/credits")
-async def get_user_credits():
+async def get_user_credits(authorization: str = Header(None)):
     """Get user's credit balance and transaction history"""
-    # Get demo user
-    user = db.get_user_by_email("demo@example.com")
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    # Extract user email from JWT token
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authorization header required")
     
-    balance = credit_system.get_user_balance(user["id"])
-    transactions = credit_system.get_user_transactions(user["id"], limit=20)
-    
-    return {
-        "balance": balance,
-        "transactions": [
-            {
-                "id": tx.id,
-                "type": tx.transaction_type.value,
-                "amount": tx.amount,
-                "balance_after": tx.balance_after,
-                "description": tx.description,
-                "created_at": tx.created_at
-            }
-            for tx in transactions
-        ]
-    }
+    try:
+        token = authorization.split(" ")[1]
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        customer_email = payload.get("sub")
+        
+        if not customer_email:
+            raise HTTPException(status_code=401, detail="Invalid token")
+            
+        # Get user by email
+        user = db.get_user_by_email(customer_email)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        balance = credit_system.get_user_balance(user["id"])
+        transactions = credit_system.get_user_transactions(user["id"], limit=20)
+        
+        return {
+            "balance": balance,
+            "transactions": [
+                {
+                    "id": tx.id,
+                    "type": tx.transaction_type.value,
+                    "amount": tx.amount,
+                    "balance_after": tx.balance_after,
+                    "description": tx.description,
+                    "created_at": tx.created_at
+                }
+                for tx in transactions
+            ]
+        }
+        
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        logger.error(f"Error getting user credits: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @app.get("/api/v1/user/rate-limits")
 async def get_user_rate_limits():
