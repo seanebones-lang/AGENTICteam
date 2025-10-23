@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
-import { Navigation } from '@/components/navigation'
-import { Footer } from '@/components/footer'
-import { SupportChatbot } from '@/components/support-chatbot'
+import { CleanNavigation } from '@/components/clean-navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,15 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers>
-          <div className="flex min-h-screen flex-col">
-            <Navigation />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <SupportChatbot />
-        </Providers>
+      <body className={inter.className} style={{ backgroundColor: '#ffffff', color: '#000000', margin: '0', padding: '0' }}>
+        <CleanNavigation />
+        {children}
       </body>
     </html>
   )

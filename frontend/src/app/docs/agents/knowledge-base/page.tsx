@@ -1,53 +1,62 @@
-import { GenericDocPage } from '@/components/docs/GenericDocPage'
+import { CleanLayout, CleanCard } from "@/components/clean-layout";
+import Link from "next/link";
 
-export default function KnowledgeBasePage() {
+export default function DocsAgentsKnowledgeBasePage() {
   return (
-    <GenericDocPage
-      title="Knowledge Base Agent"
-      category="Agent Packages"
-      description="Intelligent knowledge management with semantic search, automated documentation, and context-aware responses"
-      content={{
-        sections: [
-          {
-            title: "Overview",
-            content: "The Knowledge Base agent provides intelligent knowledge management capabilities including semantic search, automated documentation generation, and context-aware question answering. It uses RAG (Retrieval Augmented Generation) with vector embeddings for accurate information retrieval."
-          },
-          {
-            title: "Key Features",
-            content: (
-              <ul className="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
-                <li>Semantic search with vector embeddings</li>
-                <li>Automated documentation generation</li>
-                <li>Context-aware question answering</li>
-                <li>Multi-source knowledge aggregation</li>
-                <li>Real-time knowledge base updates</li>
-                <li>Integration with Confluence, SharePoint, Notion</li>
-                <li>99.2% accuracy, sub-second response times</li>
-              </ul>
-            )
-          },
-          {
-            title: "Usage Example",
-            content: (
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                <code>{`result = client.execute_agent(
-    agent_id="knowledge-base",
-    input_data={
-        "query": "How do I configure SSL certificates?",
-        "sources": ["documentation", "tickets", "runbooks"],
-        "max_results": 5
-    }
-)
-
-print(f"Answer: {result.answer}")
-print(f"Sources: {result.sources}")
-print(f"Confidence: {result.confidence}")`}</code>
-              </pre>
-            )
-          }
-        ]
-      }}
-    />
-  )
+    <CleanLayout 
+      title="Docs › Agents › Knowledge Base" 
+      subtitle="Professional AI agent platform - Docs › Agents › Knowledge Base"
+    >
+      <CleanCard>
+        <div style={ textAlign: 'center', padding: '40px 20px' }>
+          <h2 style={ 
+            fontSize: '24px', 
+            fontWeight: '600', 
+            color: '#000000', 
+            marginBottom: '16px'
+          }>
+            Docs › Agents › Knowledge Base
+          </h2>
+          <p style={ 
+            fontSize: '16px', 
+            color: '#666666', 
+            marginBottom: '24px'
+          }>
+            This page is being updated with our new clean design.
+          </p>
+          
+          <div style={ display: 'flex', gap: '12px', justifyContent: 'center' }>
+            <Link 
+              href="/agents"
+              style={{
+                padding: '12px 24px',
+                fontSize: '16px',
+                fontWeight: '500',
+                color: '#ffffff',
+                backgroundColor: '#0070f3',
+                borderRadius: '6px',
+                textDecoration: 'none'
+              }}
+            >
+              Try Agents
+            </Link>
+            <Link 
+              href="/docs"
+              style={{
+                padding: '12px 24px',
+                fontSize: '16px',
+                fontWeight: '500',
+                color: '#0070f3',
+                backgroundColor: '#f0f9ff',
+                borderRadius: '6px',
+                textDecoration: 'none'
+              }}
+            >
+              Documentation
+            </Link>
+          </div>
+        </div>
+      </CleanCard>
+    </CleanLayout>
+  );
 }
-

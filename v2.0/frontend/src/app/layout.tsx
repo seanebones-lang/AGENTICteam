@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Navigation } from "@/components/navigation";
+import { CleanNavigation } from "@/components/clean-navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,17 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navigation />
-          {children}
-          <ThemeToggle />
-        </ThemeProvider>
+      <body className={inter.className} style={{ backgroundColor: '#ffffff', color: '#000000', margin: '0', padding: '0' }}>
+        <CleanNavigation />
+        {children}
       </body>
     </html>
   );
