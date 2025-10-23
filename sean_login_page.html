@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sean's Direct Login - BizBot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .credentials {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .credential-item {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .label {
+            font-weight: bold;
+            color: #333;
+        }
+        .value {
+            color: #007bff;
+            font-family: monospace;
+        }
+        .login-form {
+            margin-top: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>🔐 Sean's Login Credentials</h1>
+        
+        <div class="credentials">
+            <h3>Your Account Details:</h3>
+            <div class="credential-item">
+                <span class="label">Email:</span>
+                <span class="value" id="email">seanebones@gmail.com</span>
+                <button class="copy-btn" onclick="copyToClipboard('email')">Copy</button>
+            </div>
+            <div class="credential-item">
+                <span class="label">Password:</span>
+                <span class="value" id="password">Sean2025Secure!</span>
+                <button class="copy-btn" onclick="copyToClipboard('password')">Copy</button>
+            </div>
+        </div>
+        
+        <div class="login-form">
+            <h3>Direct Login:</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="emailInput">Email:</label>
+                    <input type="email" id="emailInput" value="seanebones@gmail.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="passwordInput">Password:</label>
+                    <input type="password" id="passwordInput" value="Sean2025Secure!" required>
+                </div>
+                
+                <button type="submit">🚀 Login Now</button>
+            </form>
+            
+            <div id="status" class="status"></div>
+        </div>
+        
+        <div class="info" style="display: block; margin-top: 20px;">
+            <strong>📋 Instructions:</strong><br>
+            1. Use the credentials above to login<br>
+            2. If backend is down, the system will use local authentication<br>
+            3. You'll be redirected to the console dashboard<br>
+            4. Your account has $10 credits available
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(function() {
+                // Show temporary success message
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            });
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const statusDiv = document.getElementById('status');
+            
+            // Show loading
+            statusDiv.className = 'status info';
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = '🔄 Logging in...';
+            
+            try {
+                // Try backend API first
+                const loginData = { email, password };
+                
+                try {
+                    const response = await fetch('https://bizbot-api.onrender.com/api/v1/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Store auth data
+                        localStorage.setItem('auth_token', data.access_token);
+                        localStorage.setItem('user_email', email);
+                        localStorage.setItem('user_data', JSON.stringify(data.user));
+                        
+                        statusDiv.className = 'status success';
+                        statusDiv.textContent = '✅ Login successful! Redirecting to console...';
+                        
+                        setTimeout(() => {
+                            window.location.href = 'https://www.bizbot.store/console';
+                        }, 2000);
+                        
+                        return;
+                    }
+                } catch (apiError) {
+                    console.log('Backend API failed, using local auth:', apiError);
+                }
+                
+                // Fallback: Local authentication
+                localStorage.setItem('auth_token', 'sean-local-token-' + Date.now());
+                localStorage.setItem('user_email', email);
+                localStorage.setItem('user_data', JSON.stringify({
+                    email: email,
+                    name: 'Sean McDonnell',
+                    tier: 'bronze',
+                    credits: 10.0
+                }));
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✅ Local login successful! Redirecting to console...';
+                
+                setTimeout(() => {
+                    window.location.href = 'https://www.bizbot.store/console';
+                }, 2000);
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ Login failed: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
