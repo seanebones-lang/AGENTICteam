@@ -1,0 +1,124 @@
+# Render.com deployment configuration for Agent Marketplace v2.0
+# Auto-scaling, health checks, blue-green deployment
+
+services:
+  # Main API Service
+  - type: web
+    name: agentmarketplace-api-v2
+    env: python
+    plan: pro  # Auto-scaling enabled
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --workers 4
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: CLAUDE_API_KEY
+        sync: false  # Set in Render dashboard
+      - key: STRIPE_SECRET_KEY
+        sync: false  # Set in Render dashboard
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false  # Set in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: REFRESH_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agentmarketplace-db-v2
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: agentmarketplace-redis-v2
+          property: connectionString
+    healthCheckPath: /health
+    autoDeploy: true
+    rootDir: backend
+    
+    # Auto-scaling configuration
+    scaling:
+      minInstances: 1
+      maxInstances: 10
+      targetCPUPercent: 70
+      targetMemoryPercent: 80
+    
+    # Health check configuration
+    healthCheck:
+      path: /health
+      intervalSeconds: 30
+      timeoutSeconds: 10
+      unhealthyThresholdCount: 3
+      healthyThresholdCount: 2
+
+# Database
+databases:
+  - name: agentmarketplace-db-v2
+    databaseName: agentmarketplace_v2
+    user: agentmarketplace
+    plan: pro  # High availability
+    version: "15"  # PostgreSQL 15 (will upgrade to 18 when available)
+    
+    # High availability configuration
+    highAvailability:
+      enabled: true
+      
+    # Backup configuration
+    backup:
+      enabled: true
+      retentionDays: 30
+
+# Redis Cache
+  - type: redis
+    name: agentmarketplace-redis-v2
+    plan: pro  # Clustering enabled
+    maxmemoryPolicy: allkeys-lru
+    
+    # Redis configuration
+    config:
+      maxmemory: 1gb
+      timeout: 300
+      tcp-keepalive: 300
+
+# Static Site (if needed for docs)
+  - type: static
+    name: agentmarketplace-docs-v2
+    staticPublishPath: docs
+    buildCommand: echo "Static docs ready"
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
+
+# Environment-specific settings
+environments:
+  production:
+    # Security headers
+    headers:
+      - key: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - key: X-Content-Type-Options
+        value: nosniff
+      - key: X-Frame-Options
+        value: DENY
+      - key: X-XSS-Protection
+        value: 1; mode=block
+      - key: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    
+    # CORS configuration
+    cors:
+      allowedOrigins:
+        - https://agentmarketplace.com
+        - https://www.agentmarketplace.com
+        - https://app.agentmarketplace.com
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+        - X-Requested-With
+      allowCredentials: true
