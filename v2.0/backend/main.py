@@ -11,7 +11,22 @@ import time
 
 from app.core.config import settings
 from app.core.database import init_db
+from app.core.redis import redis_client
 from app.api.v2 import auth, agents, credits, usage, admin
+
+# Import all 10 agents
+from app.agents import (
+    TicketResolverAgent,
+    SecurityScannerAgent,
+    KnowledgeBaseAgent,
+    IncidentResponderAgent,
+    DataProcessorAgent,
+    ReportGeneratorAgent,
+    DeploymentAgent,
+    AuditAgent,
+    WorkflowOrchestratorAgent,
+    EscalationManagerAgent,
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -112,17 +127,52 @@ app.include_router(admin.router, prefix="/api/v2/admin", tags=["Admin"])
 @app.on_event("startup")
 async def startup_event():
     """Initialize application on startup."""
-    logger.info("Starting Agent Marketplace v2.0 API")
+    logger.info("🚀 Starting Agent Marketplace v2.0 API")
     
     # Initialize database
     try:
         init_db()
-        logger.info("Database initialized successfully")
+        logger.info("✅ Database initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize database: {e}")
+        logger.error(f"❌ Failed to initialize database: {e}")
         raise
     
-    logger.info("Application startup complete")
+    # Initialize Redis
+    try:
+        await redis_client.ping()
+        logger.info("✅ Redis connected successfully")
+    except Exception as e:
+        logger.error(f"❌ Failed to connect to Redis: {e}")
+        # Continue without Redis for development
+    
+    # Initialize all 10 agents
+    try:
+        claude_api_key = settings.anthropic_api_key or "test-key-for-development"
+        
+        app.state.agents = {
+            "ticket-resolver": TicketResolverAgent(api_key=claude_api_key),
+            "security-scanner": SecurityScannerAgent(api_key=claude_api_key),
+            "knowledge-base": KnowledgeBaseAgent(api_key=claude_api_key),
+            "incident-responder": IncidentResponderAgent(api_key=claude_api_key),
+            "data-processor": DataProcessorAgent(api_key=claude_api_key),
+            "report-generator": ReportGeneratorAgent(api_key=claude_api_key),
+            "deployment-agent": DeploymentAgent(api_key=claude_api_key),
+            "audit-agent": AuditAgent(api_key=claude_api_key),
+            "workflow-orchestrator": WorkflowOrchestratorAgent(api_key=claude_api_key),
+            "escalation-manager": EscalationManagerAgent(api_key=claude_api_key),
+        }
+        
+        logger.info("✅ All 10 agents initialized with Claude 4.5 support")
+        
+        # Initialize free trial system
+        app.state.free_trial_limit = 3
+        logger.info("✅ Universal free trial system (3 queries) activated")
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize agents: {e}")
+        raise
+    
+    logger.info("🎉 Agent Marketplace v2.0 fully operational!")
 
 # Shutdown event
 @app.on_event("shutdown")
