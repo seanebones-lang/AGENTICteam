@@ -216,3 +216,4 @@ Any accounts created before this fix have invalid password hashes.
 **This was a CRITICAL bug - your entire auth system was broken!**  
 **Now it's fixed and ready for real customers!** 🚀
 
+

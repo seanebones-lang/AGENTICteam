@@ -1,0 +1,21 @@
+apiVersion: v2
+name: agents-stack
+description: Agent Marketplace v2.0 - Complete AI Agent Stack for Enterprise
+type: application
+version: 2.0.0
+appVersion: "2.0.0"
+home: https://agentmarketplace.com
+sources:
+  - https://github.com/agentmarketplace/v2.0
+maintainers:
+  - name: NextEleven Engineering
+    email: engineering@agentmarketplace.com
+keywords:
+  - ai
+  - agents
+  - enterprise
+  - claude
+  - automation
+annotations:
+  category: AI/ML
+  licenses: Enterprise

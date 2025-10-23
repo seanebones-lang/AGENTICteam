@@ -1,0 +1,57 @@
+# Agent Marketplace v2.0 - Backend Requirements
+# Simplified for compatibility
+
+# Core Framework
+fastapi==0.119.1
+uvicorn[standard]==0.30.6
+pydantic==2.12.3
+pydantic-settings==2.6.1
+
+# Database & Cache (Latest October 2025)
+asyncpg==0.29.0
+redis==5.2.1
+sqlalchemy==2.0.36
+alembic==1.13.3
+psycopg2-binary==2.9.9
+qdrant-client==1.15.0
+
+# AI & LLM Dependencies (Latest October 2025)
+anthropic==0.71.0
+langchain==0.3.27
+langchain-anthropic==0.3.22
+langchain-core==0.3.79
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# HTTP & Async
+httpx==0.25.2
+aiohttp==3.11.11
+
+# Environment & Configuration
+python-dotenv==1.0.0
+
+# Monitoring & Observability
+prometheus-client==0.21.0
+sentry-sdk[fastapi]==2.19.0
+
+# Data Processing
+pandas==2.2.3
+numpy==1.26.4
+
+# Payment Processing
+stripe==11.1.1
+
+# Utilities
+python-dateutil==2.8.2
+requests==2.31.0
+
+# Development & Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+
+# Production
+gunicorn==23.0.0

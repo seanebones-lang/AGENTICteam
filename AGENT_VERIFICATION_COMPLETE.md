@@ -185,3 +185,4 @@ After Render redeploys (2-3 minutes):
 
 The platform is **FULLY OPERATIONAL** with real AI capabilities.
 
+

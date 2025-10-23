@@ -1,0 +1,203 @@
+# Agent Marketplace v2.0 - Docker Compose
+# Deploy all 10 agents with one command
+
+version: '3.8'
+
+services:
+  # Core API Gateway
+  api-gateway:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - ENVIRONMENT=production
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Individual Agent Services
+  ticket-resolver:
+    build: 
+      context: ./backend
+      dockerfile: agents/ticket-resolver/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=ticket-resolver
+    restart: unless-stopped
+
+  security-scanner:
+    build:
+      context: ./backend
+      dockerfile: agents/security-scanner/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=security-scanner
+    restart: unless-stopped
+
+  knowledge-base:
+    build:
+      context: ./backend
+      dockerfile: agents/knowledge-base/Dockerfile
+    ports:
+      - "8083:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=knowledge-base
+    restart: unless-stopped
+
+  incident-responder:
+    build:
+      context: ./backend
+      dockerfile: agents/incident-responder/Dockerfile
+    ports:
+      - "8084:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=incident-responder
+    restart: unless-stopped
+
+  data-processor:
+    build:
+      context: ./backend
+      dockerfile: agents/data-processor/Dockerfile
+    ports:
+      - "8085:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=data-processor
+    restart: unless-stopped
+
+  report-generator:
+    build:
+      context: ./backend
+      dockerfile: agents/report-generator/Dockerfile
+    ports:
+      - "8086:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=report-generator
+    restart: unless-stopped
+
+  deployment-agent:
+    build:
+      context: ./backend
+      dockerfile: agents/deployment-agent/Dockerfile
+    ports:
+      - "8087:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=deployment-agent
+    restart: unless-stopped
+
+  audit-agent:
+    build:
+      context: ./backend
+      dockerfile: agents/audit-agent/Dockerfile
+    ports:
+      - "8088:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=audit-agent
+    restart: unless-stopped
+
+  workflow-orchestrator:
+    build:
+      context: ./backend
+      dockerfile: agents/workflow-orchestrator/Dockerfile
+    ports:
+      - "8089:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=workflow-orchestrator
+    restart: unless-stopped
+
+  escalation-manager:
+    build:
+      context: ./backend
+      dockerfile: agents/escalation-manager/Dockerfile
+    ports:
+      - "8090:8080"
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - AGENT_ID=escalation-manager
+    restart: unless-stopped
+
+  # Supporting Services
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass agentmarketplace2024
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=agentmarketplace
+      - POSTGRES_USER=agent
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agentmarketplace2024}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: agentmarketplace
