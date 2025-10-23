@@ -2,116 +2,69 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { cn } from "@/lib/utils";
 
 export function CleanNavigation() {
   const pathname = usePathname();
 
   return (
-    <nav style={{ 
-      backgroundColor: '#ffffff', 
-      borderBottom: '1px solid #f1f5f9',
-      position: 'sticky',
-      top: '0',
-      zIndex: '50',
-      backdropFilter: 'blur(8px)'
-    }}>
-      <div style={{ 
-        maxWidth: '1200px', 
-        margin: '0 auto', 
-        padding: '0 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: '60px'
-      }}>
-        {/* Logo */}
-        <Link href="/" style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '8px',
-          textDecoration: 'none'
-        }}>
-          <div style={{ 
-            width: '28px', 
-            height: '28px', 
-            backgroundColor: '#0070f3', 
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <span style={{ color: '#ffffff', fontWeight: '700', fontSize: '12px' }}>AM</span>
+    <nav className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
+            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-sm">AM</span>
+            </div>
+            <span className="font-semibold text-lg">
+              Agent Marketplace
+            </span>
+          </Link>
+
+          {/* Main Navigation */}
+          <div className="hidden md:flex items-center gap-1">
+            {[
+              { name: "Agents", href: "/agents" },
+              { name: "Playground", href: "/playground" },
+              { name: "Pricing", href: "/pricing" },
+              { name: "Docs", href: "/docs" },
+              { name: "Support", href: "/support" }
+            ].map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                    isActive 
+                      ? "bg-primary/10 text-primary" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </div>
-          <span style={{ 
-            fontWeight: '600', 
-            fontSize: '18px', 
-            color: '#000000'
-          }}>
-            Agent Marketplace
-          </span>
-        </Link>
 
-        {/* Main Navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          {[
-            { name: "Agents", href: "/agents" },
-            { name: "Playground", href: "/playground" },
-            { name: "Pricing", href: "/pricing" },
-            { name: "Docs", href: "/docs" },
-            { name: "Support", href: "/support" }
-          ].map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                style={{
-                  fontSize: '15px',
-                  fontWeight: '500',
-                  textDecoration: 'none',
-                  color: isActive ? '#0070f3' : '#666666',
-                  padding: '6px 12px',
-                  borderRadius: '4px',
-                  backgroundColor: isActive ? '#f0f9ff' : 'transparent',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Auth Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Link 
-            href="/login"
-            style={{
-              padding: '6px 12px',
-              fontSize: '15px',
-              fontWeight: '500',
-              color: '#666666',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Log in
-          </Link>
-          <Link 
-            href="/signup"
-            style={{
-              padding: '8px 16px',
-              fontSize: '15px',
-              fontWeight: '500',
-              color: '#ffffff',
-              backgroundColor: '#0070f3',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Sign up
-          </Link>
+          {/* Right side - Auth buttons and theme toggle */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link 
+              href="/login"
+              className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Log in
+            </Link>
+            <Link 
+              href="/signup"
+              className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Sign up
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

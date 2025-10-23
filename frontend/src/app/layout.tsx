@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
-import { CleanNavigation } from '@/components/clean-navigation'
+import { ModernNavigation } from '@/components/modern-navigation'
+import { ModernFooter } from '@/components/modern-footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,9 +26,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} style={{ backgroundColor: '#ffffff', color: '#000000', margin: '0', padding: '0' }}>
-        <CleanNavigation />
-        {children}
+      <body className={inter.className}>
+        <Providers>
+          <div className="relative flex min-h-screen flex-col">
+            <ModernNavigation />
+            <main className="flex-1">
+              {children}
+            </main>
+            <ModernFooter />
+          </div>
+        </Providers>
       </body>
     </html>
   )

@@ -1,62 +1,30 @@
-import { CleanLayout, CleanCard } from "@/components/clean-layout";
-import Link from "next/link";
+import { ModernLayout, ModernCard, ModernButton, ModernSection } from "@/components/modern-layout";
+import { ArrowRight } from "lucide-react";
 
-export default function DocsSecurityOverviewPage() {
+export default function UoverviewPage() {
   return (
-    <CleanLayout 
-      title="Docs › Security › Overview" 
-      subtitle="Professional AI agent platform - Docs › Security › Overview"
+    <ModernLayout
+      title="overview"
+      subtitle="Professional AI agent platform"
+      description="This page is being updated with our new modern design."
+      showHero={true}
     >
-      <CleanCard>
-        <div style={ textAlign: 'center', padding: '40px 20px' }>
-          <h2 style={ 
-            fontSize: '24px', 
-            fontWeight: '600', 
-            color: '#000000', 
-            marginBottom: '16px'
-          }>
-            Docs › Security › Overview
-          </h2>
-          <p style={ 
-            fontSize: '16px', 
-            color: '#666666', 
-            marginBottom: '24px'
-          }>
-            This page is being updated with our new clean design.
+      <ModernSection title="overview">
+        <ModernCard className="p-8 text-center">
+          <h2 className="text-2xl font-semibold mb-4">overview</h2>
+          <p className="text-muted-foreground mb-6">
+            This page is being updated with our new modern design.
           </p>
-          
-          <div style={ display: 'flex', gap: '12px', justifyContent: 'center' }>
-            <Link 
-              href="/agents"
-              style={{
-                padding: '12px 24px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: '#ffffff',
-                backgroundColor: '#0070f3',
-                borderRadius: '6px',
-                textDecoration: 'none'
-              }}
-            >
+          <div className="flex gap-4 justify-center">
+            <ModernButton href="/agents">
               Try Agents
-            </Link>
-            <Link 
-              href="/docs"
-              style={{
-                padding: '12px 24px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: '#0070f3',
-                backgroundColor: '#f0f9ff',
-                borderRadius: '6px',
-                textDecoration: 'none'
-              }}
-            >
+            </ModernButton>
+            <ModernButton href="/docs" variant="outline">
               Documentation
-            </Link>
+            </ModernButton>
           </div>
-        </div>
-      </CleanCard>
-    </CleanLayout>
+        </ModernCard>
+      </ModernSection>
+    </ModernLayout>
   );
 }

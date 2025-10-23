@@ -1,58 +1,39 @@
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface CleanLayoutProps {
   children: ReactNode;
   title?: string;
   subtitle?: string;
   maxWidth?: string;
+  className?: string;
 }
 
 export function CleanLayout({ 
   children, 
   title, 
   subtitle, 
-  maxWidth = "1000px" 
+  maxWidth = "max-w-4xl",
+  className
 }: CleanLayoutProps) {
   return (
-    <div style={{ 
-      backgroundColor: '#ffffff', 
-      minHeight: '100vh', 
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' 
-    }}>
+    <div className={cn("min-h-screen bg-background text-foreground", className)}>
       {title && (
-        <section style={{ 
-          padding: '60px 20px 40px', 
-          textAlign: 'center', 
-          maxWidth: maxWidth, 
-          margin: '0 auto' 
-        }}>
-          <h1 style={{ 
-            fontSize: '48px', 
-            fontWeight: '600', 
-            color: '#000000', 
-            marginBottom: subtitle ? '16px' : '32px',
-            lineHeight: '1.1'
-          }}>
-            {title}
-          </h1>
-          {subtitle && (
-            <p style={{ 
-              fontSize: '18px', 
-              color: '#666666', 
-              marginBottom: '32px',
-              lineHeight: '1.5'
-            }}>
-              {subtitle}
-            </p>
-          )}
+        <section className="py-16 px-4 text-center">
+          <div className={cn("mx-auto", maxWidth)}>
+            <h1 className="text-4xl md:text-5xl font-semibold text-foreground mb-4 leading-tight">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                {subtitle}
+              </p>
+            )}
+          </div>
         </section>
       )}
       
-      <main style={{ 
-        maxWidth: maxWidth, 
-        margin: '0 auto', 
-        padding: '0 20px'
-      }}>
+      <main className={cn("mx-auto px-4", maxWidth)}>
         {children}
       </main>
     </div>
@@ -61,19 +42,19 @@ export function CleanLayout({
 
 export function CleanCard({ 
   children, 
-  padding = "24px" 
+  padding = "p-6",
+  className
 }: { 
   children: ReactNode; 
-  padding?: string; 
+  padding?: string;
+  className?: string;
 }) {
   return (
-    <div style={{ 
-      backgroundColor: '#ffffff', 
-      padding: padding, 
-      borderRadius: '8px',
-      border: '1px solid #e2e8f0',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-    }}>
+    <div className={cn(
+      "bg-card text-card-foreground rounded-lg border border-border shadow-sm",
+      padding,
+      className
+    )}>
       {children}
     </div>
   );
@@ -82,29 +63,26 @@ export function CleanCard({
 export function CleanButton({ 
   href, 
   children, 
-  variant = "primary" 
+  variant = "primary",
+  className
 }: { 
   href: string; 
   children: ReactNode; 
-  variant?: "primary" | "secondary"; 
+  variant?: "primary" | "secondary";
+  className?: string;
 }) {
   const isPrimary = variant === "primary";
   
   return (
     <a 
       href={href}
-      style={{
-        display: 'inline-block',
-        padding: '12px 24px',
-        fontSize: '16px',
-        fontWeight: '500',
-        color: isPrimary ? '#ffffff' : '#0070f3',
-        backgroundColor: isPrimary ? '#0070f3' : 'transparent',
-        border: isPrimary ? 'none' : '1px solid #e2e8f0',
-        borderRadius: '6px',
-        textDecoration: 'none',
-        transition: 'all 0.2s ease'
-      }}
+      className={cn(
+        "inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-md transition-colors",
+        isPrimary 
+          ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+          : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        className
+      )}
     >
       {children}
     </a>
