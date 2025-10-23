@@ -1,105 +1,245 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-16">
-        {/* Hero Section - Minimalistic */}
-        <div className="text-center space-y-8 mb-20">
-          <h1 className="text-5xl font-bold tracking-tight">
-            AI Agents for Enterprise
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            10 production-ready AI agents with 98.7% success rate. 
-            Deploy anywhere: SaaS, Docker, Kubernetes, Edge, Air-gapped.
+    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      {/* Hero Section - Stripe/Vercel inspired */}
+      <section style={{ padding: '120px 20px', textAlign: 'center', maxWidth: '1200px', margin: '0 auto' }}>
+        <h1 style={{ 
+          fontSize: '72px', 
+          fontWeight: '700', 
+          color: '#000000', 
+          marginBottom: '24px',
+          lineHeight: '1.1',
+          letterSpacing: '-0.02em'
+        }}>
+          AI Agents for Enterprise
+        </h1>
+        
+        <p style={{ 
+          fontSize: '24px', 
+          color: '#666666', 
+          marginBottom: '48px', 
+          maxWidth: '800px', 
+          margin: '0 auto 48px auto',
+          lineHeight: '1.5'
+        }}>
+          10 production-ready AI agents with 98.7% success rate. Deploy anywhere: SaaS, Docker, Kubernetes, Edge, Air-gapped.
+        </p>
+        
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginBottom: '64px' }}>
+          <Link 
+            href="/agents"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '16px 32px',
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#ffffff',
+              backgroundColor: '#0070f3',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+              border: 'none'
+            }}
+          >
+            Try Free (3 Queries)
+          </Link>
+          
+          <Link 
+            href="/docs/deploy"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '16px 32px',
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#0070f3',
+              backgroundColor: 'transparent',
+              border: '2px solid #0070f3',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Deploy Guide
+          </Link>
+        </div>
+        
+        {/* Stats - Clean and minimal */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          gap: '48px', 
+          fontSize: '16px',
+          color: '#666666'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: '#00d4aa', fontSize: '18px' }}>✓</span>
+            <span>10 Agents</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: '#00d4aa', fontSize: '18px' }}>✓</span>
+            <span>98.7% Success</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: '#00d4aa', fontSize: '18px' }}>✓</span>
+            <span>2.1s Response</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: '#00d4aa', fontSize: '18px' }}>✓</span>
+            <span>7 Deploy Methods</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section - OpenAI inspired */}
+      <section style={{ 
+        backgroundColor: '#f8fafc', 
+        padding: '80px 20px',
+        borderTop: '1px solid #e2e8f0'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ 
+              fontSize: '48px', 
+              fontWeight: '700', 
+              color: '#000000', 
+              marginBottom: '16px'
+            }}>
+              Enterprise-Ready AI Agents
+            </h2>
+            <p style={{ 
+              fontSize: '20px', 
+              color: '#666666',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Deploy anywhere with unmatched flexibility and performance
+            </p>
+          </div>
+          
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
+            gap: '32px'
+          }}>
+            {/* Feature Cards */}
+            <div style={{ 
+              backgroundColor: '#ffffff', 
+              padding: '32px', 
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{ fontSize: '32px', marginBottom: '16px' }}>🚀</div>
+              <h3 style={{ fontSize: '24px', fontWeight: '600', color: '#000000', marginBottom: '12px' }}>
+                7 Deployment Methods
+              </h3>
+              <p style={{ color: '#666666', lineHeight: '1.6' }}>
+                SaaS, Docker, Kubernetes, SDK, Serverless, Edge, Air-gapped. Deploy anywhere with complete flexibility.
+              </p>
+            </div>
+            
+            <div style={{ 
+              backgroundColor: '#ffffff', 
+              padding: '32px', 
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{ fontSize: '32px', marginBottom: '16px' }}>⚡</div>
+              <h3 style={{ fontSize: '24px', fontWeight: '600', color: '#000000', marginBottom: '12px' }}>
+                Universal Free Trial
+              </h3>
+              <p style={{ color: '#666666', lineHeight: '1.6' }}>
+                3 queries across ALL agents. No credit card required. Test every agent before you buy.
+              </p>
+            </div>
+            
+            <div style={{ 
+              backgroundColor: '#ffffff', 
+              padding: '32px', 
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{ fontSize: '32px', marginBottom: '16px' }}>💰</div>
+              <h3 style={{ fontSize: '24px', fontWeight: '600', color: '#000000', marginBottom: '12px' }}>
+                50-60% Cost Savings
+              </h3>
+              <p style={{ color: '#666666', lineHeight: '1.6' }}>
+                Smart model selection and competitive pricing. Significantly cheaper than OpenAI, Anthropic, Google.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Stripe inspired */}
+      <section style={{ 
+        padding: '80px 20px', 
+        textAlign: 'center',
+        backgroundColor: '#ffffff'
+      }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ 
+            fontSize: '48px', 
+            fontWeight: '700', 
+            color: '#000000', 
+            marginBottom: '24px'
+          }}>
+            Ready to get started?
+          </h2>
+          <p style={{ 
+            fontSize: '20px', 
+            color: '#666666', 
+            marginBottom: '40px'
+          }}>
+            Try any agent with 3 free queries. No credit card required.
           </p>
           
-          <div className="flex gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/agents">Try Free (3 Queries)</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/docs/deploy">Deploy Guide</Link>
-            </Button>
-          </div>
-
-          {/* Key Stats */}
-          <div className="flex justify-center gap-8 text-sm text-muted-foreground mt-8">
-            <div>✅ 10 Agents</div>
-            <div>✅ 98.7% Success</div>
-            <div>✅ 2.1s Response</div>
-            <div>✅ 7 Deploy Methods</div>
-          </div>
-        </div>
-
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Universal Free Trial</CardTitle>
-              <CardDescription>
-                3 queries across ALL agents before paywall
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                No "special" agent focus - all 10 agents have equal access from day one.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>JWT Authentication</CardTitle>
-              <CardDescription>
-                Secure sessions with refresh tokens
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                15-minute access tokens with 7-day refresh cycles for seamless experience.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Theme System</CardTitle>
-              <CardDescription>
-                Light/Dark mode with system detection
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Toggle between light and dark themes with the button in the bottom-right corner.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="mt-16 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Tech Stack</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div className="p-4 border rounded-lg">
-              <div className="font-medium">Frontend</div>
-              <div className="text-muted-foreground">Next.js 16 + React 19.2</div>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <div className="font-medium">Backend</div>
-              <div className="text-muted-foreground">FastAPI 0.119.1 + Python 3.13</div>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <div className="font-medium">AI Models</div>
-              <div className="text-muted-foreground">Claude Haiku/Sonnet 4.5</div>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <div className="font-medium">Databases</div>
-              <div className="text-muted-foreground">PostgreSQL 18 + Redis 8.0.4</div>
-            </div>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+            <Link 
+              href="/agents"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '16px 32px',
+                fontSize: '18px',
+                fontWeight: '600',
+                color: '#ffffff',
+                backgroundColor: '#0070f3',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Start Free Trial
+            </Link>
+            
+            <Link 
+              href="/pricing"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '16px 32px',
+                fontSize: '18px',
+                fontWeight: '600',
+                color: '#666666',
+                backgroundColor: 'transparent',
+                border: '2px solid #e2e8f0',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              View Pricing
+            </Link>
           </div>
         </div>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }

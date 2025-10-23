@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -18,69 +17,105 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded bg-blue-600 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">AM</span>
-              </div>
-              <span className="font-semibold text-lg">Agent Marketplace</span>
-            </Link>
+    <nav style={{ 
+      backgroundColor: '#ffffff', 
+      borderBottom: '1px solid #e2e8f0',
+      position: 'sticky',
+      top: '0',
+      zIndex: '50'
+    }}>
+      <div style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto', 
+        padding: '0 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: '64px'
+      }}>
+        {/* Logo */}
+        <Link href="/" style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            backgroundColor: '#0070f3', 
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <span style={{ color: '#ffffff', fontWeight: '700', fontSize: '14px' }}>AM</span>
           </div>
+          <span style={{ 
+            fontWeight: '600', 
+            fontSize: '20px', 
+            color: '#000000'
+          }}>
+            Agent Marketplace
+          </span>
+        </Link>
 
-          {/* Navigation Links */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive
-                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
-                        : "text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
+        {/* Navigation Links */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+          <div style={{ display: 'flex', gap: '24px' }}>
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                    fontWeight: '500',
+                    textDecoration: 'none',
+                    color: isActive ? '#0070f3' : '#666666',
+                    backgroundColor: isActive ? '#f0f9ff' : 'transparent',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Sign up</Link>
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button variant="ghost" size="sm">
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              </svg>
-            </Button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Link 
+              href="/login"
+              style={{
+                padding: '8px 16px',
+                fontSize: '16px',
+                fontWeight: '500',
+                color: '#666666',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Log in
+            </Link>
+            <Link 
+              href="/signup"
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                fontWeight: '600',
+                color: '#ffffff',
+                backgroundColor: '#0070f3',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Sign up
+            </Link>
           </div>
         </div>
       </div>
